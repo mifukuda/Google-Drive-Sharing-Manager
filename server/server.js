@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+// Minato Fukuda commit
+
 app.get('/', (req, res) => {
   res.send('Hello Linux Stans!')
 })

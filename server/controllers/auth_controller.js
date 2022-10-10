@@ -19,6 +19,11 @@ login = (req, res) => {
     return res.redirect(auth_url);
 }
 
+auth_callback = (req, res) => {
+
+}
+
 module.exports = {
-    login: login
+    login: login,
+    auth_callback: auth_callback
 }

@@ -21,6 +21,10 @@ app.get('/', (req, res) => {
   res.send('Hello Linux Stans!')
 })
 
+app.get('/testing', (req, res) => {
+  res.send('Finally we have some identity.')
+})
+
 app.listen(CONFIG.port, () => {
   console.log(`Server running on port ${CONFIG.port}`)
 })

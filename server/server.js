@@ -4,7 +4,7 @@ const cookie_parser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 const {auth_client} = require('./controllers/auth_controller.js')
 const google = require('googleapis').google 
-const {GoogleDriveAdapter} = require('./DriveAdapter.ts')
+const {GoogleDriveAdapter, dummyTreeTest} = require('./DriveAdapter.ts')
 
 //file imports
 const CONFIG = require('./configs.js')
@@ -30,7 +30,8 @@ app.get('/testing', async (req, res) => {
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
-  google_drive_adapter.createFileInfoSnapshot(decoded_token)
+  console.log(dummyTreeTest().toString(0))
+  console.log((await google_drive_adapter.createFileInfoSnapshot(decoded_token)).toString())
 })
 
 

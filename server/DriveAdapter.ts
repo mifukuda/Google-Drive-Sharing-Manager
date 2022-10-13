@@ -65,7 +65,7 @@ class DriveFile {
     }
 
     toString(depth: number): String {
-        return "\t".repeat(depth) + this.name + " DriveFile\n"
+        return "\t".repeat(depth) + this.name + ", type: DriveFile\n"
     }
 }
 
@@ -77,7 +77,7 @@ class DriveFolder extends DriveFile {
     }
 
     toString(depth: number): String {
-        let s = "\t".repeat(depth) + this.name + " DriveFolder" + "\n"
+        let s = "\t".repeat(depth) + this.name + ", type: DriveFolder" + "\n"
         for (let i = 0; i < this.children.length; i++) {
             let child: DriveFile = this.children[i]
             s = s + child.toString(depth+1) 
@@ -87,7 +87,7 @@ class DriveFolder extends DriveFile {
 }
 
 interface DriveAdapter {
-    createFileInfoSnapshot(access_token: string): Promise<void>
+    createFileInfoSnapshot(access_token: string): Promise<FileInfoSnapshot>
     updateSharing(access_token: string, files: DriveFile[], permissions: Group[]): Promise<void>
 }
 
@@ -99,7 +99,7 @@ class SnapshotSystem {
 }
 
 export class GoogleDriveAdapter implements DriveAdapter {
-    async createFileInfoSnapshot(access_token: string): Promise<void> {
+    async createFileInfoSnapshot(access_token: string): Promise<FileInfoSnapshot> {
         auth_client.setCredentials(access_token)
         const drive = google.drive('v3');
         let nextPageToken: String = ""
@@ -116,44 +116,34 @@ export class GoogleDriveAdapter implements DriveAdapter {
             allFiles = allFiles.concat(response.data.files)
             nextPageToken = response.data.nextPageToken
         }
-
-        console.log(allFiles)
-
-        let idToFileInfo: Map<String, typeof GoogleFile> = new Map<String, typeof GoogleFile>()
-        let idToDriveFile: Map<String, DriveFile> = new Map<String, DriveFile>()
+        // todo: set DriveFolder children default value to empty list to avoid conditional logic
+        // create DriveRoot as a subclass of DriveFolder
+        let idToDriveFiles: Map<String, [DriveFile, String]> = new Map<String, [DriveFile, String]>()
         for (let i = 0; i < allFiles.length; i++) {
             let file: typeof GoogleFile = allFiles[i]
-            let newDriveFile: DriveFile
             if (file.mimeType === "application/vnd.google-apps.folder") {
-                newDriveFile = new DriveFolder(file.id, null, file.dateCreated, file.dateModified, file.name, [])
-            }
-            else if (file.mimeType === "application/vnd.google-apps.document") {
-                newDriveFile = new DriveFile(file.id, null, file.dateCreated, file.dateModified, file.name)
+                idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.dateCreated, file.dateModified, file.name, []), file.parents[0]])
             }
             else {
-                console.log("File type: " + file.mimeType + " not recognized")
-                return
+                idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.dateCreated, file.dateModified, file.name), file.parents[0]])
             }
-            idToFileInfo.set(file.id, file)
-            idToDriveFile.set(file.id, newDriveFile)
         }
 
-        let root: DriveFolder = new DriveFolder("Masteru Waifu", null, new Date(), new Date(), "OOh Mami", [])
-        for (let i = 0; i < allFiles.length; i++) {
-            let file: typeof GoogleFile = allFiles[i]
-            let child: DriveFile = idToDriveFile.get(file.id) as DriveFile
-            let parentID: String = file.parents[0]
-            if (!(idToFileInfo.has(parentID))) {
+        let root: DriveFolder = new DriveFolder("", null, new Date(), new Date(), "Drive Root", [])
+        for (let [id, fileAndParentId] of idToDriveFiles) {
+            let child: DriveFile = fileAndParentId[0]
+            let parentID: String = fileAndParentId[1]
+            if (!(idToDriveFiles.has(parentID))) {
                 child.parent = root
                 root.children.push(child)
             }
             else {
-                let parent = idToDriveFile.get(parentID) as DriveFolder
+                let parent: DriveFolder = (idToDriveFiles.get(parentID) as [DriveFile, String])[0] as DriveFolder
                 child.parent = parent
                 parent.children.push(child)
             }
         }
-        console.log(root.toString(0))
+        return new FileInfoSnapshot(new Date(), root, [])
     }
 
     async updateSharing(access_token: string, files: DriveFile[], permissions: Group[]): Promise<void> {

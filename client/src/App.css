@@ -38,7 +38,10 @@
 }*/
 
 .home {
-  background-color: aquamarine;
+  background-color:#f9cdd4;
   margin: auto;
-  width: 50%
+  height: 500px;
+  width: 60%;
+  overflow-y: scroll; 
+  white-space: nowrap;
 }

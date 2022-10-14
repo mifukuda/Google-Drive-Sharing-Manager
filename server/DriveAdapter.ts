@@ -107,7 +107,7 @@ export class GoogleDriveAdapter implements DriveAdapter {
         while (nextPageToken != null) {
             let response = await drive.files.list({
                 auth: auth_client,
-                pageSize: 1,
+                pageSize: 100,
                 pageToken: nextPageToken,
                 includeItemsFromAllDrives: true,
                 supportsAllDrives: true,
@@ -116,16 +116,18 @@ export class GoogleDriveAdapter implements DriveAdapter {
             allFiles = allFiles.concat(response.data.files)
             nextPageToken = response.data.nextPageToken
         }
+        // console.log(JSON.stringify(allFiles, null, "\t"))
         // todo: set DriveFolder children default value to empty list to avoid conditional logic
         // create DriveRoot as a subclass of DriveFolder
         let idToDriveFiles: Map<String, [DriveFile, String]> = new Map<String, [DriveFile, String]>()
         for (let i = 0; i < allFiles.length; i++) {
             let file: typeof GoogleFile = allFiles[i]
+            let parentID : String = (file.parents ? file.parents[0] : "") 
             if (file.mimeType === "application/vnd.google-apps.folder") {
-                idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.dateCreated, file.dateModified, file.name, []), file.parents[0]])
+                idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.dateCreated, file.dateModified, file.name, []), parentID])
             }
             else {
-                idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.dateCreated, file.dateModified, file.name), file.parents[0]])
+                idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.dateCreated, file.dateModified, file.name), parentID])
             }
         }
 

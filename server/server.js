@@ -30,7 +30,7 @@ app.get('/testing', async (req, res) => {
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
-  console.log(dummyTreeTest().toString(0))
+  // console.log(dummyTreeTest().toString(0))
   console.log((await google_drive_adapter.createFileInfoSnapshot(decoded_token)).toString())
 })
 

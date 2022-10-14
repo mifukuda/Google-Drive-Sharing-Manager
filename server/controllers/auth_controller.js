@@ -21,7 +21,6 @@ login = (req, res) => {
 }
 
 auth_callback = (req, res) => {
-    console.log(req.query.code)
     if(req.query.error){
         console.log("Error recieving Authorization Code")
         return res.redirect('/')

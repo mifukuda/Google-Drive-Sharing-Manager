@@ -64,12 +64,14 @@ export default function HomeScreen() {
     let directory = [];
     buildTree(testSnapshot);
 
+    // DFS: returns directory structure (each file/folder is a FileCard)
     function buildTree(snapshot) {
         directory.push(<FileCard file={snapshot} depth={0} key={key++}/>)
         //directory.push("Name: " + snapshot.name + ", Depth: " + 0);
         buildTreeHelper(snapshot, 1)
     }
 
+    // DFS: depth used for indentation
     function buildTreeHelper(root, depth) {
         for(let i = 0; i < root.children.length; i++) {
             directory.push(<FileCard file={root.children[i]} depth={depth} key={key++}/>)

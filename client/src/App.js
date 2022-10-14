@@ -4,8 +4,10 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import {HomeScreen} from './components';
 import './App.css';
+import {HomeScreen} from './components';
+import {fetchArticleDetails} from './actions';
+import {useDispatch} from 'react-redux';
 
 export default function App() {
   return (
@@ -41,5 +43,6 @@ function About() {
 }
 
 function Users() {
-  return <h2>Users</h2>;
+  const dispatch = useDispatch();
+  return <button onClick={() => dispatch(fetchArticleDetails())}>Users</button>;
 }

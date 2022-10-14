@@ -13,10 +13,9 @@ const auth_client = new OAuth2(
 login = (req, res) => {
     // Obtain the google login link 
     const auth_url = auth_client.generateAuthUrl({
-        access_type: 'offline', //Does not require user to constantly give consent
+        access_type: 'offline', // Does not require user to constantly give consent
         scope: CONFIG.oauth_credentials.scopes 
     });
-
     return res.redirect(auth_url);
 }
 
@@ -24,13 +23,13 @@ auth_callback = (req, res) => {
     if(req.query.error){
         console.log("Error recieving Authorization Code")
         return res.redirect('/')
-    }else{
+    }
+    else {
         auth_client.getToken(req.query.code, function(err, token) {
-            if(err){
+            if(err) {
                 console.log("Failed to get token.")
                 return res.redirect('/')
             }
-
             res.cookie('jwt', jwt.sign(token, CONFIG.JWT_secret));
             return res.redirect('/testing');
         })
@@ -39,5 +38,6 @@ auth_callback = (req, res) => {
 
 module.exports = {
     login: login,
-    auth_callback: auth_callback
+    auth_callback: auth_callback,
+    auth_client: auth_client
 }

@@ -16,15 +16,17 @@ export default function SearchBar() {
 
     let style = {
         margin: 'auto',
+        marginTop: '2%',
         marginBottom: '2%',
         width: '60%'
     }
+
     return (
         <Form>
-            <Form.Group style={style} controlId="formBasicEmail">
+            <Form.Group style={style} controlId="formSearchBar">
                 <Form.Label>Search</Form.Label>
                 <Form.Control placeholder="Search for files..." 
-                    onChange={event => setText(event.target.value)} onKeyPress={event => handleSubmit(event)}/>
+                    onChange={(event) => setText(event.target.value)} onKeyPress={(event) => handleSubmit(event)}/>
             </Form.Group>
         </Form>
     );

@@ -8,3 +8,9 @@
   border: 2px solid black;
   padding: 1%;
 }
+
+.welcomescreen {
+  margin-top: 15%;
+  width: 100%;
+  text-align: center;
+}

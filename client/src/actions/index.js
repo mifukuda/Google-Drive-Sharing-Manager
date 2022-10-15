@@ -1,5 +1,6 @@
 import apis from "../api";
 
+//THUNKS
 export function getSnapshotFromBackend() {
     return (dispatch) => {
       return apis.getSnapshot().then(response => {
@@ -16,6 +17,7 @@ export function getFilteredSnapshotFromBackend(id, query) {
   };
 }
 
+//ACTIONS
 const setSnapshot = (response) => {
     console.log(response);
     return {

@@ -1,4 +1,4 @@
-const {auth_client} = require('./controllers/auth_controller.js')
+const {auth_client} = require('./controllers/auth_controller.ts')
 const google = require('googleapis').google 
 const GoogleFile = require('googleapis').File
 

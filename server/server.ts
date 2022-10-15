@@ -1,14 +1,15 @@
 //library imports
+import { Request, Response } from 'express';
 const express = require('express')
 const cookie_parser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
-const {auth_client} = require('./controllers/auth_controller.js')
+const {auth_client} = require('./controllers/auth_controller.ts')
 const google = require('googleapis').google 
 const {GoogleDriveAdapter, dummyTreeTest} = require('./DriveAdapter.ts')
 
 //file imports
 const CONFIG = require('./configs.js')
-const auth_router = require('./routers/auth_router.js');
+const auth_router = require('./routers/auth_router.ts');
 const { response } = require('express');
 
 //starting the express server
@@ -21,16 +22,16 @@ app.use(express.json())
 //installing custom middleware
 app.use('/auth', auth_router)
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.send('Hello Linux Stans!')
 })
 
-app.get('/testing', async (req, res) => {
+app.get('/testing', async (req: Request, res: Response) => {
   res.send('Finally we have some identity.')
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
-  // console.log(dummyTreeTest().toString(0))
+  console.log(dummyTreeTest().toString(0))
   console.log((await google_drive_adapter.createFileInfoSnapshot(decoded_token)).toString())
 })
 

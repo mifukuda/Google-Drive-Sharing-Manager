@@ -1,4 +1,5 @@
 const google = require('googleapis').google 
+import { Request, Response, NextFunction } from 'express';
 const jwt = require('jsonwebtoken')
 const CONFIG = require('../configs.js')
 
@@ -9,11 +10,11 @@ const auth_client = new OAuth2(
     CONFIG.oauth_credentials.redirect_uris[0]
 );
 
-const verifyToken = (req, res, next) => {
+const verifyToken = (req: any, res: any, next: NextFunction) => {
     try{
         const token = req.cookies.jwt
         if(!token){
-            res.return(400).json({
+            return res.status(400).json({
                 message: "No Token Found",
             })
         }
@@ -22,7 +23,7 @@ const verifyToken = (req, res, next) => {
         req.accessToken = decoded
         next()
     }catch{
-        res.return(401).json({
+        return res.status(401).json({
             message: "Token cannot be verified."
         })
     }

@@ -10,7 +10,7 @@ const auth_client = new OAuth2(
     CONFIG.oauth_credentials.redirect_uris[0]
 );
 
-login = (req, res) => {
+const login = (req: any, res: any) => {
     // Obtain the google login link 
     const auth_url = auth_client.generateAuthUrl({
         access_type: 'offline', // Does not require user to constantly give consent
@@ -19,13 +19,13 @@ login = (req, res) => {
     return res.redirect(auth_url);
 }
 
-auth_callback = (req, res) => {
+const auth_callback = (req: any, res: any) => {
     if(req.query.error){
         console.log("Error recieving Authorization Code")
         return res.redirect('/')
     }
     else {
-        auth_client.getToken(req.query.code, function(err, token) {
+        auth_client.getToken(req.query.code, function(err: any, token: any) {
             if(err) {
                 console.log("Failed to get token.")
                 return res.redirect('/')

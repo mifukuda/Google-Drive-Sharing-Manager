@@ -9,7 +9,8 @@ const {GoogleDriveAdapter, dummyTreeTest} = require('./DriveAdapter.ts')
 
 //file imports
 const CONFIG = require('./configs.js')
-const auth_router = require('./routers/auth_router.ts');
+import { auth_router } from './routers/auth_router'
+import { snapshot_router } from './routers/snapshot_router'
 const { response } = require('express');
 
 //starting the express server
@@ -21,6 +22,7 @@ app.use(express.json())
 
 //installing custom middleware
 app.use('/auth', auth_router)
+app.use('/snapshot', snapshot_router)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello Linux Stans!')

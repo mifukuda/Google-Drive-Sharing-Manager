@@ -14,14 +14,14 @@ export default function HomeScreen() {
                 parent: '1',
                 date_created: '2022-10-14T16:12:34.563Z',
                 date_modified: '2022-10-14T16:12:34.563Z',
-                name: 'child1',
+                name: 'Artwork',
                 children: [
                 {
                     id: '4',
                     parent: '2',
                     date_created: '2022-10-14T16:12:34.563Z',
                     date_modified: '2022-10-14T16:12:34.563Z',
-                    name: 'grandchild1',
+                    name: 'amythehedgehogr34.jpg',
                     children: []
                 },
                 {
@@ -29,7 +29,7 @@ export default function HomeScreen() {
                     parent: '2',
                     date_created: '2022-10-14T16:12:34.563Z',
                     date_modified: '2022-10-14T16:12:34.563Z',
-                    name: 'grandchild2',
+                    name: 'idk.png',
                     children: []
                 }]
             },
@@ -38,14 +38,14 @@ export default function HomeScreen() {
                 parent: '1',
                 date_created: '2022-10-14T16:12:34.563Z',
                 date_modified: '2022-10-14T16:12:34.563Z',
-                name: 'child2',
+                name: 'Research',
                 children: [
                     {
                         id: '6',
                         parent: '3',
                         date_created: '2022-10-14T16:12:34.563Z',
                         date_modified: '2022-10-14T16:12:34.563Z',
-                        name: 'grandchild3',
+                        name: 'pokimane_feet_pics.jpg',
                         children: []
                     },
                     {
@@ -53,7 +53,7 @@ export default function HomeScreen() {
                         parent: '3',
                         date_created: '2022-10-14T16:12:34.563Z',
                         date_modified: '2022-10-14T16:12:34.563Z',
-                        name: 'grandchild4',
+                        name: 'pokimane_12_30_2021.mp4',
                         children: []
                     }
                 ]

@@ -1,6 +1,6 @@
 import apis from "../api";
 
-export function fetchArticleDetails() {
+export function getSnapshotFromBackend() {
     return (dispatch) => {
       return apis.getSnapshot().then(response => {
         dispatch(setSnapshot(response));
@@ -8,10 +8,18 @@ export function fetchArticleDetails() {
     };
 }
 
-const setSnapshot = (request) => {
-    console.log(request);
+export function getFilteredSnapshotFromBackend(id, query) {
+  return (dispatch) => {
+    return apis.getFilteredSnapshot(id, {query: query}).then(response => {
+      dispatch(setSnapshot(response));
+    });
+  };
+}
+
+const setSnapshot = (response) => {
+    console.log(response);
     return {
         type: 'SET_SNAPSHOT',
-        payload: request.data.name
+        payload: response.data
     };
 }

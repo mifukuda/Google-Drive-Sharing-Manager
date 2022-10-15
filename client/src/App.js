@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import './App.css';
 import {HomeScreen} from './components';
-import {fetchArticleDetails} from './actions';
+import {getFilteredSnapshotFromBackend} from './actions';
 import {useDispatch} from 'react-redux';
 
 export default function App() {
@@ -44,5 +44,5 @@ function About() {
 
 function Users() {
   const dispatch = useDispatch();
-  return <button onClick={() => dispatch(fetchArticleDetails())}>Users</button>;
+  return <button onClick={() => dispatch(getFilteredSnapshotFromBackend('Minato', 'pieomy'))}>Users</button>;
 }

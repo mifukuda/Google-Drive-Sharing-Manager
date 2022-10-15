@@ -4,9 +4,11 @@ const api = axios.create({
     baseURL: 'http://localhost:4000/api',
 })
 
-export const getSnapshot = () => api.get(`/getSnapshot/`)
-const apis = {
-    getSnapshot
-}
+export const getSnapshot = () => api.get('/getSnapshot/');
+export const getFilteredSnapshot = (id, payload) => api.post(`/getSnapshot/${id}`, payload);
 
+const apis = {
+    getSnapshot,
+    getFilteredSnapshot
+}
 export default apis;

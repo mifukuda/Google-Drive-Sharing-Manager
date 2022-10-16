@@ -9,7 +9,7 @@ enum permission_level {
     COMMENTER,
 }
 
-class FileInfoSnapshot {
+export class FileInfoSnapshot {
     date_created: Date
     drive_root: DriveRoot
     group_membership_snapshots: GroupMembershipSnapshot[]
@@ -19,9 +19,9 @@ class FileInfoSnapshot {
         this.group_membership_snapshots = group_membership_snapshots
     }
     
-    // serialize(): JSON {
-    //     return this.root_directory.serialize()
-    // }
+    serialize(): string {
+        return JSON.stringify(this.drive_root.serialize())
+    }
 
     toString(): String {
         return this.drive_root.toString(0)
@@ -44,11 +44,22 @@ class DriveFile {
         this.name = name
     }
 
-    // serialize(): JSON {
-    // }
+    serialize(): DriveFile {
+        return JSON.parse(JSON.stringify(this, (key, value) => {
+            if (key === "parent" && value != null) {
+                // console.log("value = " + value)
+                // console.log("value.id = " + value.id)
+                // console.log("value.parent.id = " + value.parent.id)
+                // delete value
+                value = null;
+            }
+            return value;
+        }))
+    }
 
     toString(depth: number): String {
-        return "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name  + "\n"
+        let parent = (this.parent ? this.parent.id : "null")
+        return "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + "\n"
     }
 }
 
@@ -59,11 +70,27 @@ class DriveFolder extends DriveFile {
         this.children = children
     }
 
-    // serialize(): JSON {
-    // }
+    serialize(): DriveFile {
+        return JSON.parse(JSON.stringify(this, (key, value) => {
+            if (key === "parent") {
+                // return value.id;
+                value = null
+            }
+            else if (key === "children") {
+                console.log(value)
+                let s: DriveFile[] = []
+                this.children.forEach((child: DriveFile) => {
+                    s.push(child.serialize())
+                })
+                value = s;
+            }
+            return value;
+        }))
+    }
 
     toString(depth: number): String {
-        let s = "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + "\n"
+        let parent = (this.parent ? this.parent.id : "null")
+        let s = "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + "\n"
         for (let i = 0; i < this.children.length; i++) {
             let child: DriveFile = this.children[i]
             s = s + child.toString(depth+1) 
@@ -72,12 +99,13 @@ class DriveFolder extends DriveFile {
     }
 }
 
-class DriveRoot extends DriveFolder {
+export class DriveRoot extends DriveFolder {
     isSharedDrive: boolean
     constructor(id: String, name: String, children: DriveFile[], isSharedDrive: boolean) {
         super(id, null, new Date(), new Date(), name, children)
         this.isSharedDrive = isSharedDrive
     }
+
 }
 
 interface DriveAdapter {
@@ -157,14 +185,14 @@ class Group {
 
 class User extends Group {}
 
-export function dummyTreeTest(): DriveFolder {
-    let root: DriveRoot = new DriveRoot("dummyid", "dummydriveroot", [], false)
-    let child1: DriveFolder = new DriveFolder("", root, new Date(), new Date(), "child1", [])
-    let child2: DriveFolder = new DriveFolder("", root, new Date(), new Date(), "child2", [])
-    let grandchild1: DriveFile = new DriveFile("", child1, new Date(), new Date(), "grandchild1")
-    let grandchild2: DriveFile = new DriveFile("", child1, new Date(), new Date(), "grandchild2")
-    let grandchild3: DriveFile = new DriveFile("", child2, new Date(), new Date(), "grandchild3")
-    let grandchild4: DriveFile = new DriveFile("", child2, new Date(), new Date(), "grandchild4")
+export function dummyTreeTest(): DriveRoot {
+    let root: DriveRoot = new DriveRoot("r1", "dummydriveroot", [], false)
+    let child1: DriveFolder = new DriveFolder("c1", root, new Date(), new Date(), "child1", [])
+    let child2: DriveFolder = new DriveFolder("c2", root, new Date(), new Date(), "child2", [])
+    let grandchild1: DriveFile = new DriveFile("gc1", child1, new Date(), new Date(), "grandchild1")
+    let grandchild2: DriveFile = new DriveFile("gc2", child1, new Date(), new Date(), "grandchild2")
+    let grandchild3: DriveFile = new DriveFile("gc3", child2, new Date(), new Date(), "grandchild3")
+    let grandchild4: DriveFile = new DriveFile("gc4", child2, new Date(), new Date(), "grandchild4")
     root.children.push(child1)
     root.children.push(child2)
     child1.children.push(grandchild1)

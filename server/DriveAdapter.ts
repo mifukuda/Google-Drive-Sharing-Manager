@@ -1,6 +1,6 @@
-const {auth_client} = require('./controllers/auth_controller.ts')
-const google = require('googleapis').google 
 const GoogleFile = require('googleapis').File
+import { getAllGoogleDriveFiles, treeFromGoogleDriveFiles } from "./google_api_utils"
+
 
 enum permission_level {
     OWNER,
@@ -19,7 +19,7 @@ export class FileInfoSnapshot {
         this.group_membership_snapshots = group_membership_snapshots
     }
     
-    serialize(): string {
+    serialize(): string { // TODO: use structuredClone to seralize instead of JSON.stringify: https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript
         return JSON.stringify(this.drive_root.serialize(), null, "\t")
     }
 
@@ -108,49 +108,8 @@ interface DriveAdapter {
 
 export class GoogleDriveAdapter implements DriveAdapter {
     async createFileInfoSnapshot(access_token: string): Promise<FileInfoSnapshot> {
-        auth_client.setCredentials(access_token)
-        const drive = google.drive('v3');
-        let nextPageToken: string = ""
-        let allFiles: typeof GoogleFile[] = []
-        while (nextPageToken != null) {
-            let response = await drive.files.list({
-                auth: auth_client,
-                pageSize: 100,
-                pageToken: nextPageToken,
-                includeItemsFromAllDrives: true,
-                supportsAllDrives: true,
-                fields: 'nextPageToken, files(name, id, mimeType, createdTime, modifiedTime, permissions, parents)',
-            })
-            allFiles = allFiles.concat(response.data.files)
-            nextPageToken = response.data.nextPageToken
-        }
-        let idToDriveFiles: Map<string, [DriveFile, string]> = new Map<string, [DriveFile, string]>()
-        for (let i = 0; i < allFiles.length; i++) {
-            let file: typeof GoogleFile = allFiles[i]
-            let parentID : string = (file.parents ? file.parents[0] : "") 
-            if (file.mimeType === "application/vnd.google-apps.folder") {
-                idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.dateCreated, file.dateModified, file.name, []), parentID])
-            }
-            else {
-                idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.dateCreated, file.dateModified, file.name), parentID])
-            }
-        }
-
-        let root: DriveRoot = new DriveRoot("", "<needs implementation>", [], false) 
-        for (let [id, fileAndParentId] of idToDriveFiles) {
-            let child: DriveFile = fileAndParentId[0]
-            let parentID: string = fileAndParentId[1]
-            if (!(idToDriveFiles.has(parentID))) {
-                root.id = parentID
-                child.parent = root
-                root.children.push(child)
-            }
-            else {
-                let parent: DriveFolder = (idToDriveFiles.get(parentID) as [DriveFile, string])[0] as DriveFolder
-                child.parent = parent
-                parent.children.push(child)
-            }
-        }
+        let allFiles: typeof GoogleFile[] = await getAllGoogleDriveFiles(access_token)
+        let root: DriveRoot = await treeFromGoogleDriveFiles(allFiles)
         return new FileInfoSnapshot(new Date(), root, [])
     }
 

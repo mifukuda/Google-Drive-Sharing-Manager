@@ -1,5 +1,6 @@
 import React from "react";
 
+// Button redirects to Google Auth
 export default function WelcomeScreen() {
     return (
         <div className="welcomescreen">

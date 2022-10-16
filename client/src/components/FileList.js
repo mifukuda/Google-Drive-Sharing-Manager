@@ -1,8 +1,10 @@
 import React from "react";
+import {useSelector} from "react-redux";
 import FileCard from './FileCard';
 
-export default function HomeScreen() {
-    let testSnapshot = {
+export default function HomeScreen(props) {
+    const snapshot = useSelector(state => state.snapshot.files);
+    /*let testSnapshot = {
         id: '1',
         parent: null,
         date_created: '2022-10-14T16:12:34.563Z',
@@ -59,10 +61,16 @@ export default function HomeScreen() {
                 ]
             }
         ]
-    }
+    }*/
     let key = 0;
     let directory = [];
-    buildTree(testSnapshot);
+    if(snapshot && Object.keys(snapshot).length !== 0) {
+        try {
+            buildTree(snapshot);
+        } catch (error) {
+            directory = [];
+        }
+    }
 
     // DFS: returns directory structure (each file/folder is a FileCard)
     function buildTree(snapshot) {

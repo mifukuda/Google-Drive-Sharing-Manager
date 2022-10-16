@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function FileCard(props) {
     const {file, depth} = props;
+    // Render directory with indents
     let indent = 2*depth;
     let width = 100 - 2*depth;
     let style = {

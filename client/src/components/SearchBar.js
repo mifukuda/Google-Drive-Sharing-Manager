@@ -4,9 +4,11 @@ import {getFilteredSnapshotFromBackend} from '../actions';
 import {Form} from 'react-bootstrap';
 
 export default function SearchBar() {
+    // Stores current text within SearchBar
     const [text, setText] = useState('');
     const dispatch = useDispatch();
 
+    // Send (id, query) to backend; update global state with filtered snapshot
     function handleSubmit(event) {
         if(event.key === 'Enter') {
             event.preventDefault();

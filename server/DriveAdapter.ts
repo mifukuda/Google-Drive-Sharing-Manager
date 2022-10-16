@@ -20,7 +20,7 @@ export class FileInfoSnapshot {
     }
     
     serialize(): string {
-        return JSON.stringify(this.drive_root.serialize())
+        return JSON.stringify(this.drive_root.serialize(), null, "\t")
     }
 
     toString(): String {
@@ -45,16 +45,11 @@ class DriveFile {
     }
 
     serialize(): DriveFile {
-        return JSON.parse(JSON.stringify(this, (key, value) => {
-            if (key === "parent" && value != null) {
-                // console.log("value = " + value)
-                // console.log("value.id = " + value.id)
-                // console.log("value.parent.id = " + value.parent.id)
-                // delete value
-                value = null;
-            }
-            return value;
-        }))
+        let saved_parent: DriveParent = this.parent
+        this.parent = null
+        let copy: DriveFile = JSON.parse(JSON.stringify(this))
+        this.parent = saved_parent
+        return copy
     }
 
     toString(depth: number): String {
@@ -71,21 +66,19 @@ class DriveFolder extends DriveFile {
     }
 
     serialize(): DriveFile {
-        return JSON.parse(JSON.stringify(this, (key, value) => {
-            if (key === "parent") {
-                // return value.id;
-                value = null
-            }
-            else if (key === "children") {
-                console.log(value)
-                let s: DriveFile[] = []
-                this.children.forEach((child: DriveFile) => {
-                    s.push(child.serialize())
-                })
-                value = s;
-            }
-            return value;
-        }))
+        let save_parent: DriveParent = this.parent
+        this.parent = null
+        let save_children = this.children
+        let children: DriveFile[] = []
+        for (let i = 0; i < this.children.length; i++) {
+            let child: DriveFile = this.children[i]
+            children.push(child.serialize())
+        }
+        this.children = children
+        let copy: DriveFile = JSON.parse(JSON.stringify(this))
+        this.children = save_children
+        this.parent = save_parent
+        return copy
     }
 
     toString(depth: number): String {

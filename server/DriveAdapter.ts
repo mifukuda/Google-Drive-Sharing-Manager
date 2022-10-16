@@ -1,12 +1,31 @@
 const GoogleFile = require('googleapis').File
 import { getAllGoogleDriveFiles, treeFromGoogleDriveFiles } from "./google_api_utils"
-
+import { DrivePermissionLevelProperty } from "./predicates"
 
 enum permission_level {
-    OWNER,
     VIEWER,
-    EDITOR,
     COMMENTER,
+    EDITOR,
+    OWNER,
+}
+
+export const permissionPropertyToLevel: { [property: DrivePermissionLevelProperty]: permission_level } = {
+    "readable": permission_level.VIEWER,
+    "writable": permission_level.EDITOR,
+    "sharable": permission_level.EDITOR
+}
+
+export class Permission {
+    id: string
+    role: permission_level
+    to: Group | User
+    from: Group | User
+    constructor(id: string, to: Group | User, from: Group | User, role: permission_level) {
+        this.id = id
+        this.to = to
+        this.from = from
+        this.role = role
+    }
 }
 
 export class FileInfoSnapshot {
@@ -33,15 +52,20 @@ type DriveParent = DriveFolder | null
 export class DriveFile {
     id: string
     parent: DriveParent
+    owners: User[]
+    creator: User
+    permissions: Permission[]
     date_created: Date
     date_modified: Date
     name: string
-    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string) {
+    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owners: User[]) {
         this.id = id
         this.parent = parent
         this.date_created = date_created
         this.date_modified = date_modified
         this.name = name
+        this.owners = owners
+        this.creator = this.owners[0]
     }
 
     serialize(): DriveFile {
@@ -94,8 +118,8 @@ export class DriveFolder extends DriveFile {
 
 export class DriveRoot extends DriveFolder {
     isSharedDrive: boolean
-    constructor(id: string, name: string, children: DriveFile[], isSharedDrive: boolean) {
-        super(id, null, new Date(), new Date(), name, children)
+    constructor(id: string, drive_name: string, children: DriveFile[], isSharedDrive: boolean) {
+        super(id, null, new Date(), new Date(), drive_name, children)
         this.isSharedDrive = isSharedDrive
     }
 
@@ -109,6 +133,7 @@ interface DriveAdapter {
 export class GoogleDriveAdapter implements DriveAdapter {
     async createFileInfoSnapshot(access_token: string): Promise<FileInfoSnapshot> {
         let allFiles: typeof GoogleFile[] = await getAllGoogleDriveFiles(access_token)
+        console.log(JSON.stringify(allFiles, null, "\t"))
         let root: DriveRoot = await treeFromGoogleDriveFiles(allFiles)
         return new FileInfoSnapshot(new Date(), root, [])
     }
@@ -129,13 +154,22 @@ class GroupMembershipSnapshot {
 class Group {
     email: string
     display_name: string
+    users: User[]
+    constructor(email: string, display_name: string, users: User[]) {
+        this.email = email
+        this.display_name = display_name
+        this.users = users
+    }
+}
+
+class User {
+    email: string
+    display_name: string
     constructor(email: string, display_name: string) {
         this.email = email
         this.display_name = display_name
     }
 }
-
-class User extends Group {}
 
 export function dummyTreeTest(): DriveRoot {
     let root: DriveRoot = new DriveRoot("r1", "dummydriveroot", [], false)

@@ -23,20 +23,20 @@ export class FileInfoSnapshot {
         return JSON.stringify(this.drive_root.serialize(), null, "\t")
     }
 
-    toString(): String {
+    toString(): string {
         return this.drive_root.toString(0)
     }
 }
 
 type DriveParent = DriveFolder | null
 
-class DriveFile {
-    id: String
+export class DriveFile {
+    id: string
     parent: DriveParent
     date_created: Date
     date_modified: Date
-    name: String
-    constructor(id: String, parent: DriveParent, date_created: Date, date_modified: Date, name: String) {
+    name: string
+    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string) {
         this.id = id
         this.parent = parent
         this.date_created = date_created
@@ -52,15 +52,15 @@ class DriveFile {
         return copy
     }
 
-    toString(depth: number): String {
+    toString(depth: number): string {
         let parent = (this.parent ? this.parent.id : "null")
         return "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + "\n"
     }
 }
 
-class DriveFolder extends DriveFile {
+export class DriveFolder extends DriveFile {
     children: DriveFile[]
-    constructor(id: String, parent: DriveParent, date_created: Date, date_modified: Date, name: String, children: DriveFile[]) {
+    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, children: DriveFile[]) {
         super(id, parent, date_created, date_modified, name)
         this.children = children
     }
@@ -81,7 +81,7 @@ class DriveFolder extends DriveFile {
         return copy
     }
 
-    toString(depth: number): String {
+    toString(depth: number): string {
         let parent = (this.parent ? this.parent.id : "null")
         let s = "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + "\n"
         for (let i = 0; i < this.children.length; i++) {
@@ -94,7 +94,7 @@ class DriveFolder extends DriveFile {
 
 export class DriveRoot extends DriveFolder {
     isSharedDrive: boolean
-    constructor(id: String, name: String, children: DriveFile[], isSharedDrive: boolean) {
+    constructor(id: string, name: string, children: DriveFile[], isSharedDrive: boolean) {
         super(id, null, new Date(), new Date(), name, children)
         this.isSharedDrive = isSharedDrive
     }
@@ -110,7 +110,7 @@ export class GoogleDriveAdapter implements DriveAdapter {
     async createFileInfoSnapshot(access_token: string): Promise<FileInfoSnapshot> {
         auth_client.setCredentials(access_token)
         const drive = google.drive('v3');
-        let nextPageToken: String = ""
+        let nextPageToken: string = ""
         let allFiles: typeof GoogleFile[] = []
         while (nextPageToken != null) {
             let response = await drive.files.list({
@@ -124,10 +124,10 @@ export class GoogleDriveAdapter implements DriveAdapter {
             allFiles = allFiles.concat(response.data.files)
             nextPageToken = response.data.nextPageToken
         }
-        let idToDriveFiles: Map<String, [DriveFile, String]> = new Map<String, [DriveFile, String]>()
+        let idToDriveFiles: Map<string, [DriveFile, string]> = new Map<string, [DriveFile, string]>()
         for (let i = 0; i < allFiles.length; i++) {
             let file: typeof GoogleFile = allFiles[i]
-            let parentID : String = (file.parents ? file.parents[0] : "") 
+            let parentID : string = (file.parents ? file.parents[0] : "") 
             if (file.mimeType === "application/vnd.google-apps.folder") {
                 idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.dateCreated, file.dateModified, file.name, []), parentID])
             }
@@ -139,14 +139,14 @@ export class GoogleDriveAdapter implements DriveAdapter {
         let root: DriveRoot = new DriveRoot("", "<needs implementation>", [], false) 
         for (let [id, fileAndParentId] of idToDriveFiles) {
             let child: DriveFile = fileAndParentId[0]
-            let parentID: String = fileAndParentId[1]
+            let parentID: string = fileAndParentId[1]
             if (!(idToDriveFiles.has(parentID))) {
                 root.id = parentID
                 child.parent = root
                 root.children.push(child)
             }
             else {
-                let parent: DriveFolder = (idToDriveFiles.get(parentID) as [DriveFile, String])[0] as DriveFolder
+                let parent: DriveFolder = (idToDriveFiles.get(parentID) as [DriveFile, string])[0] as DriveFolder
                 child.parent = parent
                 parent.children.push(child)
             }
@@ -168,9 +168,9 @@ class GroupMembershipSnapshot {
 }
 
 class Group {
-    email: String
-    display_name: String
-    constructor(email: String, display_name: String) {
+    email: string
+    display_name: string
+    constructor(email: string, display_name: string) {
         this.email = email
         this.display_name = display_name
     }

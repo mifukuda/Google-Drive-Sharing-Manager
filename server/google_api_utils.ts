@@ -1,4 +1,4 @@
-import { DriveRoot, DriveFile, DriveFolder } from "./DriveAdapter";
+import { DriveRoot, DriveFile, DriveFolder, Permission, User, Group, googleDrivePermissionToOurs } from "./DriveAdapter";
 
 const {auth_client} = require('./controllers/auth_controller.ts')
 const google = require('googleapis').google 
@@ -16,28 +16,43 @@ export async function getAllGoogleDriveFiles(access_token: string, drive_id: str
             pageToken: nextPageToken,
             includeItemsFromAllDrives: true,
             supportsAllDrives: true,
-            fields: 'nextPageToken, files(name, id, mimeType, createdTime, modifiedTime, permissions, parents)',
+            fields: 'nextPageToken, files(name, id, mimeType, createdTime, modifiedTime, permissions, parents, owners, sharingUser)',
         })
         allFiles = allFiles.concat(response.data.files)
         nextPageToken = response.data.nextPageToken
     }
+    // console.log(JSON.stringify(allFiles, null, "\t"))
     return allFiles
 }
 
-export async function treeFromGoogleDriveFiles(allFiles: typeof GoogleFile[]): Promise<DriveRoot> {
+export async function treeFromGoogleDriveFiles(allFiles: any): Promise<DriveRoot> {
     let idToDriveFiles: Map<string, [DriveFile, string]> = new Map<string, [DriveFile, string]>()
     for (let i = 0; i < allFiles.length; i++) {
-        let file: typeof GoogleFile = allFiles[i]
+        let file = allFiles[i]
+        if (file === undefined) {
+            throw new Error("file undefined")
+        }
         let parentID : string = (file.parents ? file.parents[0] : "") 
+        let owner = new User(file.owners[0].emailAddress, file.owners[0].displayName)
+        let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
+        let permissions: Permission[] = file.permissions.map((p: any)  => {
+            // console.log("file = " + JSON.stringify(file, null, "\t") + "sharinguser = " + file.sharingUser, " containing file = ", file.displayName)
+            // if permission=me, then set from=file.sharingUser and to=p.email
+            //else set from = null and to = p.email 
+            // let from: User = new User(file.sharingUser.emailAddress, file.sharingUser.displayName)
+            //THIS NEEDS TO BE CHANGED
+            let to: User | Group = new User(p.emailAddress, file.owners[0].displayName)
+            return new Permission(p.id, to, googleDrivePermissionToOurs[p.role])
+        })
         if (file.mimeType === "application/vnd.google-apps.folder") {
-            idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.dateCreated, file.dateModified, file.name, []), parentID])
+            idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, [], shared_by), parentID])
         }
         else {
-            idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.dateCreated, file.dateModified, file.name), parentID])
+            idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by), parentID])
         }
     }
 
-    let root: DriveRoot = new DriveRoot("", "<name of drive>", [], false) 
+    let root: DriveRoot = new DriveRoot("", "My Drive", [], false) 
     for (let [id, fileAndParentId] of idToDriveFiles) {
         let child: DriveFile = fileAndParentId[0]
         let parentID: string = fileAndParentId[1]

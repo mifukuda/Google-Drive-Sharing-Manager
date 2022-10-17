@@ -1,5 +1,6 @@
 //library imports
 import { Request, Response } from 'express';
+import { FileInfoSnapshot, DriveRoot } from './DriveAdapter';
 const express = require('express')
 const cookie_parser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
@@ -33,8 +34,14 @@ app.get('/testing', async (req: Request, res: Response) => {
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
-  console.log(dummyTreeTest().toString(0))
-  console.log((await google_drive_adapter.createFileInfoSnapshot(decoded_token)).toString())
+  let dummyRoot: DriveRoot = dummyTreeTest()
+  // console.log(dummyRoot.toString(0))
+  console.log(dummyRoot.toString(0))
+  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
+  // console.log(snapshot.toString())
+  // console.log(JSON.parse(snapshot.serialize()))
+  // console.log(dummyRoot.children[0].serialize())
+  console.log(dummyRoot.serialize())
 })
 
 

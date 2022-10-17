@@ -1,6 +1,6 @@
 //library imports
 import { Request, Response } from 'express';
-import { FileInfoSnapshot, DriveRoot } from './DriveAdapter';
+import { FileInfoSnapshot, DriveRoot, Query } from './DriveAdapter';
 const express = require('express')
 const cookie_parser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
@@ -27,6 +27,28 @@ app.use('/snapshot', snapshot_router)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello Linux Stans!')
+})
+
+app.get('/getSnapshot', async (req: Request, res: Response) => {
+  let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
+  auth_client.setCredentials(decoded_token)
+  let google_drive_adapter = new GoogleDriveAdapter()
+  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
+  res.send(snapshot.serialize())
+})
+
+app.get('/query', async (req: Request, res: Response) => {
+  let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
+  auth_client.setCredentials(decoded_token)
+  let google_drive_adapter = new GoogleDriveAdapter()
+  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
+  let driveFileArray = []
+  let query = req.body.query
+  let prop = query.split(":")[0]
+  let val = query.split(":")[1]
+  return snapshot.applyQuery(new Query(prop, val)).forEach(f => {
+    return f.serialize()
+  })
 })
 
 app.get('/testing', async (req: Request, res: Response) => {

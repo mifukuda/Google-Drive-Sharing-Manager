@@ -12,6 +12,7 @@ export function getSnapshotFromBackend() {
 export function getFilteredSnapshotFromBackend(id, query) {
   return (dispatch) => {
     return apis.getFilteredSnapshot(id, {query: query}).then(response => {
+      console.log(response)
       if(response.status === 200) {dispatch(setSnapshot(response));}
     });
   };

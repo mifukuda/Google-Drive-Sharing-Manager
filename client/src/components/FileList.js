@@ -68,6 +68,7 @@ export default function HomeScreen(props) {
         try {
             buildTree(snapshot);
         } catch (error) {
+            console.log(error)
             directory = [];
         }
     }
@@ -81,10 +82,12 @@ export default function HomeScreen(props) {
 
     // DFS: depth used for indentation
     function buildTreeHelper(root, depth) {
-        for(let i = 0; i < root.children.length; i++) {
-            directory.push(<FileCard file={root.children[i]} depth={depth} key={key++}/>)
-            //directory.push("Name: " + root.children[i].name + ", Depth: " + depth);
-            buildTreeHelper(root.children[i], depth + 1);
+        if (root.children) {
+            for(let i = 0; i < root.children.length; i++) {
+                directory.push(<FileCard file={root.children[i]} depth={depth} key={key++}/>)
+                //directory.push("Name: " + root.children[i].name + ", Depth: " + depth);
+                buildTreeHelper(root.children[i], depth + 1);
+            }
         }
     }
 

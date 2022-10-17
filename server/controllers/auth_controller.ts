@@ -31,7 +31,7 @@ const auth_callback = (req: any, res: any) => {
                 return res.redirect('/')
             }
             res.cookie('jwt', jwt.sign(token, CONFIG.JWT_secret));
-            return res.redirect('/testing');
+            return res.redirect('http://localhost:3000/home');
         })
     }
 }

@@ -16,7 +16,7 @@ export default function FileCard(props) {
             <Accordion.Item eventKey="0">
                 <Accordion.Header>{file.name}</Accordion.Header>
                 <Accordion.Body>
-                <p>ID: {file.id}, Date Created: {file.date_created}, Date Modified: {file.date_modified}</p>
+                <p>ID: {file.id}, Date Created: {new Date(file.date_created).toString()}, Date Modified: {file.date_modified}</p>
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>

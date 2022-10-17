@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const {auth_client} = require('./controllers/auth_controller.ts')
 const google = require('googleapis').google 
 const {GoogleDriveAdapter, dummyTreeTest} = require('./DriveAdapter.ts')
+const cors = require('cors');
 
 //file imports
 const CONFIG = require('./configs.js')
@@ -21,6 +22,12 @@ const app = express()
 app.use(cookie_parser())
 app.use(express.json())
 
+// cors stuff
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:3000/home'],
+  credentials: true };
+app.use(cors(corsOptions));
+
 //installing custom middleware
 app.use('/auth', auth_router)
 app.use('/snapshot', snapshot_router)
@@ -29,26 +36,27 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello Linux Stans!')
 })
 
-app.get('/getSnapshot', async (req: Request, res: Response) => {
+app.get('/api/getSnapshot', async (req: Request, res: Response) => {
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
-  res.send(snapshot.serialize())
+  res.send({id: "", files: JSON.parse(snapshot.serialize()), filter: ""})
 })
 
-app.get('/query', async (req: Request, res: Response) => {
+app.post('/api/query', async (req: Request, res: Response) => {
+  console.log("query = " + req.body.query)
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
-  let driveFileArray = []
   let query = req.body.query
   let prop = query.split(":")[0]
   let val = query.split(":")[1]
-  return snapshot.applyQuery(new Query(prop, val)).forEach(f => {
+  let drivefiles = snapshot.applyQuery(new Query(prop, val)).map(f => {
     return f.serialize()
   })
+  res.send({id: "", files: drivefiles, filter: req.body.query})
 })
 
 app.get('/testing', async (req: Request, res: Response) => {

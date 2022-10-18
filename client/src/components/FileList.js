@@ -24,7 +24,7 @@ export default function HomeScreen(props) {
                     date_created: '2022-10-14T16:12:34.563Z',
                     date_modified: '2022-10-14T16:12:34.563Z',
                     name: 'amythehedgehogr34.jpg',
-                    children: []
+                    children: null
                 },
                 {
                     id: '5',
@@ -32,7 +32,7 @@ export default function HomeScreen(props) {
                     date_created: '2022-10-14T16:12:34.563Z',
                     date_modified: '2022-10-14T16:12:34.563Z',
                     name: 'idk.png',
-                    children: []
+                    children: null
                 }]
             },
             {
@@ -48,7 +48,7 @@ export default function HomeScreen(props) {
                         date_created: '2022-10-14T16:12:34.563Z',
                         date_modified: '2022-10-14T16:12:34.563Z',
                         name: 'pokimane_feet_pics.jpg',
-                        children: []
+                        children: null
                     },
                     {
                         id: '7',
@@ -56,7 +56,7 @@ export default function HomeScreen(props) {
                         date_created: '2022-10-14T16:12:34.563Z',
                         date_modified: '2022-10-14T16:12:34.563Z',
                         name: 'pokimane_12_30_2021.mp4',
-                        children: []
+                        children: null
                     }
                 ]
             }
@@ -64,27 +64,43 @@ export default function HomeScreen(props) {
     }*/
     let key = 0;
     let directory = [];
-    if(snapshot && Object.keys(snapshot).length !== 0) {
-        try {
-            buildTree(snapshot);
-        } catch (error) {
-            console.log(error)
-            directory = [];
+    if(snapshot) {
+        if(Array.isArray(snapshot)) {
+            try {
+                buildList(snapshot);
+            } catch (error) {
+                console.log(error)
+                directory = [];
+            }
+        }
+        else if (Object.keys(snapshot).length !== 0) {
+            try {
+                buildTree(snapshot);
+            } catch (error) {
+                console.log(error)
+                directory = [];
+            }
+        }
+    }
+
+    function buildList(snapshot) {
+        for(let i = 0; i < snapshot.length; i++) {
+            directory.push(<FileCard file={snapshot[i]} depth={0} key={key++}/>);
         }
     }
 
     // DFS: returns directory structure (each file/folder is a FileCard)
     function buildTree(snapshot) {
-        directory.push(<FileCard file={snapshot} depth={0} key={key++}/>)
+        directory.push(<FileCard file={snapshot} depth={0} key={key++}/>);
         //directory.push("Name: " + snapshot.name + ", Depth: " + 0);
-        buildTreeHelper(snapshot, 1)
+        buildTreeHelper(snapshot, 1);
     }
 
     // DFS: depth used for indentation
     function buildTreeHelper(root, depth) {
         if (root.children) {
             for(let i = 0; i < root.children.length; i++) {
-                directory.push(<FileCard file={root.children[i]} depth={depth} key={key++}/>)
+                directory.push(<FileCard file={root.children[i]} depth={depth} key={key++}/>);
                 //directory.push("Name: " + root.children[i].name + ", Depth: " + depth);
                 buildTreeHelper(root.children[i], depth + 1);
             }

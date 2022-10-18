@@ -18,12 +18,6 @@ export const googleDrivePermissionToOurs: { [property: string]: permission_level
     // "fileOrganizer"
 }
 
-
-
-// let queryPropertiesToObjectFieldNames: { [queryProperty: string] : DriveFileProperty } = {
-//     "name": "name"
-// }
-
 export class Permission {
     id: string
     role: permission_level
@@ -40,11 +34,11 @@ export class Permission {
 }
 
 export class Query {
-    property: string
-    value: string
+    operator: string
+    argument: string
     constructor(property: string, value: string) {
-        this.property = property
-        this.value = value
+        this.operator = property
+        this.argument = value
     }
 }
 
@@ -59,7 +53,7 @@ export class FileInfoSnapshot {
     }
 
     applyQuery(query: Query): DriveFile[] {
-        switch(query.property) {
+        switch(query.operator) {
             case ("drive"): return this.drive_root.applyQuery(query, isInDrive); break
             case ("owner"): return this.drive_root.applyQuery(query, isOwnedBy); break
             case ("creator"): return this.drive_root.applyQuery(query, isCreatedBy); break
@@ -73,7 +67,7 @@ export class FileInfoSnapshot {
             case ("folder"): return this.drive_root.applyQuery(query,isUnderFolder); break
             case ("path"): return this.drive_root.applyQuery(query, hasPath); break
             case ("sharing"): throw Error("sharing queries not implemented"); break
-            default: throw Error("not matched")
+            default: return []
         }
     }
     
@@ -119,7 +113,7 @@ export class DriveFile {
     }
 
     applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
-        return (predicate(query.value, this) ? [this] : [])
+        return (predicate(query.argument, this) ? [this] : [])
     }
 
     toString(depth: number): string {
@@ -154,7 +148,7 @@ export class DriveFolder extends DriveFile {
     applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
         return this.children.reduce((prev: DriveFile[], child: DriveFile) => {
            return prev.concat(child.applyQuery(query, predicate))  
-        }, (predicate(query.value, this) ? [this] : []))
+        }, (predicate(query.argument, this) ? [this] : []))
 
     }
 

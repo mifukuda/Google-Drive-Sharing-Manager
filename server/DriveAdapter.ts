@@ -175,7 +175,11 @@ export class DriveRoot extends DriveFolder {
         super(id, null, new Date(), new Date(), drive_name, new User("", ""), [], children, null)
         this.isSharedDrive = isSharedDrive
     }
-
+    applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
+        return this.children.reduce((prev: DriveFile[], child: DriveFile) => {
+           return prev.concat(child.applyQuery(query, predicate))  
+        }, [])
+    }
 }
 
 interface DriveAdapter {

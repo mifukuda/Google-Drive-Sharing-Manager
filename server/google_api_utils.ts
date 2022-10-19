@@ -33,6 +33,7 @@ export async function treeFromGoogleDriveFiles(allFiles: any): Promise<DriveRoot
             throw new Error("file undefined")
         }
         let parentID : string = (file.parents ? file.parents[0] : "") 
+        let mimeType: string = file.mimeType
         let owner = file.owners ? new User(file.owners[0].emailAddress, file.owners[0].displayName) : null
         let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
         let permissions: Permission[] = file.permissions ? file.permissions.map((p: any)  => {
@@ -40,10 +41,10 @@ export async function treeFromGoogleDriveFiles(allFiles: any): Promise<DriveRoot
             return new Permission(p.id, to, googleDrivePermissionToOurs[p.role])
         }) : []
         if (file.mimeType === "application/vnd.google-apps.folder") {
-            idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, [], shared_by), parentID])
+            idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, [], shared_by, mimeType), parentID])
         }
         else {
-            idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by), parentID])
+            idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType), parentID])
         }
     }
 

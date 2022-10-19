@@ -92,7 +92,8 @@ export class DriveFile {
     date_created: Date
     date_modified: Date
     name: string
-    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owner: User | null, permissions: Permission[], shared_by: User | Group | null) {
+    mimeType: string
+    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owner: User | null, permissions: Permission[], shared_by: User | Group | null, mimeType: string) {
         this.id = id
         this.parent = parent
         this.date_created = date_created
@@ -102,6 +103,7 @@ export class DriveFile {
         this.permissions = permissions
         this.creator = owner
         this.shared_by = shared_by
+        this.mimeType = mimeType
     }
 
     serialize(): DriveFile {
@@ -124,8 +126,8 @@ export class DriveFile {
 
 export class DriveFolder extends DriveFile {
     children: DriveFile[]
-    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owner: User | Group | null, permissions: Permission[], children: DriveFile[], shared_by: User | Group | null) {
-        super(id, parent, date_created, date_modified, name, owner, permissions, shared_by)
+    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owner: User | Group | null, permissions: Permission[], children: DriveFile[], shared_by: User | Group | null, mimeType: string) {
+        super(id, parent, date_created, date_modified, name, owner, permissions, shared_by, mimeType)
         this.children = children
     }
 
@@ -162,7 +164,7 @@ export class DriveFolder extends DriveFile {
 export class DriveRoot extends DriveFolder {
     is_shared_drive: boolean
     constructor(id: string, drive_name: string, children: DriveFile[], isSharedDrive: boolean) {
-        super(id, null, new Date(), new Date(), drive_name, new User("", ""), [], children, null)
+        super(id, null, new Date(), new Date(), drive_name, new User("", ""), [], children, null, "")
         this.is_shared_drive = isSharedDrive
     }
     applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
@@ -221,12 +223,12 @@ export class User {
 export function dummyTreeTest(): DriveRoot {
     let root: DriveRoot = new DriveRoot("r1", "dummydriveroot", [], false)
     let user: User = new User("dummyhead", "test@noob.com")
-    let child1: DriveFolder = new DriveFolder("c1", root, new Date(), new Date(), "child1", user, [], [], null)
-    let child2: DriveFolder = new DriveFolder("c2", root, new Date(), new Date(), "child2", user, [], [], null)
-    let grandchild1: DriveFile = new DriveFile("gc1", child1, new Date(), new Date(), "grandchild1", user, [], null)
-    let grandchild2: DriveFile = new DriveFile("gc2", child1, new Date(), new Date(), "grandchild2", user, [], null)
-    let grandchild3: DriveFile = new DriveFile("gc3", child2, new Date(), new Date(), "grandchild3", user, [], null)
-    let grandchild4: DriveFile = new DriveFile("gc4", child2, new Date(), new Date(), "grandchild4", user, [], null)
+    let child1: DriveFolder = new DriveFolder("c1", root, new Date(), new Date(), "child1", user, [], [], null, "pdf")
+    let child2: DriveFolder = new DriveFolder("c2", root, new Date(), new Date(), "child2", user, [], [], null, "pdf")
+    let grandchild1: DriveFile = new DriveFile("gc1", child1, new Date(), new Date(), "grandchild1", user, [], null, "pdf")
+    let grandchild2: DriveFile = new DriveFile("gc2", child1, new Date(), new Date(), "grandchild2", user, [], null, "pdf")
+    let grandchild3: DriveFile = new DriveFile("gc3", child2, new Date(), new Date(), "grandchild3", user, [], null, "pdf")
+    let grandchild4: DriveFile = new DriveFile("gc4", child2, new Date(), new Date(), "grandchild4", user, [], null, "pdf")
     root.children.push(child1)
     root.children.push(child2)
     child1.children.push(grandchild1)

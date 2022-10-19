@@ -85,14 +85,14 @@ type DriveParent = DriveFolder | null
 export class DriveFile {
     id: string
     parent: DriveParent
-    owner: User
-    creator: User 
+    owner: User | null
+    creator: User | null
     shared_by: User | Group | null
     permissions: Permission[]
     date_created: Date
     date_modified: Date
     name: string
-    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owner: User, permissions: Permission[], shared_by: User | Group | null) {
+    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owner: User | null, permissions: Permission[], shared_by: User | Group | null) {
         this.id = id
         this.parent = parent
         this.date_created = date_created
@@ -118,14 +118,14 @@ export class DriveFile {
 
     toString(depth: number): string {
         let parent = (this.parent ? this.parent.id : "null")
-        return "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + ", Owner: " + this.owner.display_name + "Creator: " + this.creator.display_name + ", date_created = " + this.date_created.toString() + "\n"
+        return "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + ", Owner: " + (this.owner ? this.owner.display_name : "no owner") + ", date_created = " + this.date_created.toString() + "\n"
     }
 }
 
 export class DriveFolder extends DriveFile {
     children: DriveFile[]
-    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owners: User | Group, permissions: Permission[], children: DriveFile[], shared_by: User | Group | null) {
-        super(id, parent, date_created, date_modified, name, owners, permissions, shared_by)
+    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owner: User | Group | null, permissions: Permission[], children: DriveFile[], shared_by: User | Group | null) {
+        super(id, parent, date_created, date_modified, name, owner, permissions, shared_by)
         this.children = children
     }
 

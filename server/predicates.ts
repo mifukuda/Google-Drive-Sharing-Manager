@@ -16,11 +16,11 @@ export const isNamedAs: QueryPredicate = (value: string, operand: DriveFile) => 
 } 
 
 export const isOwnedBy: QueryPredicate = (value: string, operand: DriveFile) => { // owner:user | files owned by user  
-    return value === operand.owner.email
+    return operand.owner ? value === operand.owner.email : false
 } 
 
 export const isCreatedBy: QueryPredicate = (value: string, operand: DriveFile) => {  // creator:user | files created by user (equiv. to “owner” for services without ownership transfer)
-    return value === operand.creator.email
+    return operand.creator ? value === operand.creator.email : false
 } 
 
 export const isSharedBy: QueryPredicate = (value: string, operand: DriveFile) => {  // from:user | files shared by user

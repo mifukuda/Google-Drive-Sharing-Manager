@@ -33,7 +33,7 @@ export async function treeFromGoogleDriveFiles(allFiles: any): Promise<DriveRoot
             throw new Error("file undefined")
         }
         let parentID : string = (file.parents ? file.parents[0] : "") 
-        let owner = new User(file.owners[0].emailAddress, file.owners[0].displayName)
+        let owner = file.owners ? new User(file.owners[0].emailAddress, file.owners[0].displayName) : null
         let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
         let permissions: Permission[] = file.permissions ? file.permissions.map((p: any)  => {
             let to: User | Group = new User(p.emailAddress, file.owners[0].displayName)

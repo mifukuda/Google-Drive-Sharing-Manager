@@ -16,7 +16,7 @@ export const isNamedAs: QueryPredicate = (value: string, operand: DriveFile) => 
 } 
 
 export const isOwnedBy: QueryPredicate = (value: string, operand: DriveFile) => { // owner:user | files owned by user  
-    return value === operand.owners.email
+    return value === operand.owner.email
 } 
 
 export const isCreatedBy: QueryPredicate = (value: string, operand: DriveFile) => {  // creator:user | files created by user (equiv. to “owner” for services without ownership transfer)
@@ -28,19 +28,19 @@ export const isSharedBy: QueryPredicate = (value: string, operand: DriveFile) =>
 } 
 
 export const isSharedTo: QueryPredicate = (value: string, operand: DriveFile) => { // to:user | files directly (i.e., ignoring inherited and group permissions) shared with user
-    return operand.permissions.some((p: Permission) => p.to.email === value)
+    return operand.permissions.some((p: Permission) => p.granted_to.email === value)
 } 
 
 export const isReadableBy: QueryPredicate = (value: string, operand: DriveFile) => {  // readable:user | files readable (viewable) by user
-    return operand.permissions.some((p: Permission) => p.to.email === value && p.role >= permission_level.VIEWER)
+    return operand.permissions.some((p: Permission) => p.granted_to.email === value && p.role >= permission_level.VIEWER)
 } 
 
 export const isWritableBy: QueryPredicate = (value: string, operand: DriveFile) => {  // writable:user | files writable (editable) by user
-    return operand.permissions.some((p: Permission) => p.to.email === value && p.role >= permission_level.EDITOR)
+    return operand.permissions.some((p: Permission) => p.granted_to.email === value && p.role >= permission_level.EDITOR)
 } 
 
 export const isSharableBy: QueryPredicate = (value: string, operand: DriveFile) => {  // sharable:user | files sharable by user, i.e., user can change the file’s permissions
-    return operand.permissions.some((p: Permission) => p.to.email === value && p.role >= permission_level.EDITOR)
+    return operand.permissions.some((p: Permission) => p.granted_to.email === value && p.role >= permission_level.EDITOR)
 } 
 
 export const isInFolder: QueryPredicate = (value: string, operand: DriveFile) => {  // inFolder:regexp | files in all folders whose name matches regexp

@@ -21,10 +21,10 @@ export const googleDrivePermissionToOurs: { [property: string]: permission_level
 export class Permission {
     id: string
     role: permission_level
-    to: Group | User
-    constructor(id: string, to: Group | User, role: permission_level) {
+    granted_to: Group | User
+    constructor(id: string, granted_to: Group | User, role: permission_level) {
         this.id = id
-        this.to = to
+        this.granted_to = granted_to
         this.role = role
     }
 
@@ -54,19 +54,19 @@ export class FileInfoSnapshot {
 
     applyQuery(query: Query): DriveFile[] {
         switch(query.operator) {
-            case ("drive"): return this.drive_root.applyQuery(query, isInDrive); break
-            case ("owner"): return this.drive_root.applyQuery(query, isOwnedBy); break
-            case ("creator"): return this.drive_root.applyQuery(query, isCreatedBy); break
-            case ("from"): return this.drive_root.applyQuery(query, isSharedBy); break
-            case ("to"): return this.drive_root.applyQuery(query, isSharedTo); break
-            case ("readable"): return this.drive_root.applyQuery(query, isReadableBy); break
-            case ("writable"): return this.drive_root.applyQuery(query, isWritableBy);break
-            case ("sharable"): return this.drive_root.applyQuery(query, isSharableBy);break
-            case ("name"): return this.drive_root.applyQuery(query, isNamedAs); break;
-            case ("inFolder"): return this.drive_root.applyQuery(query, isInFolder); break
-            case ("folder"): return this.drive_root.applyQuery(query,isUnderFolder); break
-            case ("path"): return this.drive_root.applyQuery(query, hasPath); break
-            case ("sharing"): throw Error("sharing queries not implemented"); break
+            case ("drive"): return this.drive_root.applyQuery(query, isInDrive)
+            case ("owner"): return this.drive_root.applyQuery(query, isOwnedBy)
+            case ("creator"): return this.drive_root.applyQuery(query, isCreatedBy)
+            case ("from"): return this.drive_root.applyQuery(query, isSharedBy)
+            case ("to"): return this.drive_root.applyQuery(query, isSharedTo)
+            case ("readable"): return this.drive_root.applyQuery(query, isReadableBy)
+            case ("writable"): return this.drive_root.applyQuery(query, isWritableBy)
+            case ("sharable"): return this.drive_root.applyQuery(query, isSharableBy)
+            case ("name"): return this.drive_root.applyQuery(query, isNamedAs)
+            case ("inFolder"): return this.drive_root.applyQuery(query, isInFolder)
+            case ("folder"): return this.drive_root.applyQuery(query,isUnderFolder)
+            case ("path"): return this.drive_root.applyQuery(query, hasPath)
+            case ("sharing"): throw Error("sharing queries not implemented")
             default: return []
         }
     }
@@ -85,22 +85,22 @@ type DriveParent = DriveFolder | null
 export class DriveFile {
     id: string
     parent: DriveParent
-    owners: User
+    owner: User
     creator: User 
     shared_by: User | Group | null
     permissions: Permission[]
     date_created: Date
     date_modified: Date
     name: string
-    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owners: User, permissions: Permission[], shared_by: User | Group | null) {
+    constructor(id: string, parent: DriveParent, date_created: Date, date_modified: Date, name: string, owner: User, permissions: Permission[], shared_by: User | Group | null) {
         this.id = id
         this.parent = parent
         this.date_created = date_created
         this.date_modified = date_modified
         this.name = name
-        this.owners = owners
+        this.owner = owner
         this.permissions = permissions
-        this.creator = owners
+        this.creator = owner
         this.shared_by = shared_by
     }
 
@@ -118,7 +118,7 @@ export class DriveFile {
 
     toString(depth: number): string {
         let parent = (this.parent ? this.parent.id : "null")
-        return "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + ", Owner: " + this.owners.display_name + "Creator: " + this.creator.display_name + ", date_created = " + this.date_created.toString() + "\n"
+        return "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + ", Owner: " + this.owner.display_name + "Creator: " + this.creator.display_name + ", date_created = " + this.date_created.toString() + "\n"
     }
 }
 
@@ -133,11 +133,7 @@ export class DriveFolder extends DriveFile {
         let save_parent: DriveParent = this.parent
         this.parent = null
         let save_children = this.children
-        let children: DriveFile[] = []
-        for (let i = 0; i < this.children.length; i++) {
-            let child: DriveFile = this.children[i]
-            children.push(child.serialize())
-        }
+        let children: DriveFile[] = this.children.map(child => child.serialize()) 
         this.children = children
         let copy: DriveFile = JSON.parse(JSON.stringify(this))
         this.children = save_children
@@ -164,10 +160,10 @@ export class DriveFolder extends DriveFile {
 }
 
 export class DriveRoot extends DriveFolder {
-    isSharedDrive: boolean
+    is_shared_drive: boolean
     constructor(id: string, drive_name: string, children: DriveFile[], isSharedDrive: boolean) {
         super(id, null, new Date(), new Date(), drive_name, new User("", ""), [], children, null)
-        this.isSharedDrive = isSharedDrive
+        this.is_shared_drive = isSharedDrive
     }
     applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
         return this.children.reduce((prev: DriveFile[], child: DriveFile) => {

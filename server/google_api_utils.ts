@@ -35,15 +35,10 @@ export async function treeFromGoogleDriveFiles(allFiles: any): Promise<DriveRoot
         let parentID : string = (file.parents ? file.parents[0] : "") 
         let owner = new User(file.owners[0].emailAddress, file.owners[0].displayName)
         let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
-        let permissions: Permission[] = file.permissions.map((p: any)  => {
-            // console.log("file = " + JSON.stringify(file, null, "\t") + "sharinguser = " + file.sharingUser, " containing file = ", file.displayName)
-            // if permission=me, then set from=file.sharingUser and to=p.email
-            //else set from = null and to = p.email 
-            // let from: User = new User(file.sharingUser.emailAddress, file.sharingUser.displayName)
-            //THIS NEEDS TO BE CHANGED
+        let permissions: Permission[] = file.permissions ? file.permissions.map((p: any)  => {
             let to: User | Group = new User(p.emailAddress, file.owners[0].displayName)
             return new Permission(p.id, to, googleDrivePermissionToOurs[p.role])
-        })
+        }) : []
         if (file.mimeType === "application/vnd.google-apps.folder") {
             idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, [], shared_by), parentID])
         }

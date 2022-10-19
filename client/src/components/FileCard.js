@@ -20,7 +20,7 @@ export default function FileCard(props) {
                 <p>ID: {file.id}</p>
                 <p>Date Created: {file.date_created}</p>
                 <p>Date Modified: {file.date_modified}</p>
-                <p>Owner: {file.owners.email}</p>
+                <p>Owner: {file.owner.email}</p>
                 <p>Creator: {file.creator.email}</p>
                 <p>{file.shared_by ? "Shared by:" + file.shared_by.email : "Sharing info not accessible"}</p>
                 </Accordion.Body>

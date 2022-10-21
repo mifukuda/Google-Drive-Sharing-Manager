@@ -1,6 +1,6 @@
 const GoogleFile = require('googleapis').File
-import { getAllGoogleDriveFiles, treeFromGoogleDriveFiles } from "./google_api_utils"
-import { QueryPredicate, isNamedAs, isOwnedBy, isCreatedBy, isSharedBy, isSharedTo, isInDrive, isReadableBy, isSharableBy, isWritableBy, isInFolder, isUnderFolder, hasPath } from "./predicates"
+import { getAllGoogleDriveFiles, buildGoogleDriveTrees, getSharedGoogleDrives } from "./google_api_utils"
+import { QueryPredicate, isNamedAs, isOwnedBy, isCreatedBy, isSharedBy, isSharedTo, isInDrive, isReadableBy, isSharableBy, isWritableBy, isInFolder, isUnderFolder, hasPath, operatorToQueryPredicate } from "./predicates"
 
 export enum permission_level {
     VIEWER,
@@ -44,39 +44,37 @@ export class Query {
 
 export class FileInfoSnapshot {
     date_created: Date
-    drive_root: DriveRoot
+    drive_roots: DriveRoot[]
     group_membership_snapshots: GroupMembershipSnapshot[]
-    constructor(date_created: Date, drive_root: DriveRoot, group_membership_snapshots: GroupMembershipSnapshot[]) {
+    constructor(date_created: Date, drive_roots: DriveRoot[], group_membership_snapshots: GroupMembershipSnapshot[]) {
         this.date_created = date_created
-        this.drive_root = drive_root
+        this.drive_roots = drive_roots
         this.group_membership_snapshots = group_membership_snapshots
     }
 
     applyQuery(query: Query): DriveFile[] {
-        switch(query.operator) {
-            case ("drive"): return this.drive_root.applyQuery(query, isInDrive)
-            case ("owner"): return this.drive_root.applyQuery(query, isOwnedBy)
-            case ("creator"): return this.drive_root.applyQuery(query, isCreatedBy)
-            case ("from"): return this.drive_root.applyQuery(query, isSharedBy)
-            case ("to"): return this.drive_root.applyQuery(query, isSharedTo)
-            case ("readable"): return this.drive_root.applyQuery(query, isReadableBy)
-            case ("writable"): return this.drive_root.applyQuery(query, isWritableBy)
-            case ("sharable"): return this.drive_root.applyQuery(query, isSharableBy)
-            case ("name"): return this.drive_root.applyQuery(query, isNamedAs)
-            case ("inFolder"): return this.drive_root.applyQuery(query, isInFolder)
-            case ("folder"): return this.drive_root.applyQuery(query,isUnderFolder)
-            case ("path"): return this.drive_root.applyQuery(query, hasPath)
-            case ("sharing"): throw Error("sharing queries not implemented")
-            default: return []
-        }
+        let f: QueryPredicate = operatorToQueryPredicate[query.operator]
+        return this.drive_roots.reduce((prev: DriveFile[], curr: DriveRoot) => {
+            return prev.concat(curr.applyQuery(query, f))
+        }, [])
     }
     
-    serialize(): string { // TODO: use structuredClone to seralize instead of JSON.stringify: https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript
-        return JSON.stringify(this.drive_root.serialize(), null, "\t")
+    serialize(): FileInfoSnapshot { // TODO: use structuredClone to seralize instead of JSON.stringify: https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript
+        let save_drive_roots = this.drive_roots
+        this.drive_roots = this.drive_roots.map((d: DriveRoot) => {return d.serialize()})
+        let copy: FileInfoSnapshot = JSON.parse(JSON.stringify(this))
+        this.drive_roots = save_drive_roots
+        return copy
     }
 
     toString(): string {
-        return this.drive_root.toString(0)
+        let depth: number = 0
+        let s = "\t".repeat(depth) + "Type: " + this.constructor.name + "\n"
+        for (let i = 0; i < this.drive_roots.length; i++) {
+            let child: DriveFile = this.drive_roots[i]
+            s = s + child.toString(depth+1) 
+        }
+        return s
     }
 }
 
@@ -131,13 +129,12 @@ export class DriveFolder extends DriveFile {
         this.children = children
     }
 
-    serialize(): DriveFile {
+    serialize(): DriveFolder {
         let save_parent: DriveParent = this.parent
+        let save_children: DriveFile[] = this.children
         this.parent = null
-        let save_children = this.children
-        let children: DriveFile[] = this.children.map(child => child.serialize()) 
-        this.children = children
-        let copy: DriveFile = JSON.parse(JSON.stringify(this))
+        this.children = this.children.map(child => child.serialize()) 
+        let copy: DriveFolder = JSON.parse(JSON.stringify(this))
         this.children = save_children
         this.parent = save_parent
         return copy
@@ -167,6 +164,16 @@ export class DriveRoot extends DriveFolder {
         super(id, null, new Date(), new Date(), drive_name, new User("", ""), [], children, null, "")
         this.is_shared_drive = isSharedDrive
     }
+
+    serialize(): DriveRoot {
+        let save_children = this.children
+        this.children = this.children.map(child => child.serialize()) 
+        let copy: DriveRoot = JSON.parse(JSON.stringify(this))
+        this.children = save_children
+        return copy
+    }
+
+
     applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
         return this.children.reduce((prev: DriveFile[], child: DriveFile) => {
            return prev.concat(child.applyQuery(query, predicate))  
@@ -181,10 +188,10 @@ interface DriveAdapter {
 
 export class GoogleDriveAdapter implements DriveAdapter {
     async createFileInfoSnapshot(access_token: string): Promise<FileInfoSnapshot> {
-        let allFiles: typeof GoogleFile[] = await getAllGoogleDriveFiles(access_token)
-        // console.log(allFiles)
-        let root: DriveRoot = await treeFromGoogleDriveFiles(allFiles)
-        return new FileInfoSnapshot(new Date(), root, [])
+        let allFiles: any = await getAllGoogleDriveFiles(access_token)
+        let sharedDrives: any = await getSharedGoogleDrives()
+        let roots: DriveRoot[] = await buildGoogleDriveTrees(allFiles, sharedDrives)
+        return new FileInfoSnapshot(new Date(), roots, [])
     }
 
     async updateSharing(access_token: string, files: DriveFile[], permissions: Group[]): Promise<void> {

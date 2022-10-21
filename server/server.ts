@@ -41,7 +41,8 @@ app.get('/api/getSnapshot', async (req: Request, res: Response) => {
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
-  res.send({id: "", files: JSON.parse(snapshot.serialize()), filter: ""})
+  // console.log(JSON.stringify(snapshot.serialize(), null, "\t"))
+  res.send({id: "", files: snapshot.serialize(), filter: ""})
 })
 
 app.post('/api/query', async (req: Request, res: Response) => {

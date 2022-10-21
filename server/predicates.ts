@@ -78,3 +78,18 @@ export const hasPath: QueryPredicate = (value: string, operand: DriveFile) => { 
 // sharing:anyone | files shared with anyone with the link
 // sharing:individual | files shared with specific users
 // sharing:domain | files shared with anyone in the owner’s domain (e.g., stonybrook.edu)
+
+export const operatorToQueryPredicate: { [property: string]: QueryPredicate } = {
+    "drive": isInDrive,
+    "owner": isOwnedBy,
+    "creator": isCreatedBy,
+    "from": isSharedBy,
+    "to": isSharedTo,
+    "readable": isReadableBy,
+    "writable": isWritableBy,
+    "sharable": isSharableBy,
+    "name": isNamedAs,
+    "inFolder": isInFolder,
+    "folder": isUnderFolder,
+    "path": hasPath
+}

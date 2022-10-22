@@ -5,8 +5,8 @@ const google = require('googleapis').google
 const drive = google.drive('v3');
 const GoogleFile = require('googleapis').File
 
-export async function getAllGoogleDriveFiles(access_token: string, drive_id: string = ""): Promise<typeof GoogleFile[]> {
-    auth_client.setCredentials(access_token)
+
+export async function getAllGoogleDriveFiles(): Promise<typeof GoogleFile[]> {
     let nextPageToken: string = ""
     let allFiles: typeof GoogleFile[] = []
     while (nextPageToken != null) {
@@ -59,9 +59,9 @@ export async function buildGoogleDriveTrees(allFiles: any, sharedDrives: any): P
         let parentID : string = (file.parents ? file.parents[0] : "shared_with_me") 
         let owner = file.owners ? new User(file.owners[0].emailAddress, file.owners[0].displayName) : null
         let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
-        let permissions: Permission[] = file.permissions ? file.permissions.map((p: any)  => {
-            let to: User | Group = new User(p.emailAddress, file.owners[0].displayName)
-            return new Permission(p.id, to, googleDrivePermissionToOurs[p.role])
+        let permissions: Permission[] = file.permissions ? file.permissions.map((p: any) => {
+            let granted_to: User | Group = new User(p.emailAddress, file.owners[0].displayName)
+            return new Permission(p.id, granted_to, googleDrivePermissionToOurs[p.role])
         }) : []
         if (mimeType === "application/vnd.google-apps.folder") {
             idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, [], shared_by, mimeType), parentID])

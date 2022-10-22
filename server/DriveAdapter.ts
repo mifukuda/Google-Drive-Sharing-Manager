@@ -1,6 +1,5 @@
-const GoogleFile = require('googleapis').File
 import { getAllGoogleDriveFiles, buildGoogleDriveTrees, getSharedGoogleDrives } from "./google_api_utils"
-import { QueryPredicate, isNamedAs, isOwnedBy, isCreatedBy, isSharedBy, isSharedTo, isInDrive, isReadableBy, isSharableBy, isWritableBy, isInFolder, isUnderFolder, hasPath, operatorToQueryPredicate } from "./predicates"
+import { QueryPredicate, operatorToQueryPredicate } from "./predicates"
 
 export enum permission_level {
     VIEWER,
@@ -54,9 +53,8 @@ export class FileInfoSnapshot {
 
     applyQuery(query: Query): DriveFile[] {
         let f: QueryPredicate = operatorToQueryPredicate[query.operator]
-        return this.drive_roots.reduce((prev: DriveFile[], curr: DriveRoot) => {
-            return prev.concat(curr.applyQuery(query, f))
-        }, [])
+        let all_files: DriveFile[] = this.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())     
+        return all_files.filter((d: DriveFile) => f(query.argument, d))
     }
     
     serialize(): FileInfoSnapshot { // TODO: use structuredClone to seralize instead of JSON.stringify: https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript
@@ -112,8 +110,8 @@ export class DriveFile {
         return copy
     }
 
-    applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
-        return (predicate(query.argument, this) ? [this] : [])
+    getSubtree(): DriveFile[] {
+        return [this]
     }
 
     toString(depth: number): string {
@@ -140,11 +138,8 @@ export class DriveFolder extends DriveFile {
         return copy
     }
 
-    applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
-        return this.children.reduce((prev: DriveFile[], child: DriveFile) => {
-           return prev.concat(child.applyQuery(query, predicate))  
-        }, (predicate(query.argument, this) ? [this] : []))
-
+    getSubtree(): DriveFile[] {
+        return this.children.flatMap((c: DriveFile) => c.getSubtree()).concat([this])
     }
 
     toString(depth: number): string {
@@ -173,11 +168,8 @@ export class DriveRoot extends DriveFolder {
         return copy
     }
 
-
-    applyQuery(query: Query, predicate: QueryPredicate): DriveFile[] {
-        return this.children.reduce((prev: DriveFile[], child: DriveFile) => {
-           return prev.concat(child.applyQuery(query, predicate))  
-        }, [])
+    getSubtree(): DriveFile[] {
+        return this.children.flatMap((c: DriveFile) => c.getSubtree())
     }
 }
 
@@ -187,8 +179,8 @@ interface DriveAdapter {
 }
 
 export class GoogleDriveAdapter implements DriveAdapter {
-    async createFileInfoSnapshot(access_token: string): Promise<FileInfoSnapshot> {
-        let allFiles: any = await getAllGoogleDriveFiles(access_token)
+    async createFileInfoSnapshot(): Promise<FileInfoSnapshot> {
+        let allFiles: any = await getAllGoogleDriveFiles()
         let sharedDrives: any = await getSharedGoogleDrives()
         let roots: DriveRoot[] = await buildGoogleDriveTrees(allFiles, sharedDrives)
         return new FileInfoSnapshot(new Date(), roots, [])

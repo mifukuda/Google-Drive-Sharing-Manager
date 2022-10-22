@@ -40,7 +40,7 @@ app.get('/api/getSnapshot', async (req: Request, res: Response) => {
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
-  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
+  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
   // console.log(JSON.stringify(snapshot.serialize(), null, "\t"))
   res.send({id: "", files: snapshot.serialize(), filter: ""})
 })
@@ -57,6 +57,7 @@ app.post('/api/query', async (req: Request, res: Response) => {
   let drivefiles = snapshot.applyQuery(new Query(prop, val)).map(f => {
     return f.serialize()
   })
+  console.log(drivefiles)
   res.send({id: "", files: drivefiles, filter: req.body.query})
 })
 

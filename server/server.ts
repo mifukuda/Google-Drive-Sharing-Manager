@@ -1,12 +1,13 @@
 //library imports
 import { Request, Response } from 'express';
-import { FileInfoSnapshot, DriveRoot, Query } from './DriveAdapter';
+import { FileInfoSnapshot } from './classes/FileInfoSnapshot';
+import { Query } from './classes/Query';
+import { GoogleDriveAdapter } from './classes/DriveAdapter';
 const express = require('express')
 const cookie_parser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 const {auth_client} = require('./controllers/auth_controller.ts')
 const google = require('googleapis').google 
-const {GoogleDriveAdapter, dummyTreeTest} = require('./DriveAdapter.ts')
 const cors = require('cors');
 
 //file imports
@@ -50,7 +51,7 @@ app.post('/api/query', async (req: Request, res: Response) => {
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
-  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
+  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
   let query = req.body.query
   let prop = query.split(":")[0]
   let val = query.split(":")[1]
@@ -65,15 +66,15 @@ app.get('/testing', async (req: Request, res: Response) => {
   res.send('Finally we have some identity.')
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
-  let google_drive_adapter = new GoogleDriveAdapter()
-  let dummyRoot: DriveRoot = dummyTreeTest()
+  // let google_drive_adapter = new GoogleDriveAdapter()
+  // let dummyRoot: DriveRoot = dummyTreeTest()
   // console.log(dummyRoot.toString(0))
-  console.log(dummyRoot.toString(0))
-  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
+  // console.log(dummyRoot.toString(0))
+  // let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
   // console.log(snapshot.toString())
   // console.log(JSON.parse(snapshot.serialize()))
   // console.log(dummyRoot.children[0].serialize())
-  console.log(dummyRoot.serialize())
+  // console.log(dummyRoot.serialize())
 })
 
 

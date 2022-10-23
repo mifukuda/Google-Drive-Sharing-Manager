@@ -1,6 +1,11 @@
-import { DriveRoot, DriveFile, DriveFolder, Permission, User, Group, googleDrivePermissionToOurs } from "./DriveAdapter";
+import { DriveFile } from "../classes/DriveFile";
+import { DriveFolder } from "../classes/DriveFolder";
+import { DriveRoot } from "../classes/DriveRoot";
+import { Permission, googleDrivePermissionToOurs } from "../classes/Permission";
+import { User } from "../classes/User";
+import { Group } from "../classes/Group";
 
-const {auth_client} = require('./controllers/auth_controller.ts')
+const {auth_client} = require('../controllers/auth_controller.ts')
 const google = require('googleapis').google 
 const drive = google.drive('v3');
 const GoogleFile = require('googleapis').File

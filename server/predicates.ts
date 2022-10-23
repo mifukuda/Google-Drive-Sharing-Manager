@@ -1,4 +1,5 @@
-import { DriveFile, Permission, permission_level } from "./DriveAdapter";
+import { DriveFile } from "./classes/DriveFile"
+import { Permission, permission_level } from "./classes/Permission"
 
 export type QueryPredicate = (value: string, operand: DriveFile) => boolean
 

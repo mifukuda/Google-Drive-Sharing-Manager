@@ -3,10 +3,10 @@ import {Accordion} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function FileCard(props) {
-    const {file, depth} = props;
+    const {file, depth, isRoot} = props;
     // Render directory with indents
-    let indent = 2*depth;
-    let width = 100 - 2*depth;
+    let indent = 3*depth;
+    let width = 100 - 3*depth;
     let style = {
         marginLeft: indent + '%',
         width: width + '%'

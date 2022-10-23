@@ -4,10 +4,23 @@ import { Group } from "./Group"
 import { Permission } from "./Permission"
 
 export class DriveFolder extends DriveFile {
-    children: DriveFile[]
-    constructor(id: string, parent: DriveFolder | null, date_created: Date, date_modified: Date, name: string, owner: User | Group | null, permissions: Permission[], children: DriveFile[], shared_by: User | Group | null, mimeType: string) {
+    constructor (
+        id: string, 
+        parent: DriveFolder | null, 
+        date_created: Date,
+        date_modified: Date,
+        name: string, 
+        owner: User | Group | null, 
+        permissions: Permission[], 
+        shared_by: User | Group | null, 
+        mimeType: string,
+        public children: DriveFile[]
+    ) {
         super(id, parent, date_created, date_modified, name, owner, permissions, shared_by, mimeType)
-        this.children = children
+    }
+
+    getSubtree(): DriveFile[] {
+        return this.children.flatMap((c: DriveFile) => c.getSubtree()).concat([this])
     }
 
     serialize(): DriveFolder {
@@ -19,10 +32,6 @@ export class DriveFolder extends DriveFile {
         this.children = save_children
         this.parent = save_parent
         return copy
-    }
-
-    getSubtree(): DriveFile[] {
-        return this.children.flatMap((c: DriveFile) => c.getSubtree()).concat([this])
     }
 
     toString(depth: number): string {

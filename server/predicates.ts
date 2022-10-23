@@ -16,11 +16,7 @@ const isNamedAs: QueryPredicate = (value: string, operand: DriveFile) => { // na
 } 
 
 const isOwnedBy: QueryPredicate = (value: string, operand: DriveFile) => { // owner:user | files owned by user  
-    return operand.owner ? value === operand.owner.email : false
-} 
-
-const isCreatedBy: QueryPredicate = (value: string, operand: DriveFile) => {  // creator:user | files created by user (equiv. to “owner” for services without ownership transfer)
-    return operand.creator ? value === operand.creator.email : false
+    return operand.owner ? value === operand.owner.email : false           // creator:user | files created by user (equiv. to “owner” for services without ownership transfer)
 } 
 
 const isSharedBy: QueryPredicate = (value: string, operand: DriveFile) => {  // from:user | files shared by user
@@ -82,7 +78,7 @@ const hasPath: QueryPredicate = (value: string, operand: DriveFile) => { // path
 export const operatorToQueryPredicate: { [property: string]: QueryPredicate } = {
     "drive": isInDrive,
     "owner": isOwnedBy,
-    "creator": isCreatedBy,
+    "creator": isOwnedBy,
     "from": isSharedBy,
     "to": isSharedTo,
     "readable": isReadableBy,

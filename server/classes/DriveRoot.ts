@@ -3,10 +3,17 @@ import { DriveFolder } from "./DriveFolder"
 import { User } from "./User"
 
 export class DriveRoot extends DriveFolder {
-    is_shared_drive: boolean
-    constructor(id: string, drive_name: string, children: DriveFile[], isSharedDrive: boolean) {
-        super(id, null, new Date(), new Date(), drive_name, new User("", ""), [], children, null, "")
-        this.is_shared_drive = isSharedDrive
+    constructor (
+        id: string, 
+        drive_name: string, 
+        children: DriveFile[], 
+        public isSharedDrive: boolean
+    ) {
+        super(id, null, new Date(), new Date(), drive_name, new User("", ""), [], null, "", children)
+    }
+
+    getSubtree(): DriveFile[] {
+        return this.children.flatMap((c: DriveFile) => c.getSubtree())
     }
 
     serialize(): DriveRoot {
@@ -15,9 +22,5 @@ export class DriveRoot extends DriveFolder {
         let copy: DriveRoot = structuredClone(this)
         this.children = save_children
         return copy
-    }
-
-    getSubtree(): DriveFile[] {
-        return this.children.flatMap((c: DriveFile) => c.getSubtree())
     }
 }

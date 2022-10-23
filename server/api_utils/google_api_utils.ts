@@ -69,7 +69,7 @@ export async function buildGoogleDriveTrees(allFiles: any, sharedDrives: any): P
             return new Permission(p.id, granted_to, googleDrivePermissionToOurs[p.role])
         }) : []
         if (mimeType === "application/vnd.google-apps.folder") {
-            idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, [], shared_by, mimeType), parentID])
+            idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, []), parentID])
         }
         else {
             idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType), parentID])

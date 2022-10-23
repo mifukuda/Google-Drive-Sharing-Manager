@@ -18,14 +18,11 @@ export const googleDrivePermissionToOurs: { [property: string]: permission_level
 }
 
 export class Permission {
-    id: string
-    role: permission_level
-    granted_to: Group | User
-    constructor(id: string, granted_to: Group | User, role: permission_level) {
-        this.id = id
-        this.granted_to = granted_to
-        this.role = role
-    }
+    constructor (
+        public id: string, 
+        public granted_to: Group | User, 
+        public role: permission_level
+    ) {}
 
     toString(): string {
         return "unimplemented"

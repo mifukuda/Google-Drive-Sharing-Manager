@@ -4,27 +4,20 @@ import { Group } from "./Group"
 import { Permission } from "./Permission"
 
 export class DriveFile {
-    id: string
-    parent: DriveFolder | null
-    owner: User | null
-    creator: User | null
-    shared_by: User | Group | null
-    permissions: Permission[]
-    date_created: Date
-    date_modified: Date
-    name: string
-    mimeType: string
-    constructor(id: string, parent: DriveFolder | null, date_created: Date, date_modified: Date, name: string, owner: User | null, permissions: Permission[], shared_by: User | Group | null, mimeType: string) {
-        this.id = id
-        this.parent = parent
-        this.date_created = date_created
-        this.date_modified = date_modified
-        this.name = name
-        this.owner = owner
-        this.permissions = permissions
-        this.creator = owner
-        this.shared_by = shared_by
-        this.mimeType = mimeType
+    constructor (
+        public id: string,
+        public parent: DriveFolder | null,
+        public date_created: Date,
+        public date_modified: Date,
+        public name: string,
+        public owner: User | null,
+        public permissions: Permission[],
+        public shared_by: User | Group | null,
+        public mimeType: string
+    ) {}
+
+    getSubtree(): DriveFile[] {
+        return [this]
     }
 
     serialize(): DriveFile {
@@ -33,10 +26,6 @@ export class DriveFile {
         let copy: DriveFile = structuredClone(this)
         this.parent = saved_parent
         return copy
-    }
-
-    getSubtree(): DriveFile[] {
-        return [this]
     }
 
     toString(depth: number): string {

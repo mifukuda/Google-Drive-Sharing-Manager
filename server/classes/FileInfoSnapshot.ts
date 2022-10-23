@@ -5,14 +5,11 @@ import { GroupMembershipSnapshot } from "./GroupMembershipSnapshot"
 import { operatorToQueryPredicate, QueryPredicate } from "../predicates"
 
 export class FileInfoSnapshot {
-    date_created: Date
-    drive_roots: DriveRoot[]
-    group_membership_snapshots: GroupMembershipSnapshot[]
-    constructor(date_created: Date, drive_roots: DriveRoot[], group_membership_snapshots: GroupMembershipSnapshot[]) {
-        this.date_created = date_created
-        this.drive_roots = drive_roots
-        this.group_membership_snapshots = group_membership_snapshots
-    }
+    constructor (
+        public date_created: Date, 
+        public drive_roots: DriveRoot[], 
+        public group_membership_snapshots: GroupMembershipSnapshot[]
+    ) {}
 
     applyQuery(query: Query): DriveFile[] {
         let f: QueryPredicate = operatorToQueryPredicate[query.operator]
@@ -20,7 +17,7 @@ export class FileInfoSnapshot {
         return all_files.filter((d: DriveFile) => f(query.argument, d))
     }
     
-    serialize(): FileInfoSnapshot { // TODO: use structuredClone to seralize instead of JSON.stringify: https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript
+    serialize(): FileInfoSnapshot {
         let save_drive_roots = this.drive_roots
         this.drive_roots = this.drive_roots.map((d: DriveRoot) => d.serialize())
         let copy: FileInfoSnapshot = structuredClone(this)

@@ -12,7 +12,4 @@ const saveSnap = (req: Request, res: Response) => {
     })
 }
 
-module.exports = {
-    getSnap: getSnap,
-    saveSnap:saveSnap
-}
+export { getSnap, saveSnap }

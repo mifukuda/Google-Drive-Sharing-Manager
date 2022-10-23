@@ -4,8 +4,8 @@ import { DriveRoot } from "../classes/DriveRoot";
 import { Permission, googleDrivePermissionToOurs } from "../classes/Permission";
 import { User } from "../classes/User";
 import { Group } from "../classes/Group";
+import { auth_client } from "../controllers/auth_controller";
 
-const {auth_client} = require('../controllers/auth_controller.ts')
 const google = require('googleapis').google 
 const drive = google.drive('v3');
 const GoogleFile = require('googleapis').File

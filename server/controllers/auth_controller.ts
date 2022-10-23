@@ -1,6 +1,7 @@
 const google = require('googleapis').google 
+import { Request, Response } from 'express';
 const CONFIG = require('../configs.js')
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken'
 
 // Create an OAuth2 client object for google
 const OAuth2 = google.auth.OAuth2
@@ -10,7 +11,7 @@ const auth_client = new OAuth2(
     CONFIG.oauth_credentials.redirect_uris[0]
 );
 
-const login = (req: any, res: any) => {
+const login = (req: Request, res: Response) => {
     // Obtain the google login link 
     const auth_url = auth_client.generateAuthUrl({
         access_type: 'offline', // Does not require user to constantly give consent
@@ -19,7 +20,7 @@ const login = (req: any, res: any) => {
     return res.redirect(auth_url);
 }
 
-const auth_callback = (req: any, res: any) => {
+const auth_callback = (req: Request, res: Response) => {
     if(req.query.error){
         console.log("Error recieving Authorization Code")
         return res.redirect('/')
@@ -36,8 +37,4 @@ const auth_callback = (req: any, res: any) => {
     }
 }
 
-module.exports = {
-    login: login,
-    auth_callback: auth_callback,
-    auth_client: auth_client
-}
+export { login, auth_callback, auth_client }

@@ -1,20 +1,18 @@
 //library imports
-import { Request, Response } from 'express';
-import { FileInfoSnapshot } from './classes/FileInfoSnapshot';
-import { Query } from './classes/Query';
-import { GoogleDriveAdapter } from './classes/DriveAdapter';
-const express = require('express')
-const cookie_parser = require('cookie-parser')
-const jwt = require('jsonwebtoken');
-const {auth_client} = require('./controllers/auth_controller.ts')
-const google = require('googleapis').google 
-const cors = require('cors');
+import { Request, Response } from 'express'
+import { FileInfoSnapshot } from './classes/FileInfoSnapshot'
+import { Query } from './classes/Query'
+import { GoogleDriveAdapter } from './classes/DriveAdapter'
+import express from 'express'
+import cookie_parser from 'cookie-parser'
+import jwt from 'jsonwebtoken'
+import { auth_client } from './controllers/auth_controller'
+import cors from 'cors'
 
 //file imports
-const CONFIG = require('./configs.js')
+const CONFIG = require('./configs.js');
 import { auth_router } from './routers/auth_router'
 import { snapshot_router } from './routers/snapshot_router'
-const { response } = require('express');
 
 //starting the express server
 const app = express()
@@ -26,7 +24,7 @@ app.use(express.json())
 // cors stuff
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:3000/home'],
-  credentials: true };
+  credentials: true }
 app.use(cors(corsOptions));
 
 //installing custom middleware

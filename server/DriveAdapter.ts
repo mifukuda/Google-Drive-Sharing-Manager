@@ -59,8 +59,8 @@ export class FileInfoSnapshot {
     
     serialize(): FileInfoSnapshot { // TODO: use structuredClone to seralize instead of JSON.stringify: https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript
         let save_drive_roots = this.drive_roots
-        this.drive_roots = this.drive_roots.map((d: DriveRoot) => {return d.serialize()})
-        let copy: FileInfoSnapshot = JSON.parse(JSON.stringify(this))
+        this.drive_roots = this.drive_roots.map((d: DriveRoot) => d.serialize())
+        let copy: FileInfoSnapshot = structuredClone(this)
         this.drive_roots = save_drive_roots
         return copy
     }
@@ -105,7 +105,7 @@ export class DriveFile {
     serialize(): DriveFile {
         let saved_parent: DriveParent = this.parent
         this.parent = null
-        let copy: DriveFile = JSON.parse(JSON.stringify(this))
+        let copy: DriveFile = structuredClone(this)
         this.parent = saved_parent
         return copy
     }
@@ -129,10 +129,10 @@ export class DriveFolder extends DriveFile {
 
     serialize(): DriveFolder {
         let save_parent: DriveParent = this.parent
-        let save_children: DriveFile[] = this.children
         this.parent = null
+        let save_children: DriveFile[] = this.children
         this.children = this.children.map(child => child.serialize()) 
-        let copy: DriveFolder = JSON.parse(JSON.stringify(this))
+        let copy: DriveFolder = structuredClone(this)
         this.children = save_children
         this.parent = save_parent
         return copy
@@ -163,7 +163,7 @@ export class DriveRoot extends DriveFolder {
     serialize(): DriveRoot {
         let save_children = this.children
         this.children = this.children.map(child => child.serialize()) 
-        let copy: DriveRoot = JSON.parse(JSON.stringify(this))
+        let copy: DriveRoot = structuredClone(this)
         this.children = save_children
         return copy
     }

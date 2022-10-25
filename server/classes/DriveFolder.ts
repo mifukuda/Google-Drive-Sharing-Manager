@@ -2,8 +2,6 @@ import { DriveFile } from "./DriveFile"
 import { User } from "./User"
 import { Group } from "./Group"
 import { Permission } from "./Permission"
-import { Model, Schema, Types } from "mongoose"
-import { DriveFileModel } from "./DriveFile"
 
 export class DriveFolder extends DriveFile {
     constructor (
@@ -12,9 +10,9 @@ export class DriveFolder extends DriveFile {
         date_created: Date,
         date_modified: Date,
         name: string, 
-        owner: Group | null, 
+        owner: Group | User | null, 
         permissions: Permission[], 
-        shared_by: Group | null, 
+        shared_by: Group | User | null, 
         mime_type: string,
         public children: DriveFile[]
     ) {
@@ -46,7 +44,3 @@ export class DriveFolder extends DriveFile {
         return s
     }
 }
-
-export const DriveFolderModel = DriveFileModel.discriminator("DriveFolder", new Schema<DriveFolder>({
-    children: { type: Types.DocumentArray<>, required: true }
-}, { discriminatorKey: 'kind' })

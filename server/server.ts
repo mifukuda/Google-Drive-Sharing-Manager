@@ -6,13 +6,14 @@ import { GoogleDriveAdapter } from './classes/DriveAdapter'
 import express from 'express'
 import cookie_parser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
-import { auth_client } from './controllers/auth_controller'
 import cors from 'cors'
 
 //file imports
 const CONFIG = require('./configs.js');
 import { auth_router } from './routers/auth_router'
 import { snapshot_router } from './routers/snapshot_router'
+import { auth_client } from './controllers/auth_controller'
+import db_connect from './db'
 
 //starting the express server
 const app = express()

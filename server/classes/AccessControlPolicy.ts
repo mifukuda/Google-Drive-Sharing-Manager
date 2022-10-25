@@ -1,6 +1,5 @@
 import { Group } from "./Group";
 import { GroupModel } from "./Group";
-import { Schema, Types, model } from "mongoose";
 
 export class AccessControlPolicy {
     constructor (
@@ -10,10 +9,3 @@ export class AccessControlPolicy {
         public DeniedWriters: Group[],
     ) {}
 }
-
-export const accessControlPolicySchema = new Schema<AccessControlPolicy>({
-    AllowedReaders: [{ }]
-    AllowedWriters: Group[],
-    DeniedReaders: Group[],
-    DeniedWriters: Group[],
-})

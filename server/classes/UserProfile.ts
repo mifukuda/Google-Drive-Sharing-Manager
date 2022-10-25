@@ -1,6 +1,5 @@
 import { Query, QueryModel } from "./Query";
 import { AccessControlPolicy } from "./AccessControlPolicy";
-import { Schema, Types, model } from "mongoose";
 import { FileInfoSnapshot } from "./FileInfoSnapshot";
 
 export class UserProfile {
@@ -13,10 +12,3 @@ export class UserProfile {
     ) {}
 
 }
-
-export const userProfileSchema = new Schema<UserProfile>({
-    userID: { type: String, required: true },
-    query_history: [{type: Schema.Types.ObjectId, ref: QueryModel}]
-})
-
-export const UserProfileModel = model("UserProfile", userProfileSchema)

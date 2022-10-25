@@ -1,5 +1,4 @@
 import { User } from "./User"
-import { Schema, model } from "mongoose"
 
 export class Group {
     timestamp: Date
@@ -11,10 +10,3 @@ export class Group {
         this.timestamp = new Date()
     }
 }
-
-export const groupSchema = new Schema<User>({
-    email: String,
-    display_name: String
-})
-
-export const GroupModel = model("Group", groupSchema)

@@ -1,8 +1,6 @@
 import { DriveFile } from "./DriveFile"
 import { DriveFolder } from "./DriveFolder"
 import { User } from "./User"
-import { Schema, Types } from "mongoose"
-import { DriveFolderModel } from "./DriveFolder"
 
 export class DriveRoot extends DriveFolder {
     constructor (
@@ -26,7 +24,3 @@ export class DriveRoot extends DriveFolder {
         return copy
     }
 }
-
-export const DriveRootModel = DriveFolderModel.discriminator("DriveRoot", new Schema<DriveRoot>({
-    is_shared_drive: Boolean
-}, { discriminatorKey: 'kind' }))

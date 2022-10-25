@@ -1,5 +1,7 @@
 import { Group } from "./Group"
-import { User } from "./User"
+import { Schema, Types } from "mongoose"
+import { UserModel } from "./User"
+
 
 export enum permission_level {
     VIEWER,
@@ -20,7 +22,7 @@ export const googleDrivePermissionToOurs: { [property: string]: permission_level
 export class Permission {
     constructor (
         public id: string, 
-        public granted_to: Group | User, 
+        public granted_to: Group, 
         public role: permission_level
     ) {}
 
@@ -28,3 +30,9 @@ export class Permission {
         return "unimplemented"
     }
 }
+
+const permissionSchema = new Schema<Permission>({
+    id: Types.ObjectId, 
+    granted_to: {Types.ObjectId, ref: UserModel, required: true},
+    role: { type: Number, required: true }
+})

@@ -1,14 +1,13 @@
 import { DriveRoot } from "./DriveRoot"
 import { DriveFile } from "./DriveFile"
 import { Query } from "./Query"
-import { GroupMembershipSnapshot } from "./GroupMembershipSnapshot"
 import { operatorToQueryPredicate, QueryPredicate } from "../predicates"
+import { Schema, Types } from "mongoose"
 
 export class FileInfoSnapshot {
     constructor (
         public date_created: Date, 
         public drive_roots: DriveRoot[], 
-        public group_membership_snapshots: GroupMembershipSnapshot[]
     ) {}
 
     applyQuery(query: Query): DriveFile[] {
@@ -35,3 +34,8 @@ export class FileInfoSnapshot {
         return s
     }
 }
+
+const FileInfoSnapshotSchema = new Schema<FileInfoSnapshot>({
+    date_created: { type: Date, required: true},
+    drive_roots: { type: Types.DocumentArray<Types.ObjectId>, ref:  required: true}
+})

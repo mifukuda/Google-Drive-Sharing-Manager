@@ -1,17 +1,17 @@
 //library imports
 import { Request, Response } from 'express';
-import { FileInfoSnapshot, DriveRoot } from './DriveAdapter';
+// import { FileInfoSnapshot, DriveRoot } from './DriveAdapter';
 const express = require('express')
 const cookie_parser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 const {auth_client} = require('./controllers/auth_controller.ts')
-const google = require('googleapis').google 
-const {GoogleDriveAdapter, dummyTreeTest} = require('./DriveAdapter.ts')
+// const {GoogleDriveAdapter, dummyTreeTest} = require('./DriveAdapter.ts')
 
 //file imports
 const CONFIG = require('./configs.js')
 const auth_router = require('./routers/auth_router.ts');
 const { response } = require('express');
+import db_connect from './db'
 
 //starting the express server
 const app = express()
@@ -23,24 +23,27 @@ app.use(express.json())
 //installing custom middleware
 app.use('/auth', auth_router)
 
+//connect to the database
+db_connect()
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello Linux Stans!')
 })
 
-app.get('/testing', async (req: Request, res: Response) => {
-  res.send('Finally we have some identity.')
-  let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
-  auth_client.setCredentials(decoded_token)
-  let google_drive_adapter = new GoogleDriveAdapter()
-  let dummyRoot: DriveRoot = dummyTreeTest()
-  // console.log(dummyRoot.toString(0))
-  console.log(dummyRoot.toString(0))
-  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
-  // console.log(snapshot.toString())
-  // console.log(JSON.parse(snapshot.serialize()))
-  // console.log(dummyRoot.children[0].serialize())
-  console.log(dummyRoot.serialize())
-})
+// app.get('/testing', async (req: Request, res: Response) => {
+//   res.send('Finally we have some identity.')
+//   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
+//   auth_client.setCredentials(decoded_token)
+//   let google_drive_adapter = new GoogleDriveAdapter()
+//   let dummyRoot: DriveRoot = dummyTreeTest()
+//   // console.log(dummyRoot.toString(0))
+//   console.log(dummyRoot.toString(0))
+//   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot(decoded_token)
+//   // console.log(snapshot.toString())
+//   // console.log(JSON.parse(snapshot.serialize()))
+//   // console.log(dummyRoot.children[0].serialize())
+//   console.log(dummyRoot.serialize())
+// })
 
 
 app.listen(CONFIG.port, () => {

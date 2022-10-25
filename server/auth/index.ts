@@ -10,7 +10,7 @@ const auth_client = new OAuth2(
     CONFIG.oauth_credentials.redirect_uris[0]
 );
 
-const verifyToken = (req: any, res: any, next: NextFunction) => {
+export const verifyToken = (req: any, res: any, next: NextFunction) => {
     try{
         const token = req.cookies.jwt
         if(!token){
@@ -27,8 +27,4 @@ const verifyToken = (req: any, res: any, next: NextFunction) => {
             message: "Token cannot be verified."
         })
     }
-}
-
-module.exports = {
-    verifyToken: verifyToken
 }

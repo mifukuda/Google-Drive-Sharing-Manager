@@ -1,10 +1,9 @@
-const express = require('express')
-const auth_controllers = require('../controllers/auth_controller.ts')
-const testing = require('../auth')
+import express, { Router } from "express"
+import { login, auth_callback } from "../controllers/auth_controller"
 
-const router = express.Router()
+const router: Router = express.Router()
 
-router.get('/login', auth_controllers.login)
-router.get('/callback', auth_controllers.auth_callback)
+router.get('/login', login)
+router.get('/callback', auth_callback)
 
-module.exports = router
+export { router as auth_router }

@@ -120,6 +120,7 @@ export default function HomeScreen(props) {
         }
     }
 
+    // Building list from search results
     function buildList(snapshot) {
         for(let i = 0; i < snapshot.length; i++) {
             directory.push(<FileCard file={snapshot[i]} depth={0} key={key++} isRoot={false}/>);

@@ -1,8 +1,12 @@
+body {
+  font-size: 100%;
+}
+
 .filelist {
   background-color: #ededed;
   margin: auto;
   height: 500px;
-  width: 60%;
+  width: 70%;
   overflow-y: scroll; 
   white-space: nowrap;
   border: 2px solid black;
@@ -13,4 +17,94 @@
   margin-top: 15%;
   width: 100%;
   text-align: center;
+}
+
+.homescreen {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.homescreencenter {
+  display: inline-block;
+  width: 85%
+}
+
+.analyzescreen {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.analyzescreencenter {
+  margin: auto;
+  width: 85%;
+}
+
+.analyzescreenheader {
+  display: flex;
+  align-items: center;
+  padding-left: 2%;
+  height: 10%;
+  color: white;
+  background-color: rgb(74, 74, 223);
+}
+
+.analyzescreensubtitle {
+  margin-top: 4%;
+}
+
+.analyzescreenheadertitle {
+  padding-right: 70%;
+}
+
+.sidebar {
+  display: inline-block;
+  width: 15%;
+  height: 100vh;
+  color: white;
+  background-color: rgb(74, 74, 223);
+  padding-top: 2%;
+  padding-left: 1%;
+}
+
+h1.sidebarlogo {
+  font-size: 2.0em;
+}
+
+h2.sidebarlogo {
+  font-size: 1.2em;
+  margin-bottom: 0;
+}
+
+.deviantsharinglist {
+  background-color: rgb(74, 74, 223);
+  margin: auto;
+  width: 100%;
+  height: 800px;
+  border-radius: 25px;
+}
+
+.redundantsharinglist {
+  background-color: rgb(74, 74, 223);
+  margin: auto;
+  width: 100%;
+  height: 800px;
+  border-radius: 25px;
+}
+
+.sharingdifferenceslist {
+  background-color: rgb(74, 74, 223);
+  margin: auto;
+  width: 100%;
+  height: 800px;
+  border-radius: 25px;
+}
+
+.exitbutton {
+  background:none;
+}
+
+.exitbutton:hover{
+  filter: invert(30%);
 }

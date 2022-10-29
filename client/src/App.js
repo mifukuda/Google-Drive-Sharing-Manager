@@ -4,7 +4,7 @@ import {
   Route
 } from "react-router-dom";
 import './App.css';
-import {WelcomeScreen, HomeScreen} from './components';
+import {WelcomeScreen, HomeScreen, AnalyzeScreen} from './components';
 
 export default function App() {
   return (
@@ -13,6 +13,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<WelcomeScreen/>}/> 
           <Route path="/home" element={<HomeScreen/>}/>
+          <Route path="/analyze" element={<AnalyzeScreen/>}/>
         </Routes>
       </div>
     </Router>

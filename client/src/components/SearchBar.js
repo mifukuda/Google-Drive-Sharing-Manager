@@ -20,7 +20,8 @@ export default function SearchBar() {
         margin: 'auto',
         marginTop: '2%',
         marginBottom: '2%',
-        width: '60%'
+        marginLeft: '15%',
+        width: '70%'
     }
 
     return (

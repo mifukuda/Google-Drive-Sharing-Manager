@@ -7,9 +7,10 @@ export default function SideBar() {
         <div className="sidebar">
            <h2 className="sidebarlogo">The</h2>
            <h1 className="sidebarlogo">Microservices</h1>
+           <button className="sidebarButton">Take Snapshot</button>
            <ul>
                 <li>
-                    <Link to="/analyze">Analyze Sharing</Link>
+                    <Link to="/analyze" className="sidebarlink">Analyze Sharing</Link>
                 </li>
             </ul>
         </div>

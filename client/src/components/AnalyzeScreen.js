@@ -4,9 +4,10 @@ import RedundantSharingList from "./RedundantSharingList";
 import DeviantSharingList from "./DeviantSharingList";
 import SharingDifferencesList from "./SharingDifferencesList";
 
-export default function SideBar() {
+export default function AnalyzeScreen() {
     let navigate = useNavigate();
 
+    // Navigate to home page when close button is pressed
     function handleClose(event) {
         navigate("/home");
     }

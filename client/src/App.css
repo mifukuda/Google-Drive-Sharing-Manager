@@ -30,6 +30,52 @@ body {
   width: 85%
 }
 
+.homescreenheader {
+  display: flex;
+  margin-top: 2%;
+  margin-bottom: 1%;
+  padding: 0;
+}
+
+.homescreentitle {
+  margin-left: 15%;
+  margin-right: 52%;
+}
+
+.querycontrols {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2%;
+}
+
+.sidebar {
+  display: inline-block;
+  width: 15%;
+  height: 100vh;
+  color: white;
+  background-color: rgb(74, 74, 223);
+  padding-top: 2%;
+  padding-left: 1%;
+}
+
+a.sidebarlink {
+  color: white;
+  text-decoration: none;
+}
+
+a.sidebar:hover {
+  color: gray;
+}
+
+h1.sidebarlogo {
+  font-size: 2.0em;
+}
+
+h2.sidebarlogo {
+  font-size: 1.2em;
+  margin-bottom: 0;
+}
+
 .analyzescreen {
   height: 100vh;
   margin: 0;
@@ -56,25 +102,6 @@ body {
 
 .analyzescreenheadertitle {
   padding-right: 70%;
-}
-
-.sidebar {
-  display: inline-block;
-  width: 15%;
-  height: 100vh;
-  color: white;
-  background-color: rgb(74, 74, 223);
-  padding-top: 2%;
-  padding-left: 1%;
-}
-
-h1.sidebarlogo {
-  font-size: 2.0em;
-}
-
-h2.sidebarlogo {
-  font-size: 1.2em;
-  margin-bottom: 0;
 }
 
 .deviantsharinglist {

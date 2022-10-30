@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import {useDispatch} from "react-redux";
 import {getSnapshotFromBackend} from "../actions";
 import FileList from "./FileList";
+import HomeScreenHeader from "./HomeScreenHeader";
 import SearchBar from "./SearchBar";
 import SideBar from "./SideBar";
 
@@ -16,6 +17,7 @@ export default function FileCard() {
         <div className="homescreen">
             <SideBar/>
             <div className="homescreencenter">
+                <HomeScreenHeader/>
                 <SearchBar/>
                 <div className="filelist">
                     <p>Snapshot:</p>

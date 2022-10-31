@@ -12,7 +12,7 @@ export default function SearchBar() {
     function handleSubmit(event) {
         if(event.key === 'Enter') {
             event.preventDefault();
-            dispatch(getFilteredSnapshotFromBackend('Minato', text));
+            dispatch(getFilteredSnapshotFromBackend('', text));
         }
     }
 

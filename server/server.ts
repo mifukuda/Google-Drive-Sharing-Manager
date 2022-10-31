@@ -40,6 +40,8 @@ app.use('/snapshot', snapshot_router)
 db_connect()
 
 app.get('/', async (req: Request, res: Response) => {
+  let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
+  auth_client.setCredentials(decoded_token)
   const file = new Models.FileModel(
     {
       drive_id: "Mooooooooo",
@@ -85,13 +87,7 @@ app.post('/uploadgroup', function(req, res) {
 
 app.get('/api/getSnapshot', async (req: Request, res: Response) => {
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
-  auth_client.setCredentials({
-    access_token: 'ya29.a0Aa4xrXNkfs3sMXTnKsPOQIONrJ8TZx1Wwj4p5NCo030PX8xHGn1faqjkYKXlcCja_kipLwKGw1ssj9jneol_XudKIBa2U_iVnqQyxnAjIVLbFKe196_g6Mxv6_Y9Nj6SLCQ4rXWoqxmnSKS3Yuf_vBTa3icVaCgYKATASARESFQEjDvL9TvTVkKhsVcyWVsq_CgGX5A0163',
-    refresh_token: '1//0dRRNXm4UuUpwCgYIARAAGA0SNwF-L9Ir8OSoYJoJNBZhTbmsM6m9I3k5-kWxMA_IemDuTz6hMPH2ASkoGrHylVVybxyPqR8x0os',
-    scope: 'https://www.googleapis.com/auth/drive',
-    token_type: 'Bearer',
-    expiry_date: 1667006287058
-  })
+  auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
   const serializedSnapshot = snapshot.serialize()

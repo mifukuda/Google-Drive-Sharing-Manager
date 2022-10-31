@@ -92,7 +92,7 @@ app.get('/api/getSnapshot', async (req: Request, res: Response) => {
     token_type: 'Bearer',
     expiry_date: 1667006287058
   })
-  let google_drive_adapter = new GoogleDriveAdapter()
+  let google_drive_adapter = new GoogleDriveAdapter("hello")
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
   const serializedSnapshot = snapshot.serialize()
   snapshot.save(err => {
@@ -105,7 +105,7 @@ app.post('/api/query', async (req: Request, res: Response) => {
   console.log("query = " + req.body.query)
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
-  let google_drive_adapter = new GoogleDriveAdapter()
+  let google_drive_adapter = new GoogleDriveAdapter("heyo")
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
   let query = req.body.query
   let prop = query.split(":")[0]

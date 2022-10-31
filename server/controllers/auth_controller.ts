@@ -2,6 +2,7 @@ const google = require('googleapis').google
 import { Request, Response } from 'express';
 const CONFIG = require('../configs.js')
 import jwt from 'jsonwebtoken'
+import { GoogleDriveAdapter } from "../classes/DriveAdapter"
 
 // Create an OAuth2 client object for google
 const OAuth2 = google.auth.OAuth2
@@ -20,19 +21,29 @@ const login = (req: Request, res: Response) => {
     return res.redirect(auth_url);
 }
 
-const auth_callback = (req: Request, res: Response) => {
+const auth_callback = async (req: Request, res: Response) => {
+    //If the person does not provide authorization, an error will be returned
     if(req.query.error){
         console.log("Error recieving Authorization Code")
         return res.redirect('/')
     }
-    auth_client.getToken(req.query.code, function(err: any, token: any) {
+
+    //getting tokens for OAuth
+    const {tokens} = auth_client.getToken(req.query.code, function(err: any, token: any) {
         if(err) {
             console.log("Failed to get token.")
             return res.redirect('/')
         }
-        res.cookie('jwt', jwt.sign(token, CONFIG.JWT_secret));
-        return res.redirect('http://localhost:3000/home');
     })
+
+    //make an object for drive adapter
+    const drive = new DriveAdapter(tokens.refresh_token)
+    const userProfile = drive.createUserProfile()
+
+    //sign the token and redirect the user
+    console.log(tokens)
+    res.cookie('jwt', jwt.sign(tokens, CONFIG.JWT_secret));
+    return res.redirect('/');
 }
 
 export { login, auth_callback, auth_client }

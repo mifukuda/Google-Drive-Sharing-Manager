@@ -13,13 +13,9 @@ import fileUpload, { UploadedFile } from 'express-fileupload'
 const CONFIG = require('./configs.js');
 import { auth_router } from './routers/auth_router'
 import { snapshot_router } from './routers/snapshot_router'
-<<<<<<< HEAD
 import { auth_client } from './controllers/auth_controller'
 import db_connect from './db'
 import Models from "./db/Models"
-=======
-import { GroupMembershipSnapshot } from './classes/GroupMembershipSnapshot'
->>>>>>> master
 
 //starting the express server
 const app = express()

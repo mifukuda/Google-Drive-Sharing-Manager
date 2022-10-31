@@ -49,10 +49,10 @@ export async function getSharedGoogleDrives(): Promise<any> {
 export async function buildGoogleDriveTrees(allFiles: any, sharedDrives: any): Promise<DriveRoot[]> {
     let roots: DriveRoot[] = []
     let my_drive_rootID = (await drive.files.get({ auth: auth_client, fileId: "root" })).data.id
-    roots.push(new DriveRoot(my_drive_rootID, "My Drive", [], false))
-    let shared_with_me_root = new DriveRoot("shared_with_me", "Shared with me", [], false)
+    roots.push(new DriveRoot("NEEDS TO BE CHANGED", my_drive_rootID, "My Drive", [], false))
+    let shared_with_me_root = new DriveRoot("NEEDS TO BE CHANGED", "shared_with_me", "Shared with me", [], false)
     roots.push(shared_with_me_root)
-    sharedDrives.forEach((s: any) => {roots.push(new DriveRoot(s.id, s.name, [], true))});
+    sharedDrives.forEach((s: any) => {roots.push(new DriveRoot("NEEDS TO BE CHANGED", s.id, s.name, [], true))});
     
     let idToDriveFiles: Map<string, [DriveFile, string | null]> = new Map<string, [DriveFile, string | null]>()
     roots.forEach((d: DriveRoot) => {idToDriveFiles.set(d.id, [d, null])})
@@ -66,13 +66,13 @@ export async function buildGoogleDriveTrees(allFiles: any, sharedDrives: any): P
         let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
         let permissions: Permission[] = file.permissions ? file.permissions.map((p: any) => {
             let granted_to: User | Group = new User(p.emailAddress, file.owners[0].displayName)
-            return new Permission(p.id, granted_to, googleDrivePermissionToOurs[p.role])
+            return new Permission("NEEDS TO BE CHANGED", p.id, granted_to, googleDrivePermissionToOurs[p.role])
         }) : []
         if (mimeType === "application/vnd.google-apps.folder") {
-            idToDriveFiles.set(file.id, [new DriveFolder(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, []), parentID])
+            idToDriveFiles.set(file.id, [new DriveFolder("NEEDS TO BE CHANGED", file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, []), parentID])
         }
         else {
-            idToDriveFiles.set(file.id, [new DriveFile(file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType), parentID])
+            idToDriveFiles.set(file.id, [new DriveFile("NEEDS TO BE CHANGED", file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType), parentID])
         }
     })
 
@@ -80,7 +80,7 @@ export async function buildGoogleDriveTrees(allFiles: any, sharedDrives: any): P
         if (!parentID) // means we are at a root (whose parent is set to null); don't process
             return
         if (!idToDriveFiles.has(parentID)) {
-            console.log("WARNING: " + parentID + " not found in files, putting item in shared folders")
+            // console.log("WARNING: " + parentID + " not found in files, putting item in shared folders")
             child.parent = shared_with_me_root
         }
         else {

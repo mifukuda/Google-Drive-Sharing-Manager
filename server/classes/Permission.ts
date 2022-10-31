@@ -1,5 +1,7 @@
 import { Group } from "./Group"
 import { User } from "./User"
+import Models from "../db/Models"
+
 
 export enum permission_level {
     VIEWER,
@@ -19,10 +21,19 @@ export const googleDrivePermissionToOurs: { [property: string]: permission_level
 
 export class Permission {
     constructor (
+        public dbID: string,
         public id: string, 
         public granted_to: Group | User, 
         public role: permission_level
     ) {}
+
+    getModel(): Object {
+        return new Models.PermissionModel({
+            drive_id: this.id,
+            grantedTo: this.granted_to,
+            role: this.role
+        })
+    }
 
     toString(): string {
         return "unimplemented"

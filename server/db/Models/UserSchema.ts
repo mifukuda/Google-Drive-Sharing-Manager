@@ -1,11 +1,13 @@
 import { Schema, Types, model } from "mongoose"
+import { ACPSchema } from "./ACPSchema"
 
 export const UserSchema = new Schema(
     {
         drive_id: { type: String, required: true },
         display_name: {type: String, required: true},
         fileSnapshots: [{type: Schema.Types.ObjectId, ref: 'fileSnapshotSchema'}],
-        groupSnapshots: [{type: Schema.Types.ObjectId, ref: 'groupSnapshotSchema'}]
+        groupSnapshots: [{type: Schema.Types.ObjectId, ref: 'groupSnapshotSchema'}],
+        AccessControlPolicy: {type: ACPSchema} 
     },
     {
         timestamps: true

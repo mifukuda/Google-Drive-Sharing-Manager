@@ -79,8 +79,8 @@ app.post('/uploadgroup', function(req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
-  let group: GroupMembershipSnapshot = new GroupMembershipSnapshot("somename", req.files.memberlist as UploadedFile, new Date())
-  console.log(group.members)
+  // let group: GroupMembershipSnapshot = new GroupMembershipSnapshot("somename", req.files.memberlist as UploadedFile, new Date())
+  // console.log(group.members)
 })
 
 app.get('/api/getSnapshot', async (req: Request, res: Response) => {

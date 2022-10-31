@@ -6,7 +6,6 @@ import { GoogleDriveAdapter } from './classes/DriveAdapter'
 import express from 'express'
 import cookie_parser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
-import { auth_client } from './controllers/auth_controller'
 import cors from 'cors'
 import fileUpload, { UploadedFile } from 'express-fileupload'
 
@@ -14,7 +13,9 @@ import fileUpload, { UploadedFile } from 'express-fileupload'
 const CONFIG = require('./configs.js');
 import { auth_router } from './routers/auth_router'
 import { snapshot_router } from './routers/snapshot_router'
-import { GroupMembershipSnapshot } from './classes/GroupMembershipSnapshot'
+import { auth_client } from './controllers/auth_controller'
+import db_connect from './db'
+import Models from "./db/Models"
 
 //starting the express server
 const app = express()
@@ -35,8 +36,43 @@ app.use(cors(corsOptions));
 app.use('/auth', auth_router)
 app.use('/snapshot', snapshot_router)
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello Linux Stans!')
+//connect to the database
+db_connect()
+
+app.get('/', async (req: Request, res: Response) => {
+  const file = new Models.FileModel(
+    {
+      drive_id: "Mooooooooo",
+      name: "File1",
+      owner: "Omar's left nut",
+      sharedBy: "Omar's left nut",
+      mime_type: "file",
+      permissions: [],
+      children: [], 
+    }
+  )
+
+  // const user: any = await userModel.findOne({name:"Omar"})
+  // const fileSanpshot: any = new Models.FileSnapshotModel(
+  //   {
+  //     user_id: user._id,
+  //     files: [file]
+  //   }
+  // ).save()
+  //   .then(async () => {
+  //     const snapshot: any = await FileSnapshotModel.findOne()
+  //     console.log(snapshot)
+  //     return res.status(200).json({})
+  //   })
+  //   .catch(err => {
+  //     console.log(err)
+  //     return res.status(400).json({
+  //       success: 'false',
+  //       user: null
+  //     })
+  //   })
+  console.log(typeof file)
+  return res.send("Hello Linux Stans")
 })
 
 app.post('/uploadgroup', function(req, res) {
@@ -49,11 +85,20 @@ app.post('/uploadgroup', function(req, res) {
 
 app.get('/api/getSnapshot', async (req: Request, res: Response) => {
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
-  auth_client.setCredentials(decoded_token)
+  auth_client.setCredentials({
+    access_token: 'ya29.a0Aa4xrXNkfs3sMXTnKsPOQIONrJ8TZx1Wwj4p5NCo030PX8xHGn1faqjkYKXlcCja_kipLwKGw1ssj9jneol_XudKIBa2U_iVnqQyxnAjIVLbFKe196_g6Mxv6_Y9Nj6SLCQ4rXWoqxmnSKS3Yuf_vBTa3icVaCgYKATASARESFQEjDvL9TvTVkKhsVcyWVsq_CgGX5A0163',
+    refresh_token: '1//0dRRNXm4UuUpwCgYIARAAGA0SNwF-L9Ir8OSoYJoJNBZhTbmsM6m9I3k5-kWxMA_IemDuTz6hMPH2ASkoGrHylVVybxyPqR8x0os',
+    scope: 'https://www.googleapis.com/auth/drive',
+    token_type: 'Bearer',
+    expiry_date: 1667006287058
+  })
   let google_drive_adapter = new GoogleDriveAdapter()
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
-  // console.log(JSON.stringify(snapshot.serialize(), null, "\t"))
-  res.send({id: "", files: snapshot.serialize(), filter: ""})
+  const serializedSnapshot = snapshot.serialize()
+  snapshot.save(err => {
+    console.log(err)
+  })
+  res.send({id: "", files: serializedSnapshot, filter: ""})
 })
 
 app.post('/api/query', async (req: Request, res: Response) => {

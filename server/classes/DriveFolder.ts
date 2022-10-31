@@ -2,25 +2,51 @@ import { DriveFile } from "./DriveFile"
 import { User } from "./User"
 import { Group } from "./Group"
 import { Permission } from "./Permission"
+import Models from "../db/Models"
+import { Types } from "mongoose"
 
 export class DriveFolder extends DriveFile {
     constructor (
+        _id: string,
         id: string, 
         parent: DriveFolder | null, 
         date_created: Date,
         date_modified: Date,
         name: string, 
-        owner: User | Group | null, 
+        owner: Group | User | null, 
         permissions: Permission[], 
-        shared_by: User | Group | null, 
-        mimeType: string,
+        shared_by: Group | User | null, 
+        mime_type: string,
         public children: DriveFile[]
     ) {
-        super(id, parent, date_created, date_modified, name, owner, permissions, shared_by, mimeType)
+        super("NEEDS TO BE REPLACED", id, parent, date_created, date_modified, name, owner, permissions, shared_by, mime_type)
     }
 
     getSubtree(): DriveFile[] {
         return this.children.flatMap((c: DriveFile) => c.getSubtree()).concat([this])
+    }
+
+    getModel(): Object[] {
+        //get the children models
+        let fileArr = this.children.flatMap((child: DriveFile) => child.getModel())
+
+        //make the model for this folder
+        let file: any = new Models.FileModel(
+            {
+                drive_id: this.id,
+                name: this.name,
+                owner: this.owner,
+                sharedBy: this.shared_by,
+                mime_type: this.mime_type,
+                type: "FOLDER",
+                permissions: this.permissions.map(p => p.getModel()),
+                children: fileArr.map((f: any) => f ? f._id : null)
+            }
+        )
+
+        file._id = new Types.ObjectId()
+        fileArr.push(file)
+        return fileArr 
     }
 
     serialize(): DriveFolder {

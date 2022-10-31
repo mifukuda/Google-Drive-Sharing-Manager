@@ -2,7 +2,7 @@ import { DriveFile } from "./classes/DriveFile"
 import { DriveFolder } from "./classes/DriveFolder"
 import { Permission } from "./classes/Permission"
 
-const deviantSharing  = (selection: DriveFile[], threshold: number = .80) => {
+export const deviantSharing  = (selection: DriveFile[], threshold: number = .80) => {
     let fileIdToFile: Map<string, DriveFile> = new Map<string, DriveFile>()
     selection.forEach((file: DriveFile) => fileIdToFile[file.id] = file)
     let deviantlyShared : DriveFile[] = []
@@ -27,7 +27,7 @@ const deviantSharing  = (selection: DriveFile[], threshold: number = .80) => {
     return deviantlyShared
 }
 
-const calculateSharingChanges = (selection1: DriveFolder[], selection2: DriveFolder[]) => {
+export const calculateSharingChanges = (selection1: DriveFolder[], selection2: DriveFolder[]) => {
     let idToPermissions : Map<string, [Permission[], Permission[]]> = new Map<string, [Permission[], Permission[]]>()
     
     selection2.forEach((file: DriveFile) => idToPermissions[file.id] = [file.permissions.sort(), []])
@@ -41,7 +41,7 @@ const calculateSharingChanges = (selection1: DriveFolder[], selection2: DriveFol
     return idToPermissions
 }
 
-const calculatePermissionDiffences = (selection: DriveFolder[]) => {
+export const calculatePermissionDiffences = (selection: DriveFolder[]) => {
     let differentlyShared : Set<DriveFile> = new Set<DriveFile>()
 
     // input will be flatmap of all files, so selection needs to be filtered for only folders

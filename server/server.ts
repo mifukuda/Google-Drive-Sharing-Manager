@@ -1,6 +1,7 @@
 //library imports
 import { Request, Response } from 'express'
 import { FileInfoSnapshot } from './classes/FileInfoSnapshot'
+import { DriveFile } from './classes/DriveFile'
 import { Query } from './classes/Query'
 import { GoogleDriveAdapter } from './classes/DriveAdapter'
 import express from 'express'
@@ -8,6 +9,7 @@ import cookie_parser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import cors from 'cors'
 import fileUpload, { UploadedFile } from 'express-fileupload'
+import { deviantSharing } from './sharinganalysis'
 
 //file imports
 const CONFIG = require('./configs.js');
@@ -16,6 +18,7 @@ import { snapshot_router } from './routers/snapshot_router'
 import { auth_client } from './controllers/auth_controller'
 import db_connect from './db'
 import Models from "./db/Models"
+import { DriveRoot } from './classes/DriveRoot'
 
 //starting the express server
 const app = express()
@@ -112,6 +115,29 @@ app.post('/api/query', async (req: Request, res: Response) => {
   console.log(drivefiles)
   res.send({id: "", files: drivefiles, filter: req.body.query})
 })
+
+app.post('/api/analyzeSharing', async (req: Request, res: Response) => {
+  let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
+  auth_client.setCredentials(decoded_token)
+  let google_drive_adapter = new GoogleDriveAdapter()
+  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
+  let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())     
+  console.log(JSON.stringify(deviantSharing(all_files, 0.6), null, "\t"))
+  res.send({})
+})
+
+// app.post('/api/getAccessControlPolicies', async (req: Request, res: Response) => {
+//   let mock_policies = [
+//     {
+//       query: ,
+//       AR: ,
+//       AW: ,
+//       DR: ,
+//       DW: ,
+//     }
+//   ]
+//   res.send({id: "", mock_policies})
+// }
 
 app.get('/testing', async (req: Request, res: Response) => {
   res.send('Finally we have some identity.')

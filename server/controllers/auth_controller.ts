@@ -20,7 +20,7 @@ const login = (req: Request, res: Response) => {
     return res.redirect(auth_url);
 }
 
-const auth_callback = async (req: Request, res: Response) => {
+const auth_callback = (req: Request, res: Response) => {
     if(req.query.error){
         console.log("Error recieving Authorization Code")
         return res.redirect('/')
@@ -30,13 +30,9 @@ const auth_callback = async (req: Request, res: Response) => {
             console.log("Failed to get token.")
             return res.redirect('/')
         }
-        console.log(token)
         res.cookie('jwt', jwt.sign(token, CONFIG.JWT_secret));
-        return res.redirect('/');
+        return res.redirect('http://localhost:3000/home');
     })
-
-    // const {tokens} = await auth_client.getToken(req.query.code)
-    // console.log(tokens)
 }
 
 export { login, auth_callback, auth_client }

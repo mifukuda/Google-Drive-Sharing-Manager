@@ -15,7 +15,7 @@ export class GoogleDriveAdapter implements DriveAdapter {
         let allFiles: any = await getAllGoogleDriveFiles()
         let sharedDrives: any = await getSharedGoogleDrives()
         let roots: DriveRoot[] = await buildGoogleDriveTrees(allFiles, sharedDrives)
-        return new FileInfoSnapshot(new Date(), roots)
+        return new FileInfoSnapshot("Prak's right nut", new Date(), roots, new Date())
     }
 
     async updateSharing(access_token: string, files: DriveFile[], permissions: Group[]): Promise<void> {

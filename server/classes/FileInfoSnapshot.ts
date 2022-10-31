@@ -2,11 +2,15 @@ import { DriveRoot } from "./DriveRoot"
 import { DriveFile } from "./DriveFile"
 import { Query } from "./Query"
 import { operatorToQueryPredicate, QueryPredicate } from "../predicates"
+import Models from "../db/Models"
+import { Types } from "mongoose"
 
 export class FileInfoSnapshot {
     constructor (
+        public userID: String,
         public date_created: Date, 
         public drive_roots: DriveRoot[], 
+        public date_updated: Date
     ) {}
 
     applyQuery(query: Query): DriveFile[] {
@@ -21,6 +25,21 @@ export class FileInfoSnapshot {
         let copy: FileInfoSnapshot = structuredClone(this)
         this.drive_roots = save_drive_roots
         return copy
+    }
+
+    async save(callback: (err: Error) => void): Promise<any> {
+        const files = this.drive_roots.flatMap((d: DriveRoot) => d.getModel())
+        const snapshotModel = new Models.FileSnapshotModel(
+            {
+                user_id: new Types.ObjectId(),
+                files: files
+            }
+        )
+        const dbSnapshot = await snapshotModel.save()
+            .catch((err: Error) => {
+                callback(err)
+            })
+        return dbSnapshot
     }
 
     toString(): string {

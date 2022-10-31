@@ -7,14 +7,19 @@ import express from 'express'
 import cookie_parser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import cors from 'cors'
+import fileUpload, { UploadedFile } from 'express-fileupload'
 
 //file imports
 const CONFIG = require('./configs.js');
 import { auth_router } from './routers/auth_router'
 import { snapshot_router } from './routers/snapshot_router'
+<<<<<<< HEAD
 import { auth_client } from './controllers/auth_controller'
 import db_connect from './db'
 import Models from "./db/Models"
+=======
+import { GroupMembershipSnapshot } from './classes/GroupMembershipSnapshot'
+>>>>>>> master
 
 //starting the express server
 const app = express()
@@ -22,6 +27,8 @@ const app = express()
 //installing builtin middleware
 app.use(cookie_parser())
 app.use(express.json())
+app.use(fileUpload())
+
 
 // cors stuff
 const corsOptions = {
@@ -70,6 +77,14 @@ app.get('/', async (req: Request, res: Response) => {
   //   })
   console.log(typeof file)
   return res.send("Hello Linux Stans")
+})
+
+app.post('/uploadgroup', function(req, res) {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  let group: GroupMembershipSnapshot = new GroupMembershipSnapshot("somename", req.files.memberlist as UploadedFile, new Date())
+  console.log(group.members)
 })
 
 app.get('/api/getSnapshot', async (req: Request, res: Response) => {

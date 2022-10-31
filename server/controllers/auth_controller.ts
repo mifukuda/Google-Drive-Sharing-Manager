@@ -25,16 +25,14 @@ const auth_callback = (req: Request, res: Response) => {
         console.log("Error recieving Authorization Code")
         return res.redirect('/')
     }
-    else {
-        auth_client.getToken(req.query.code, function(err: any, token: any) {
-            if(err) {
-                console.log("Failed to get token.")
-                return res.redirect('/')
-            }
-            res.cookie('jwt', jwt.sign(token, CONFIG.JWT_secret));
-            return res.redirect('http://localhost:3000/home');
-        })
-    }
+    auth_client.getToken(req.query.code, function(err: any, token: any) {
+        if(err) {
+            console.log("Failed to get token.")
+            return res.redirect('/')
+        }
+        res.cookie('jwt', jwt.sign(token, CONFIG.JWT_secret));
+        return res.redirect('http://localhost:3000/home');
+    })
 }
 
 export { login, auth_callback, auth_client }

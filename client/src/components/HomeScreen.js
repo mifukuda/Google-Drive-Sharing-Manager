@@ -3,6 +3,7 @@ import {useDispatch} from "react-redux";
 import {getSnapshotFromBackend} from "../actions";
 import FileList from "./FileList";
 import HomeScreenHeader from "./HomeScreenHeader";
+import QueryBuilder from "./QueryBuilder";
 import SearchBar from "./SearchBar";
 import SideBar from "./SideBar";
 
@@ -15,6 +16,7 @@ export default function FileCard() {
     }, []);
     return (
         <div className="homescreen">
+            <QueryBuilder/>
             <SideBar/>
             <div className="homescreencenter">
                 <HomeScreenHeader/>

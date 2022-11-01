@@ -1,5 +1,7 @@
 import React from "react";
-import {useNavigate } from "react-router-dom";
+// import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import FileList from './FileList';
 
 export default function UpdateScreen() {
     let navigate = useNavigate();
@@ -17,7 +19,9 @@ export default function UpdateScreen() {
                     onClick={(event) => handleClose(event)}/>
             </div>
             <div className="analyzescreencenter">
-                
+                <div>
+                    <FileList updating={true}/>
+                </div>
             </div>
         </div>
     );

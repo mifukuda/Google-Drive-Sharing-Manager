@@ -4,6 +4,8 @@ import FileCard from './FileCard';
 
 export default function HomeScreen(props) {
     const snapshot = useSelector(state => state.snapshot.files);
+    const selectedFiles = useSelector(state => state.selected);
+    const {updating} = props;
     /*let snapshot = {
         drive_roots: [
             {
@@ -102,7 +104,10 @@ export default function HomeScreen(props) {
     */
     let key = 0;
     let directory = [];
-    if(snapshot) {
+    if(updating) {
+        buildList(selectedFiles);
+    }
+    else if(snapshot) {
         try {
             // For search results
             if(Array.isArray(snapshot)) {

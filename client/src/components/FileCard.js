@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {useSelector, useDispatch} from "react-redux"
 import {selectFile, unselectFile} from "../actions";
 import {Accordion, Form} from 'react-bootstrap';
@@ -8,14 +8,16 @@ export default function FileCard(props) {
     const {file, depth, isRoot} = props;
     const dispatch = useDispatch();
     const selectedFiles = useSelector(state => state.selected);
-    const isChecked = selectedFiles.includes(file.id);
+    const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
 
     function handleCheck(event) {
         if(isChecked) {
-            dispatch(unselectFile(file.id));
+            setIsChecked(false)
+            dispatch(unselectFile(file));
         }
         else {
-            dispatch(selectFile(file.id));
+            setIsChecked(true);
+            dispatch(selectFile(file));
         }
         event.stopPropagation();
     }

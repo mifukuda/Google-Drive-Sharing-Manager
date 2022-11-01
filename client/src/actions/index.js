@@ -38,17 +38,17 @@ const hideModal = () => {
   }
 }
 
-const selectFile = (id) => {
+const selectFile = (file) => {
   return {
     type: 'SELECT_FILE',
-    payload: id
+    payload: file
   }
 }
 
-const unselectFile = (id) => {
+const unselectFile = (file) => {
   return {
     type: 'UNSELECT_FILE',
-    payload: id
+    payload: file
   }
 }
 

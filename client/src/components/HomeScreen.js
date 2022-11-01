@@ -24,7 +24,7 @@ export default function FileCard() {
                 <SearchBar/>
                 <div className="filelist">
                     <p>Snapshot: {numSelected.length} Selected</p>
-                    <FileList/>
+                    <FileList updating={false}/>
                 </div>
             </div>
         </div>

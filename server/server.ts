@@ -78,21 +78,27 @@ app.get('/', async (req: Request, res: Response) => {
 })
 
 app.get('/api/getAccessControlPolicies', async (req: Request, res: Response) => {
+  console.log("inside access policies")
   let mock_access_control_policies = [{
-    "AR": "minato",
-    "AW": "qamber",
-    "DR": "prakash",
-    "DW": "chowy bowy",
-    "query": "somequery"
-  },
-  {
-    "AR": "minato2",
-    "AW": "qamber2",
-    "DR": "prakash2",
-    "DW": "chowy bowy2",
-    "query": "somequery2"
-  }]
-  res.send(mock_access_control_policies)
+      "id" : "falskdjf",
+      "name": "Policy1",
+      "AR": [{ "email": "minato1@gmail", "display_name": "Minato Fukuda"}, { "email": "minato8@gmail", "display_name": "Minato Fukuda"}],
+      "AW": [{ "email": "minato2@gmail", "display_name": "Minato Fukuda"}],
+      "DR": [{ "email": "minato3@gmail", "display_name": "Minato Fukuda"}],
+      "DW": [{ "email": "minato4@gmail", "display_name": "Minato Fukuda"}],
+      "query": "somequery"
+    },
+    {
+      "id" : "asdklfj",
+      "name": "Policy2",
+      "AR": [{ "email": "qamber1@gmail", "display_name": "Qamber Jafri"}],
+      "AW": [{ "email": "qamber2@gmail", "display_name": "Qamber Jafri"}, { "email": "qamber8@gmail", "display_name": "Qamber Jafri"}],
+      "DR": [{ "email": "qamber3@gmail", "display_name": "Qamber Jafri"}],
+      "DW": [{ "email": "qamber4@gmail", "display_name": "Qamber Jafri"}],
+      "query": "somequery2" 
+    }
+  ]
+  res.send({ access_control_policies: mock_access_control_policies })
 })
 
 app.post('/uploadgroup', function(req, res) {

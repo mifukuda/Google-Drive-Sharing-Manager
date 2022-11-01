@@ -17,6 +17,9 @@ export default function SideBar() {
                     <li>
                         <Link to="/update" className="sidebarlink">Update Permissions</Link>
                     </li>
+                    <li>
+                        <Link to="/accessControlPolicies" className="sidebarlink">Manage Access Control Policies</Link>
+                    </li>
                 </ul>
             </div>
             <div className="sidebar2">

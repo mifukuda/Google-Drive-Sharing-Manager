@@ -5,7 +5,7 @@ import AccessControlPolicy from "./AccessControlPolicy";
 
 export default function AccessControlPolicies(props) {
     const dispatch = useDispatch()
-    const access_control_policies = useSelector(state => state.access_control_policies)
+    const access_control_policies = useSelector(state => state.accessControlPolicies)
 
     useEffect(() => {
         dispatch(getAccessControlPoliciesFromBackend())
@@ -16,7 +16,7 @@ export default function AccessControlPolicies(props) {
             <h1>
                 Access control policy page
             </h1>
-            {this.access_control_policies.map(policy => <AccessControlPolicy props={policy} />)}
+            {access_control_policies.map(policy => <AccessControlPolicy access_control_policy={policy} />)}
         </div>
     )
 }

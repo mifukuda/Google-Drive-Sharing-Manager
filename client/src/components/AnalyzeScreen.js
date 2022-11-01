@@ -7,7 +7,7 @@ import SharingDifferencesList from "./SharingDifferencesList";
 export default function AnalyzeScreen() {
     let navigate = useNavigate();
 
-    // Navigate to home page when close button is pressed
+    // Navigate to home page when close button is
     function handleClose(event) {
         navigate("/home");
     }

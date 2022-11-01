@@ -8,6 +8,7 @@ import QueryBuilder from './QueryBuilder';
 import SearchBar from './SearchBar';
 import SharingDifferencesList from './SharingDifferencesList';
 import SideBar from './SideBar';
+import UpdateScreen from './UpdateScreen'
 import WelcomeScreen from './WelcomeScreen';
 
 export {
@@ -21,5 +22,6 @@ export {
     SearchBar,
     SharingDifferencesList,
     SideBar,
+    UpdateScreen,
     WelcomeScreen
 }

@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getSnapshotFromBackend} from "../actions";
 import FileList from "./FileList";
 import HomeScreenHeader from "./HomeScreenHeader";
@@ -9,6 +9,7 @@ import SideBar from "./SideBar";
 
 export default function FileCard() {
     const dispatch = useDispatch();
+    const numSelected = useSelector(state => state.selected);
     //Return default snapshot (most recent) from backend
     useEffect(() => {
         dispatch(getSnapshotFromBackend());
@@ -22,7 +23,7 @@ export default function FileCard() {
                 <HomeScreenHeader/>
                 <SearchBar/>
                 <div className="filelist">
-                    <p>Snapshot:</p>
+                    <p>Snapshot: {numSelected.length} Selected</p>
                     <FileList/>
                 </div>
             </div>

@@ -7,10 +7,14 @@ body {
   margin: auto;
   height: 500px;
   width: 70%;
-  overflow-y: scroll; 
   white-space: nowrap;
   border: 2px solid black;
   padding: 1%;
+}
+
+.filelistinner {
+  height: 444px;
+  overflow-y: scroll; 
 }
 
 .welcomescreen {
@@ -78,6 +82,7 @@ body {
 
 .sidebarbutton {
   margin-top: 10%;
+  margin-bottom: 10%;
   width: 82%;
   height: 15%;
   font-size: 1.2em;
@@ -96,7 +101,7 @@ a.sidebarlink {
   text-decoration: none;
 }
 
-a.sidebar:hover {
+a.sidebarlink:hover {
   color: gray;
 }
 

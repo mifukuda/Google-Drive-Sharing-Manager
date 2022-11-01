@@ -14,6 +14,9 @@ export default function SideBar() {
                     <li>
                         <Link to="/analyze" className="sidebarlink">Analyze Sharing</Link>
                     </li>
+                    <li>
+                        <Link to="/update" className="sidebarlink">Update Permissions</Link>
+                    </li>
                 </ul>
             </div>
             <div className="sidebar2">

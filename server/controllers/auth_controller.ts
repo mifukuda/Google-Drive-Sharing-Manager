@@ -37,7 +37,7 @@ const auth_callback = async (req: Request, res: Response) => {
     })
 
     //make an object for drive adapter
-    const drive = new DriveAdapter(tokens.refresh_token)
+    const drive = new GoogleDriveAdapter(tokens.refresh_token)
     const userProfile = drive.createUserProfile()
 
     //sign the token and redirect the user

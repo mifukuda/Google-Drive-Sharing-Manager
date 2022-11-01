@@ -6,36 +6,37 @@ import { getAllGoogleDriveFiles, getSharedGoogleDrives, buildGoogleDriveTrees } 
 const CONFIG = require('../configs.js')
 // const google = require('googleapis').google 
 import { google } from 'googleapis'
+import { Credentials, OAuth2Client } from "google-auth-library"
 
 
-abstract class DriveAdapter {
+export abstract class DriveAdapter {
     driveToken: string
     constructor(driveToken: string){
         this.driveToken = driveToken
     }
-    // abstract createUserProfile(): Promise<Object>
+    abstract createUserProfile(): Promise<Object>
     abstract createFileInfoSnapshot(): Promise<FileInfoSnapshot>
     abstract updateSharing(files: DriveFile[], permissions: Group[]): Promise<void>
 }
 
-class GoogleDriveAdapter extends DriveAdapter {
-    auth_client: typeof(new google.auth.OAuth2)
+export class GoogleDriveAdapter extends DriveAdapter {
+    auth_client: OAuth2Client
     
     constructor(driveToken: string){
         super(driveToken)
-        // const OAuth2 = google.auth.OAuth2
-        // this.auth_client = new OAuth2(
-        //     CONFIG.oauth_credentials.client_id, 
-        //     CONFIG.oauth_credentials.client_secret, 
-        //     CONFIG.oauth_credentials.redirect_uris[0]
-        // );
-        // this.auth_client.setCredentials(this.driveToken)
+        const OAuth2 = google.auth.OAuth2
+        this.auth_client = new OAuth2(
+            CONFIG.oauth_credentials.client_id, 
+            CONFIG.oauth_credentials.client_secret, 
+            CONFIG.oauth_credentials.redirect_uris[0]
+        );
+        this.auth_client.setCredentials({ access_token: this.driveToken })
     }
 
-    // async createUserProfile(): Promise<Object> {
-    //     const userProfile = this.auth_client.currentUser.get().getBasicProfile()
-    //     return userProfile
-    // }
+    async createUserProfile(): Promise<Object> {
+        const userProfile = this.auth_client.currentUser.get().getBasicProfile()
+        return userProfile
+    }
 
     async createFileInfoSnapshot(): Promise<FileInfoSnapshot> {
         let allFiles: any = await getAllGoogleDriveFiles()
@@ -49,4 +50,4 @@ class GoogleDriveAdapter extends DriveAdapter {
 }
 
 // export {DriveAdapter}
-export {GoogleDriveAdapter}
+// export {GoogleDriveAdapter}

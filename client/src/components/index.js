@@ -8,6 +8,7 @@ import SearchBar from './SearchBar';
 import SharingDifferencesList from './SharingDifferencesList';
 import SideBar from './SideBar';
 import WelcomeScreen from './WelcomeScreen';
+import AccessControlPolicies from './AccessControlPolicies';
 
 export {
     AnalyzeScreen,
@@ -19,5 +20,6 @@ export {
     SearchBar,
     SharingDifferencesList,
     SideBar,
-    WelcomeScreen
+    WelcomeScreen,
+    AccessControlPolicies
 }

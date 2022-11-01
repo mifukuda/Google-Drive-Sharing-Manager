@@ -77,6 +77,24 @@ app.get('/', async (req: Request, res: Response) => {
   return res.send("Hello Linux Stans")
 })
 
+app.get('/api/getAccessControlPolicies', async (req: Request, res: Response) => {
+  let mock_access_control_policies = [{
+    "AR": "minato",
+    "AW": "qamber",
+    "DR": "prakash",
+    "DW": "chowy bowy",
+    "query": "somequery"
+  },
+  {
+    "AR": "minato2",
+    "AW": "qamber2",
+    "DR": "prakash2",
+    "DW": "chowy bowy2",
+    "query": "somequery2"
+  }]
+  res.send(mock_access_control_policies)
+})
+
 app.post('/uploadgroup', function(req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');

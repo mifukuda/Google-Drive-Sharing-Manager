@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useDispatch} from 'react-redux';
-import {getFilteredSnapshotFromBackend} from '../actions';
+import {getFilteredSnapshotFromBackend, showModal} from '../actions';
 import {Form, Button} from 'react-bootstrap';
 
 export default function SearchBar() {
@@ -14,6 +14,11 @@ export default function SearchBar() {
             event.preventDefault();
             dispatch(getFilteredSnapshotFromBackend('', text));
         }
+    }
+
+    // Make query builder visible
+    function handleShowModal(event) {
+        dispatch(showModal());
     }
 
     let style = {
@@ -32,7 +37,7 @@ export default function SearchBar() {
                         onChange={(event) => setText(event.target.value)} onKeyPress={(event) => handleSubmit(event)}/>
                 </Form.Group>
             </Form>
-            <Button variant="dark" style={{marginTop: "2.4%", bottom: 0, width: '10%', height: '10%'}}>Build Query</Button>
+            <Button variant="dark" style={{marginTop: "2.4%", bottom: 0, width: '10%', height: '10%'}} onClick={(event) => handleShowModal(event)}>Build Query</Button>
         </div>
     );
 }

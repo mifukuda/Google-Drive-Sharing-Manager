@@ -146,7 +146,7 @@ export default function HomeScreen(props) {
     }
 
     return (
-        <div>
+        <div className="filelistinner">
             {directory} 
         </div>
     );

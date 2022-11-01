@@ -1,12 +1,22 @@
 import React from "react";
+import {useSelector, useDispatch} from "react-redux"
+import {selectFile, unselectFile} from "../actions";
 import {Accordion, Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function FileCard(props) {
     const {file, depth, isRoot} = props;
+    const dispatch = useDispatch();
+    const selectedFiles = useSelector(state => state.selected);
+    const isChecked = selectedFiles.includes(file.id);
 
     function handleCheck(event) {
-        console.log("HELLO WORD");
+        if(isChecked) {
+            dispatch(unselectFile(file.id));
+        }
+        else {
+            dispatch(selectFile(file.id));
+        }
         event.stopPropagation();
     }
 
@@ -23,7 +33,7 @@ export default function FileCard(props) {
         img = <img src={require('../images/googledrivelogo.png')} style={{height: '18px', marginRight: '10px', }} alt="Google Logo"/>
     }
     else {
-        switch (file.mimeType) {
+        switch (file.mime_type) {
             case "application/vnd.google-apps.spreadsheet":
                 img = <img src={require('../images/googlesheetslogo.png')} style={{height: '18px', marginRight: '10px', }} alt="Google Sheets Logo"/>
                 break;
@@ -40,7 +50,7 @@ export default function FileCard(props) {
                 img = <img src={require('../images/file.png')} style={{height: '18px', marginRight: '10px', }} alt="File Logo"/>
         }
     }
-    
+
     return (
         <Accordion style={style}>
             <Accordion.Item eventKey="0">
@@ -50,6 +60,7 @@ export default function FileCard(props) {
                         id="checkbox"
                         style={{marginRight:"16px"}}
                         onClick={(event) => handleCheck(event)}
+                        checked={isChecked}
                     />
                     {img}
                     <div style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>

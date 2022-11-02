@@ -9,13 +9,16 @@ const api = axios.create({
 export const getSnapshot = () => api.get('/getSnapshot/');
 // Apply filter to snapshot
 export const getFilteredSnapshot = (id, payload) => api.post(`/query/${id}`, payload);
+
 // Get all access control policies
 export const getAccessControlPolicies = () => api.get(`/getAccessControlPolicies/`) 
+export const addAccessControlPolicy = () => api.post(`/addAccessControlPolicy/`) 
 
 const apis = {
     getSnapshot,
     getFilteredSnapshot,
-    getAccessControlPolicies
+    getAccessControlPolicies,
+    addAccessControlPolicy
 }
 
 export default apis;

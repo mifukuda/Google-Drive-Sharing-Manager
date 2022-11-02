@@ -82,6 +82,7 @@ app.get('/api/getAccessControlPolicies', async (req: Request, res: Response) => 
   let mock_access_control_policies = [{
       "id" : "falskdjf",
       "name": "Policy1",
+      "grp" : false,
       "AR": [{ "email": "minato1@gmail", "display_name": "Minato Fukuda"}, { "email": "minato8@gmail", "display_name": "Minato Fukuda"}],
       "AW": [{ "email": "minato2@gmail", "display_name": "Minato Fukuda"}],
       "DR": [{ "email": "minato3@gmail", "display_name": "Minato Fukuda"}],
@@ -91,6 +92,7 @@ app.get('/api/getAccessControlPolicies', async (req: Request, res: Response) => 
     {
       "id" : "asdklfj",
       "name": "Policy2",
+      "grp" : false,
       "AR": [{ "email": "qamber1@gmail", "display_name": "Qamber Jafri"}],
       "AW": [{ "email": "qamber2@gmail", "display_name": "Qamber Jafri"}, { "email": "qamber8@gmail", "display_name": "Qamber Jafri"}],
       "DR": [{ "email": "qamber3@gmail", "display_name": "Qamber Jafri"}],
@@ -99,6 +101,11 @@ app.get('/api/getAccessControlPolicies', async (req: Request, res: Response) => 
     }
   ]
   res.send({ access_control_policies: mock_access_control_policies })
+})
+
+app.post('/api/addAccessControlPolicy', async (req: Request, res: Response) => {
+  // validate request body
+  res.send(req.body)
 })
 
 app.post('/uploadgroup', function(req, res) {

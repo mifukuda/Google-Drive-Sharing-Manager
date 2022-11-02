@@ -25,6 +25,13 @@ export function getAccessControlPoliciesFromBackend() {
   };
 }
 
+export function addAccessControlPolicyToBackend() {
+  return async (dispatch) => {
+    return apis.addAccessControlPolicy().then(response => {
+      if(response.status === 200) {dispatch(addAccessControlPolicy(response));}
+    });
+  };
+}
 
 //ACTIONS
 const setSnapshot = (response) => {
@@ -39,6 +46,14 @@ const setAccessControlPolicies = (response) => {
     console.log(response);
     return {
       type: 'SET_ACCESS_CONTROL_POLICIES',
+      payload: response.data
+    }
+}
+
+const addAccessControlPolicy = (response) => {
+    console.log(response);
+    return {
+      type: 'ADD_ACCESS_CONTROL_POLICY',
       payload: response.data
     }
 }

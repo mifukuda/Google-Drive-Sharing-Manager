@@ -7,7 +7,7 @@ import { Types } from "mongoose"
 
 export class FileInfoSnapshot {
     constructor (
-        public userID: String,
+        public _id: Types.ObjectId,
         public date_created: Date, 
         public drive_roots: DriveRoot[], 
         public date_updated: Date
@@ -27,19 +27,21 @@ export class FileInfoSnapshot {
         return copy
     }
 
-    async save(callback: (err: Error) => void): Promise<any> {
+    save(callback: (err: Error) => void): void {
         const files = this.drive_roots.flatMap((d: DriveRoot) => d.getModel())
         const snapshotModel = new Models.FileSnapshotModel(
             {
-                user_id: new Types.ObjectId(),
+                user_id: this._id,
                 files: files
             }
         )
-        const dbSnapshot = await snapshotModel.save()
-            .catch((err: Error) => {
-                callback(err)
-            })
-        return dbSnapshot
+
+        snapshotModel.save((err, result) => {
+            if(err){
+                console.log("Error saving file snapshot: ", err)
+            }
+        })
+
     }
 
     toString(): string {

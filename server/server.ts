@@ -2,6 +2,7 @@
 import { Request, Response } from 'express'
 import { FileInfoSnapshot } from './classes/FileInfoSnapshot'
 import { DriveFile } from './classes/DriveFile'
+import { Permission } from './classes/Permission'
 import { Query } from './classes/Query'
 import { GoogleDriveAdapter } from './classes/DriveAdapter'
 import express from 'express'
@@ -9,7 +10,7 @@ import cookie_parser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import cors from 'cors'
 import fileUpload, { UploadedFile } from 'express-fileupload'
-import { deviantSharing } from './sharinganalysis'
+import { deviantSharing, calculatePermissionDiffences, calculateSharingChanges } from './sharinganalysis'
 
 //file imports
 const CONFIG = require('./configs.js');
@@ -117,17 +118,16 @@ app.post('/api/query', async (req: Request, res: Response) => {
 })
 
 app.get('/api/analyzeSharing', async (req: Request, res: Response) => {
-  console.log("hi")
+  console.log("analyzing sharing.")
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
   let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())   
   // let all_files: DriveFile[] = snapshot.drive_roots[0].getSubtree()
-  console.log(all_files)
-  console.log("==================================")
   let output: DriveFile[] = []
-  deviantSharing(all_files, 0.4).forEach((x) => output.push(x.serialize()))
+  // deviantSharing(all_files, 0.4).forEach((x) => output.push(x.serialize()))
+  let x: Map<string, [Permission[], Permission[]]>  = calculateSharingChanges(all_files, all_files)
   console.log(output)
   console.log("done")
   res.send({})

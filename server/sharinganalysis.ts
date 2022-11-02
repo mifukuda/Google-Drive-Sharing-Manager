@@ -13,22 +13,23 @@ export const deviantSharing  = (selection: DriveFile[], threshold: number = .80)
             let numFiles = 0
             folder.children.forEach((file) => {
                 let key: string = JSON.stringify(file.permissions.sort())
-                if (key === undefined){
+                if (key === undefined || key === JSON.stringify([])){
                     key = "NO PERMISSION"
                 }
                 permissionsToFileId.has(key)? permissionsToFileId.set(key, (permissionsToFileId.get(key) as string[]).concat([file.id])): permissionsToFileId.set(key, [file.id])
                 numFiles++
             })
-
-            let largestEntry = [...permissionsToFileId.values()].reduce((x, y) => x.length > y.length? x: y)
-            if(largestEntry.length / numFiles >= threshold){
-                permissionsToFileId.forEach((value, key) => {
-                    if(JSON.stringify(value) !== JSON.stringify(largestEntry)){
-                        value.forEach((fileId) => {
-                            deviantlyShared.push(fileIdToFile.get(fileId) as DriveFile)
-                        })
-                    }
-                })
+            if(numFiles > 0){
+                let largestEntry = [...permissionsToFileId.values()].reduce((x, y) => x.length > y.length? x: y)
+                if(largestEntry.length / numFiles >= threshold){
+                    permissionsToFileId.forEach((value, key) => {
+                        if(JSON.stringify(value) !== JSON.stringify(largestEntry)){
+                            value.forEach((fileId) => {
+                                deviantlyShared.push(fileIdToFile.get(fileId) as DriveFile)
+                            })
+                        }
+                    })
+                }
             }
         }
         
@@ -37,7 +38,7 @@ export const deviantSharing  = (selection: DriveFile[], threshold: number = .80)
     return deviantlyShared
 }
 
-export const calculateSharingChanges = (selection1: DriveFolder[], selection2: DriveFolder[]) => {
+export const calculateSharingChanges = (selection1: DriveFile[], selection2: DriveFile[]) => {
     let idToPermissions : Map<string, [Permission[], Permission[]]> = new Map<string, [Permission[], Permission[]]>()
     
     selection2.forEach((file: DriveFile) => idToPermissions.set(file.id, [file.permissions.sort(), []]))
@@ -51,16 +52,13 @@ export const calculateSharingChanges = (selection1: DriveFolder[], selection2: D
     return idToPermissions
 }
 
-export const calculatePermissionDiffences = (selection: DriveFolder[]) => {
+export const calculatePermissionDiffences = (selection: DriveFile[]) => {
     let differentlyShared : Set<DriveFile> = new Set<DriveFile>()
 
-    // input will be flatmap of all files, so selection needs to be filtered for only folders
-    selection.forEach((folder: DriveFolder) => {
-        // let parentPermissions =  folder.permissions.map((permssion: Permission) => JSON.stringify(permssion)).sort()
-        if(folder instanceof DriveFolder){
+    selection.forEach((folder: DriveFile) => {
+        if(folder instanceof DriveFolder && folder.children.length > 0){
             let parentPermissions = JSON.stringify(folder.permissions.sort())
             folder.children.forEach((child : DriveFile) => {
-                // let childPermissions =  child.permissions.map((permssion: Permission) => JSON.stringify(permssion)).sort()
                 let childPermissions = JSON.stringify(child.permissions.sort())
                 if(JSON.stringify(childPermissions) !== JSON.stringify(parentPermissions)){
                     differentlyShared.add(child)
@@ -69,5 +67,5 @@ export const calculatePermissionDiffences = (selection: DriveFolder[]) => {
         }
     })
 
-    return differentlyShared
+    return [...differentlyShared]
 }

@@ -62,7 +62,7 @@ export class DriveFolder extends DriveFile {
 
     toString(depth: number): string {
         let parent = (this.parent ? this.parent.id : "null")
-        let s = "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + "\n"
+        let s = "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + ", id = " + this.id + "\n"
         for (let i = 0; i < this.children.length; i++) {
             let child: DriveFile = this.children[i]
             s = s + child.toString(depth+1) 

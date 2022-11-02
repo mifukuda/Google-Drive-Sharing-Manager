@@ -116,13 +116,20 @@ app.post('/api/query', async (req: Request, res: Response) => {
   res.send({id: "", files: drivefiles, filter: req.body.query})
 })
 
-app.post('/api/analyzeSharing', async (req: Request, res: Response) => {
+app.get('/api/analyzeSharing', async (req: Request, res: Response) => {
+  console.log("hi")
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
   let google_drive_adapter = new GoogleDriveAdapter()
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
-  let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())     
-  console.log(JSON.stringify(deviantSharing(all_files, 0.6), null, "\t"))
+  let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())   
+  // let all_files: DriveFile[] = snapshot.drive_roots[0].getSubtree()
+  console.log(all_files)
+  console.log("==================================")
+  let output: DriveFile[] = []
+  deviantSharing(all_files, 0.4).forEach((x) => output.push(x.serialize()))
+  console.log(output)
+  console.log("done")
   res.send({})
 })
 

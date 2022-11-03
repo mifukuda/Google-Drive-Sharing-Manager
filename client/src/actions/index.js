@@ -84,9 +84,30 @@ const unselectFile = (file) => {
   }
 }
 
+const sortByName = () => {
+  return {
+    type: 'SORT_BY_NAME',
+  }
+}
+
+const sortByDateOld = () => {
+  return {
+    type: 'SORT_BY_DATE_OLD',
+  }
+}
+
+const sortByDateNew = () => {
+  return {
+    type: 'SORT_BY_DATE_NEW',
+  }
+}
+
 export {
   showModal,
   hideModal,
   selectFile,
-  unselectFile
+  unselectFile,
+  sortByName,
+  sortByDateOld,
+  sortByDateNew
 }

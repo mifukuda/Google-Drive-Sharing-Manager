@@ -1,7 +1,8 @@
 import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {getSnapshotFromBackend} from "../actions";
 import FileList from "./FileList";
+import FileListHeader from "./FileListHeader";
 import HomeScreenHeader from "./HomeScreenHeader";
 import QueryBuilder from "./QueryBuilder";
 import SearchBar from "./SearchBar";
@@ -9,7 +10,6 @@ import SideBar from "./SideBar";
 
 export default function FileCard() {
     const dispatch = useDispatch();
-    const numSelected = useSelector(state => state.selected);
     //Return default snapshot (most recent) from backend
     useEffect(() => {
         dispatch(getSnapshotFromBackend());
@@ -23,7 +23,7 @@ export default function FileCard() {
                 <HomeScreenHeader/>
                 <SearchBar/>
                 <div className="filelist">
-                    <p>Snapshot: {numSelected.length} Selected</p>
+                    <FileListHeader/>
                     <FileList updating={false}/>
                 </div>
             </div>

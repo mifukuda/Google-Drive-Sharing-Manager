@@ -3,12 +3,14 @@ import { DriveRoot } from "./DriveRoot"
 import { Group } from "./Group"
 import { FileInfoSnapshot } from "./FileInfoSnapshot"
 import { UserProfile } from "./UserProfile"
-import { getAllGoogleDriveFiles, getSharedGoogleDrives, buildGoogleDriveTrees } from "../api_utils/google_api_utils"
 const CONFIG = require('../configs.js')
 import { google } from 'googleapis'
 import { OAuth2Client } from "google-auth-library"
 import Models from "../db/Models"
 import { Types, HydratedDocument } from "mongoose"
+import { User } from "./User"
+import { googleDrivePermissionToOurs, Permission } from "./Permission"
+import { DriveFolder } from "./DriveFolder"
 
 
 export abstract class DriveAdapter {
@@ -16,8 +18,7 @@ export abstract class DriveAdapter {
     constructor(driveToken: string){
         this.driveToken = driveToken
     }
-    abstract createUserProfile(driveId: String, name: String, email: String): Promise<any>
-    abstract createFileInfoSnapshot(userID: Types.ObjectId): Promise<FileInfoSnapshot>
+    abstract getFileRoots(): Promise<DriveRoot[]>
     abstract updateSharing(files: DriveFile[], permissions: Group[]): Promise<void>
 }
 
@@ -35,76 +36,116 @@ export class GoogleDriveAdapter extends DriveAdapter {
         this.auth_client.setCredentials({ refresh_token: this.driveToken })
     }
 
-    // async getUserInfo(): Promise<any>{
-    //     //get the user profile information
-    //     const oauth2 = google.oauth2({
-    //         auth: this.auth_client,
-    //         version: 'v2'
-    //     });
+    async getUserInfo(): Promise<any>{
+        //get the user profile information
+        const oauth2 = google.oauth2({
+            auth: this.auth_client,
+            version: 'v2'
+        });
 
-    //     let userInfo:any
-    //     try{
-    //         userInfo = (await oauth2.userinfo.get()).data
-    //     }catch(err){
-    //         console.log("Error getting the user info: ", err)
-    //     }
-
-    //     return userInfo
-    // }
-
-    async createUserProfile(driveId: String, name: String, email: String): Promise<any> {
-        let userProfile = new Models.UserModel({
-            driveId: driveId,
-            driveToken: this.driveToken,
-            driveType: "GOOGLE",
-            displayName: name,
-            email: email, 
-            fileSnapshots: [],
-            groupSnapshots: [],
-            AccessControlPolicy: []
-        })
-
+        let userInfo:any
         try{
-            userProfile = await userProfile.save()
+            userInfo = (await oauth2.userinfo.get()).data
         }catch(err){
-            console.log("Error saving user to the database", err)
+            console.log("Error getting the user info: ", err)
         }
 
-
-
-        return userProfile
+        return userInfo
+    }
+    
+    async getFileRoots(): Promise<DriveRoot[]> {
+        let allFiles: any = await this.getAllGoogleDriveFiles()
+        let sharedDrives: any = await this.getSharedGoogleDrives()
+        let roots: DriveRoot[] = await this.buildGoogleDriveTrees(allFiles, sharedDrives)
+        return roots
     }
 
-    async getUserProfileByDriveId(driveId: String): Promise<any>{
-        let userProfile = null
-        try{
-            userProfile = await Models.UserModel.findOne({driveId: driveId})
-        }catch(err){
-            console.log("Error querying user profile.", err)
+    async getAllGoogleDriveFiles(): Promise<any>{
+        const drive = google.drive('v3');
+        const GoogleFile = require('googleapis').File
+        let nextPageToken: any = ""
+        let allFiles: typeof GoogleFile[] = []
+        while (nextPageToken != null) {
+            let response = await drive.files.list({
+                auth: this.auth_client,
+                pageSize: 100,
+                pageToken: nextPageToken,
+                includeItemsFromAllDrives: true,
+                supportsAllDrives: true,
+                fields: 'nextPageToken, files(name, id, mimeType, createdTime, modifiedTime, permissions, parents, owners, sharingUser)',
+            })
+            allFiles = allFiles.concat(response.data.files)
+            nextPageToken = response.data.nextPageToken
         }
-
-        return userProfile
+        // console.log(JSON.stringify(allFiles, null, "\t"))
+        return allFiles
     }
 
-    async getUserProfileById(_id: Types.ObjectId): Promise<any>{
-        let userProfile = null
-        try{
-            userProfile = await Models.UserModel.findById(_id)
-        }catch(err){
-            console.log("Error querying user profile.", err)
+    async getSharedGoogleDrives(): Promise<any>{
+        const drive = google.drive('v3');
+        const GoogleFile = require('googleapis').File
+
+        let nextPageToken: any = ""
+        let sharedDrives: any = []
+        while (nextPageToken != null) {
+            let response = await drive.drives.list({
+                auth: this.auth_client,
+                pageSize: 100,
+                pageToken: nextPageToken,
+                fields: 'nextPageToken, drives',
+            })
+            sharedDrives = sharedDrives.concat(response.data.drives)
+            nextPageToken = response.data.nextPageToken
         }
-
-        return userProfile
+        return sharedDrives
     }
 
-    async createFileInfoSnapshot(userID: Types.ObjectId): Promise<FileInfoSnapshot> {
-        let allFiles: any = await getAllGoogleDriveFiles()
-        let sharedDrives: any = await getSharedGoogleDrives()
-        let roots: DriveRoot[] = await buildGoogleDriveTrees(allFiles, sharedDrives)
+    async buildGoogleDriveTrees(allFiles: any, sharedDrives: any): Promise<DriveRoot[]> {
+        const drive = google.drive('v3');
+        const GoogleFile = require('googleapis').File
+        let roots: DriveRoot[] = []
+        let my_drive_rootID:any = (await drive.files.get({ auth: this.auth_client, fileId: "root" })).data.id
+        roots.push(new DriveRoot("NEEDS TO BE CHANGED", my_drive_rootID, "My Drive", [], false))
+        let shared_with_me_root = new DriveRoot("NEEDS TO BE CHANGED", "shared_with_me", "Shared with me", [], false)
+        roots.push(shared_with_me_root)
+        sharedDrives.forEach((s: any) => {roots.push(new DriveRoot("NEEDS TO BE CHANGED", s.id, s.name, [], true))});
         
-        // save to the database
-
-        return new FileInfoSnapshot(userID, new Date(), roots, new Date())
+        let idToDriveFiles: Map<string, [DriveFile, string | null]> = new Map<string, [DriveFile, string | null]>()
+        roots.forEach((d: DriveRoot) => {idToDriveFiles.set(d.id, [d, null])})
+    
+        allFiles.forEach((file: any) => { // construct nodes
+            if (!file) 
+                throw new Error("file undefined")
+            let mimeType: string = file.mimeType
+            let parentID : string = (file.parents ? file.parents[0] : "shared_with_me") 
+            let owner = file.owners ? new User(file.owners[0].emailAddress, file.owners[0].displayName) : null
+            let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
+            let permissions: Permission[] = file.permissions ? file.permissions.map((p: any) => {
+                let granted_to: User | Group = new User(p.emailAddress, file.owners[0].displayName)
+                return new Permission("NEEDS TO BE CHANGED", p.id, granted_to, googleDrivePermissionToOurs[p.role])
+            }) : []
+            if (mimeType === "application/vnd.google-apps.folder") {
+                idToDriveFiles.set(file.id, [new DriveFolder("NEEDS TO BE CHANGED", file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, []), parentID])
+            }
+            else {
+                idToDriveFiles.set(file.id, [new DriveFile("NEEDS TO BE CHANGED", file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType), parentID])
+            }
+        })
+    
+        idToDriveFiles.forEach(([child, parentID]: [DriveFile, string | null], key: string) => { // iterate through nodes and add an edge between node and its parent
+            if (!parentID) // means we are at a root (whose parent is set to null); don't process
+                return
+            if (!idToDriveFiles.has(parentID)) {
+                // console.log("WARNING: " + parentID + " not found in files, putting item in shared folders")
+                child.parent = shared_with_me_root
+            }
+            else {
+                child.parent = (idToDriveFiles.get(parentID) as [DriveFolder, string])[0]
+                child.parent.children.push(child)
+            }
+        })
+    
+        return roots
     }
 
     async updateSharing(files: DriveFile[], permissions: Group[]): Promise<void> {

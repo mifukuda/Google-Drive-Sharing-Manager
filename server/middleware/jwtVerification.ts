@@ -1,5 +1,6 @@
 const google = require('googleapis').google 
 import { Request, Response, NextFunction } from 'express';
+import { Types } from 'mongoose'
 const jwt = require('jsonwebtoken')
 const CONFIG = require('../configs.js')
 
@@ -20,7 +21,7 @@ export const verifyToken = (req: any, res: any, next: NextFunction) => {
         }
 
         const decoded = jwt.verify(token, CONFIG.JWT_secret)
-        req.accessToken = decoded
+        req._id = new Types.ObjectId(decoded)
         next()
     }catch{
         return res.status(401).json({

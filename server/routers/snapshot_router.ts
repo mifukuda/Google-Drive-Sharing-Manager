@@ -1,6 +1,6 @@
 import express from 'express';
-import { getSnap, saveSnap } from '../controllers/snapshot_controller';
-import { verifyToken } from '../auth'
+import { getSnap, saveSnap } from '../controllers/fileSnapshotController';
+import { verifyToken } from '../middleware/jwtVerification'
 
 const router = express.Router();
 

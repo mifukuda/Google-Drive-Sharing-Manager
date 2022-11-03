@@ -8,9 +8,10 @@ import { Types } from "mongoose"
 export class FileInfoSnapshot {
     constructor (
         public _id: Types.ObjectId,
-        public date_created: Date, 
+        public userId: Types.ObjectId,
         public drive_roots: DriveRoot[], 
-        public date_updated: Date
+        public date_updated: Date,
+        public date_created: Date
     ) {}
 
     applyQuery(query: Query): DriveFile[] {
@@ -31,7 +32,7 @@ export class FileInfoSnapshot {
         const files = this.drive_roots.flatMap((d: DriveRoot) => d.getModel())
         const snapshotModel = new Models.FileSnapshotModel(
             {
-                user_id: this._id,
+                user_id: this.userId,
                 files: files
             }
         )
@@ -42,6 +43,34 @@ export class FileInfoSnapshot {
             }
         })
 
+    }
+
+    static async createNew(userId:Types.ObjectId, roots: DriveRoot[]): Promise<FileInfoSnapshot>{
+        //convert the tree structure to a list of documents
+        const files = roots.flatMap((d: DriveRoot) => d.getModel())
+        
+        //create new model
+        let snapshotModel: any = new Models.FileSnapshotModel(
+            {
+                user_id: userId,
+                files: files
+            }
+        )
+
+        //save the model
+        try{
+           snapshotModel = await snapshotModel.save()
+        }catch (err){
+            console.log("Error saving snapshot model: ", err)
+        }
+        
+        return new FileInfoSnapshot(
+            snapshotModel._id,
+            snapshotModel.userId,
+            snapshotModel.files, 
+            snapshotModel.updatedAt,
+            snapshotModel.createdAt
+        )
     }
 
     toString(): string {

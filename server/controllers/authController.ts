@@ -1,9 +1,11 @@
 const google = require('googleapis').google 
-import { Request, Response } from 'express';
+import { Request, Response } from 'express'
 const CONFIG = require('../configs.js')
 import jwt from 'jsonwebtoken'
 import Models from "../db/Models"
 import { GoogleDriveAdapter } from "../classes/DriveAdapter"
+import { ObjectId } from 'mongoose'
+import { UserProfile } from "../classes/UserProfile"
 
 // Create an OAuth2 client object for google
 const OAuth2 = google.auth.OAuth2
@@ -53,16 +55,18 @@ const auth_callback = async (req: Request, res: Response) => {
     const drive = new GoogleDriveAdapter(tokens.refresh_token)
 
     //check the database to see if the user already exists
-    let userProfile = await drive.getUserProfileByDriveId(payload.sub)
+    let userProfile = await UserProfile.getUserProfileByDriveId(payload.sub)
     if(!userProfile){
-        userProfile = drive.createUserProfile(
+        userProfile = UserProfile.createUserProfile(
             payload.sub,
+            drive.driveToken,
+            "GOOGLE",
             payload.name,
             payload.email
         )
     }
 
-    res.cookie('jwt', jwt.sign(userProfile._id.toString(), CONFIG.JWT_secret));
+    res.cookie('jwt', jwt.sign((userProfile._id as ObjectId).toString(), CONFIG.JWT_secret));
     return res.redirect('/');
 }
 

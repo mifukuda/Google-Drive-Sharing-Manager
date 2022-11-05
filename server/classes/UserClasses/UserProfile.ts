@@ -1,14 +1,15 @@
 import { Query } from "./Query";
-import { AccessControlPolicy } from "./AccessControlPolicy";
-import { FileInfoSnapshot } from "./FileInfoSnapshot";
-import { GroupMembershipSnapshot } from './GroupMembershipSnapshot'
+import { AccessControlPolicy } from "../Structures/AccessControlPolicy";
+import { FileInfoSnapshot } from "../Structures/FileInfoSnapshot";
+import { GroupMembershipSnapshot } from '../Structures/GroupMembershipSnapshot'
 import { Types, FilterQuery} from "mongoose"
-import Models from "../db/Models"
+import Models from "../../db/Models"
 
 export class UserProfile {
     constructor (
         public _id: Types.ObjectId,
         public driveId: string,
+        public driveToken: string,
         public driveType: string,
         public displayName: string,
         public email: string,
@@ -37,7 +38,7 @@ export class UserProfile {
             console.log("Error saving user to the database", err)
         }
  
-        return new UserProfile(userProfile._id, driveId, driveType, name, email, [], [], [], [])
+        return new UserProfile(userProfile._id, driveId, userProfile.driveToken, driveType, name, email, [], [], [], [])
     }
 
     static async getUserProfileByDriveId(driveId: String): Promise<any>{
@@ -48,7 +49,7 @@ export class UserProfile {
             console.log("Error querying user profile.", err)
         }
         if(userProfile !== null){
-            userProfile = new UserProfile(userProfile._id, userProfile.driveId, userProfile.driveType,
+            userProfile = new UserProfile(userProfile._id, userProfile.driveId, userProfile.driveToken, userProfile.driveType,
                              userProfile.displayName, userProfile.email, [], userProfile.access_control_policies, userProfile.fileSnapshots, userProfile.groupSnapshots)
         }
         return userProfile
@@ -62,7 +63,7 @@ export class UserProfile {
             console.log("Error querying user profile.", err)
         }
         if(userProfile !== null){
-            userProfile = new UserProfile(userProfile._id, userProfile.driveId, userProfile.driveType,
+            userProfile = new UserProfile(userProfile._id, userProfile.driveId, userProfile.driveToken, userProfile.driveType,
                              userProfile.displayName, userProfile.email, [], userProfile.access_control_policies, userProfile.fileSnapshots, userProfile.groupSnapshots)
         }
         return userProfile

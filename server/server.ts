@@ -1,8 +1,8 @@
 //library imports
 import { Request, Response } from 'express'
-import { FileInfoSnapshot } from './classes/FileInfoSnapshot'
-import { Query } from './classes/Query'
-import { GoogleDriveAdapter } from './classes/DriveAdapter'
+import { FileInfoSnapshot } from './classes/Structures/FileInfoSnapshot'
+import { Query } from './classes/UserClasses/Query'
+import { GoogleDriveAdapter } from './classes/DriveAdapter/DriveAdapter'
 import express from 'express'
 import cookie_parser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
@@ -11,8 +11,8 @@ import fileUpload, { UploadedFile } from 'express-fileupload'
 
 //file imports
 const CONFIG = require('./configs.js');
-import { auth_router } from './routers/auth_router'
-import { snapshot_router } from './routers/snapshot_router'
+import { auth_router } from './routers/authRouter'
+import { snapshot_router } from './routers/fileSnapshot'
 import { auth_client } from './controllers/authController'
 import db_connect from './db'
 import Models from "./db/Models"
@@ -37,31 +37,31 @@ app.use(cors(corsOptions));
 
 //installing custom middleware
 app.use('/auth', auth_router)
-app.use('/snapshot', snapshot_router)
+app.use('/fileSnapshot', snapshot_router)
 
 //connect to the database
 db_connect()
 
-// app.get('/', async (req: Request, res: Response) => {
-// 	// {
-// 	// 	access_token: 'ya29.a0Aa4xrXPRlM5Z4f6gAp0NS-ZoiG3WIagexdvFAP1J3GQyXIYnrwFpHHShf0cGnQh-LPLQTRWZV3yv-w7uB51YtionN90djL4oSJPC1yAdBBJN4bwVp-n9SGKwXqwlugXdZ2nuNDhVZVR8kvZvQCTKvP9tX_3xaCgYKATASARESFQEjDvL9W415OOyN9VWl5kWC_q7ajQ0163',
-// 	// 	refresh_token: '1//0dgLjUOyAF20rCgYIARAAGA0SNwF-L9IrHUJXdPN1sDffhH7l5EmhiiY7RFRHpK6CcyC41clK5485p-a_3v9-epvqclSWfji6HWw',
-// 	// 	scope: 'https://www.googleapis.com/auth/drive openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-// 	// 	token_type: 'Bearer',
-// 	// 	id_token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc3Y2MwZWY0YzcxODFjZjRjMGRjZWY3YjYwYWUyOGNjOTAyMmM3NmIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2MTI0MDY4NjA0Nzktcmo5bHV1NG1mb3NtN3FmaWtldHM1YnVuc2ZlbmNiZXUuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2MTI0MDY4NjA0Nzktcmo5bHV1NG1mb3NtN3FmaWtldHM1YnVuc2ZlbmNiZXUuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTU0ODkxMDIxNjU4NjEwNzg0NzQiLCJlbWFpbCI6ImNob3dkaHVyeWFubm9vckBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6ImNBSkJYdW1wSF9DX204OEFOQkVBSVEiLCJuYW1lIjoiQ2hvd2RodXJ5IEFuLU5vb3IiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUxtNXd1My1MMUJuemRwZ2RWeXFYQjBuSHl4N2labUhzT3ZHR0x5eEpvbWw9czk2LWMiLCJnaXZlbl9uYW1lIjoiQ2hvd2RodXJ5IiwiZmFtaWx5X25hbWUiOiJBbi1Ob29yIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE2NjczNTYzNzIsImV4cCI6MTY2NzM1OTk3Mn0.H3VbBxv_4UAAAovSB4RUipDFbxkXS_Xy1uT6qte9h5RV0uti49_LWnsndJrakzmTzTtqSRpZw7AWmFYRA_T6a5HDeCh0a1-zL10u4eCioU8eZ4CI9s3KhjnC4uRmduq3B7c0lViD5x0tlFKbQmGsWfPZiAgJVpYIMQcdcUp8x2Vx10JLXTYHWD9lzmfUoLPqmyud826NKv4PP9FOwThyXp8a_rnwozgOMyrtegrSvBNLSzq_ROtM_iM8Mdlh-O0p_CR1Si_FuD41VAuwYcPhPcVq8-n_YsTHWYLbT-SEjS9VH8cNGROKrf0wiKUuDqs75nZjBLWBOdXr1DcagcGmKw',
-// 	// 	expiry_date: 1667359971709
-// 	// }
-// 	  auth_client.setCredentials({ refresh_token : "1//0dgLjUOyAF20rCgYIARAAGA0SNwF-L9IrHUJXdPN1sDffhH7l5EmhiiY7RFRHpK6CcyC41clK5485p-a_3v9-epvqclSWfji6HWw"})
-// 	  let adapter = new GoogleDriveAdapter("1//0dgLjUOyAF20rCgYIARAAGA0SNwF-L9IrHUJXdPN1sDffhH7l5EmhiiY7RFRHpK6CcyC41clK5485p-a_3v9-epvqclSWfji6HWw")
-// 	  let snapshot: FileInfoSnapshot = await adapter.createFileInfoSnapshot()
-// 	  // const serializedSnapshot = snapshot.serialize()
-// 	  let saved_snapshot_id: any = await snapshot.save(err => {
-// 		console.log(err)
-// 	  })
-// 	  // console.log(snapshot._id)
-// 	  // FileInfoSnapshot.retrieve(snapshot._id)
-// 		return res.send("Hello Linux Stans")
-// })
+app.get('/', async (req: Request, res: Response) => {
+	// {
+	// 	access_token: 'ya29.a0Aa4xrXPRlM5Z4f6gAp0NS-ZoiG3WIagexdvFAP1J3GQyXIYnrwFpHHShf0cGnQh-LPLQTRWZV3yv-w7uB51YtionN90djL4oSJPC1yAdBBJN4bwVp-n9SGKwXqwlugXdZ2nuNDhVZVR8kvZvQCTKvP9tX_3xaCgYKATASARESFQEjDvL9W415OOyN9VWl5kWC_q7ajQ0163',
+	// 	refresh_token: '1//0dgLjUOyAF20rCgYIARAAGA0SNwF-L9IrHUJXdPN1sDffhH7l5EmhiiY7RFRHpK6CcyC41clK5485p-a_3v9-epvqclSWfji6HWw',
+	// 	scope: 'https://www.googleapis.com/auth/drive openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+	// 	token_type: 'Bearer',
+	// 	id_token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc3Y2MwZWY0YzcxODFjZjRjMGRjZWY3YjYwYWUyOGNjOTAyMmM3NmIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2MTI0MDY4NjA0Nzktcmo5bHV1NG1mb3NtN3FmaWtldHM1YnVuc2ZlbmNiZXUuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2MTI0MDY4NjA0Nzktcmo5bHV1NG1mb3NtN3FmaWtldHM1YnVuc2ZlbmNiZXUuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTU0ODkxMDIxNjU4NjEwNzg0NzQiLCJlbWFpbCI6ImNob3dkaHVyeWFubm9vckBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6ImNBSkJYdW1wSF9DX204OEFOQkVBSVEiLCJuYW1lIjoiQ2hvd2RodXJ5IEFuLU5vb3IiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUxtNXd1My1MMUJuemRwZ2RWeXFYQjBuSHl4N2labUhzT3ZHR0x5eEpvbWw9czk2LWMiLCJnaXZlbl9uYW1lIjoiQ2hvd2RodXJ5IiwiZmFtaWx5X25hbWUiOiJBbi1Ob29yIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE2NjczNTYzNzIsImV4cCI6MTY2NzM1OTk3Mn0.H3VbBxv_4UAAAovSB4RUipDFbxkXS_Xy1uT6qte9h5RV0uti49_LWnsndJrakzmTzTtqSRpZw7AWmFYRA_T6a5HDeCh0a1-zL10u4eCioU8eZ4CI9s3KhjnC4uRmduq3B7c0lViD5x0tlFKbQmGsWfPZiAgJVpYIMQcdcUp8x2Vx10JLXTYHWD9lzmfUoLPqmyud826NKv4PP9FOwThyXp8a_rnwozgOMyrtegrSvBNLSzq_ROtM_iM8Mdlh-O0p_CR1Si_FuD41VAuwYcPhPcVq8-n_YsTHWYLbT-SEjS9VH8cNGROKrf0wiKUuDqs75nZjBLWBOdXr1DcagcGmKw',
+	// 	expiry_date: 1667359971709
+	// }
+	//   auth_client.setCredentials({ refresh_token : "1//0dgLjUOyAF20rCgYIARAAGA0SNwF-L9IrHUJXdPN1sDffhH7l5EmhiiY7RFRHpK6CcyC41clK5485p-a_3v9-epvqclSWfji6HWw"})
+	//   let adapter = new GoogleDriveAdapter("1//0dgLjUOyAF20rCgYIARAAGA0SNwF-L9IrHUJXdPN1sDffhH7l5EmhiiY7RFRHpK6CcyC41clK5485p-a_3v9-epvqclSWfji6HWw")
+	//   let snapshot: FileInfoSnapshot = await adapter.createFileInfoSnapshot()
+	//   // const serializedSnapshot = snapshot.serialize()
+	//   let saved_snapshot_id: any = await snapshot.save(err => {
+	// 	console.log(err)
+	//   })
+	  // console.log(snapshot._id)
+	  // FileInfoSnapshot.retrieve(snapshot._id)
+	return res.send("Hello Linux Stans")
+})
 
 // app.post('/uploadgroup', function (req, res) {
 // 	if (!req.files || Object.keys(req.files).length === 0) {

@@ -1,17 +1,44 @@
 import { Request, Response} from 'express';
-import { User } from '../classes/User';
-import { UserProfile } from '../classes/UserProfile'
+import { fstat } from 'fs';
+import { GoogleDriveAdapter } from '../classes/DriveAdapter/DriveAdapter';
+import { DriveRoot } from '../classes/FilesClasses/DriveRoot';
+import { FileInfoSnapshot } from '../classes/Structures/FileInfoSnapshot';
+import Models from '../db/Models';
 
 const createSnapshot = async (req: Request, res: Response) => {
     //get the user UserProfile
-    const user: UserProfile = await UserProfile.getUserProfileById((req as any)._id)
+    let user: any = null
+    try{
+        user = await Models.UserModel.findById((req.cookies.jwt))
+    }catch(err){
+        console.log("Error querying user profile.", err)
+        return res.status(400).json({status: "Failed"})
+    }
 
-    //create the snapshotvb 
+    //create the snapshot
+    const drive = new GoogleDriveAdapter(user.driveToken)
+    const roots: DriveRoot[] = await drive.getFileRoots()
+    console.log(roots)
+    const fileSnapshot: FileInfoSnapshot = await FileInfoSnapshot.createNew(user._id, roots)
 
     //update and save the user userProfile
+    user.fileSnapshots.push(fileSnapshot._id)
+    try{
+        user = await user.save()
+    }catch(err){
+        console.log("Error saving user profile.", err)
+        return res.status(400).json({message: "Failed"})
+    }
 
+    console.log(fileSnapshot)
     //serilize the snapshot and return
+    return res.status(201).json({
+        message: "OK",
+        fileSnapshot: fileSnapshot.serialize()
+    })
 }
+
+
 
 const getSnap = (req: Request, res: Response) => {
     res.status(200).json({
@@ -19,10 +46,10 @@ const getSnap = (req: Request, res: Response) => {
     })
 }
 
-const saveSnap = (req: Request, res: Response) => {
+const updateSnap = (req: Request, res: Response) => {
     res.status(200).json({ 
         status: 'OK' 
     })
 }
 
-export { createSnapshot, getSnap, saveSnap }
+export { createSnapshot, getSnap, updateSnap }

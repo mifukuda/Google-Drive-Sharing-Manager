@@ -1,16 +1,16 @@
-import { DriveFile } from "./DriveFile"
-import { DriveRoot } from "./DriveRoot"
-import { Group } from "./Group"
-import { FileInfoSnapshot } from "./FileInfoSnapshot"
-import { UserProfile } from "./UserProfile"
-const CONFIG = require('../configs.js')
+import { DriveFile } from "../FilesClasses/DriveFile"
+import { DriveRoot } from "../FilesClasses/DriveRoot"
+import { Group } from "../UserClasses/Group"
+import { FileInfoSnapshot } from "../Structures/FileInfoSnapshot"
+import { UserProfile } from "../UserClasses/UserProfile"
+const CONFIG = require('../../configs.js')
 import { google } from 'googleapis'
 import { OAuth2Client } from "google-auth-library"
-import Models from "../db/Models"
+import Models from "../../db/Models"
 import { Types, HydratedDocument } from "mongoose"
-import { User } from "./User"
-import { googleDrivePermissionToOurs, Permission } from "./Permission"
-import { DriveFolder } from "./DriveFolder"
+import { User } from "../UserClasses/User"
+import { googleDrivePermissionToOurs, Permission } from "../Structures/Permission"
+import { DriveFolder } from "../FilesClasses/DriveFolder"
 
 
 export abstract class DriveAdapter {

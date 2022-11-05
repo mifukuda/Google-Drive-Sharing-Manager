@@ -1,8 +1,8 @@
-import { DriveRoot } from "./DriveRoot"
-import { DriveFile } from "./DriveFile"
-import { Query } from "./Query"
-import { operatorToQueryPredicate, QueryPredicate } from "../predicates"
-import Models from "../db/Models"
+import { DriveRoot } from "../FilesClasses/DriveRoot"
+import { DriveFile } from "../FilesClasses/DriveFile"
+import { Query } from "../UserClasses/Query"
+import { operatorToQueryPredicate, QueryPredicate } from "../../predicates"
+import Models from "../../db/Models"
 import { Types } from "mongoose"
 
 export class FileInfoSnapshot {
@@ -67,7 +67,7 @@ export class FileInfoSnapshot {
         return new FileInfoSnapshot(
             snapshotModel._id,
             snapshotModel.userId,
-            snapshotModel.files, 
+            roots, 
             snapshotModel.updatedAt,
             snapshotModel.createdAt
         )

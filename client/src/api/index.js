@@ -8,7 +8,7 @@ const api = axios.create({
 // Get default snapshot
 export const getSnapshot = () => api.get('/getSnapshot/');
 // Apply filter to snapshot
-export const getFilteredSnapshot = (id, payload) => api.post(`/getSnapshot/${id}`, payload);
+export const getFilteredSnapshot = (id, payload) => api.post(`/query/${id}`, payload);
 
 const apis = {
     getSnapshot,

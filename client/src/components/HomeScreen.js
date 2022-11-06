@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getSnapshotFromBackend} from "../actions";
 import FileList from "./FileList";
 import FileListHeader from "./FileListHeader";
@@ -10,10 +10,17 @@ import SideBar from "./SideBar";
 
 export default function FileCard() {
     const dispatch = useDispatch();
+    const snapshot = useSelector(state => state.snapshot);
     //Return default snapshot (most recent) from backend
     useEffect(() => {
-        dispatch(getSnapshotFromBackend());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        console.log("Fetching from backend.");
+        if(snapshot === '') {
+            dispatch(getSnapshotFromBackend());
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
+        else {
+            console.log("Aborting fetch.")
+        }
     }, []);
     return (
         <div className="homescreen">

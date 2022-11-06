@@ -6,7 +6,7 @@ import {Dropdown} from "react-bootstrap";
 // Button redirects to Google Auth
 export default function FileListHeader() {
     const dispatch = useDispatch();
-    const numSelected = useSelector(state => state.selected);
+    const numSelected = useSelector(state => state.selectedFiles);
     const queryString = useSelector(state => state.filter);
     const [sortField, setSortField] = useState(null);
 

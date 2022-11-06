@@ -3,7 +3,7 @@ import isLoggedInReducer from './isLoggedIn.js';
 import filterReducer from './filter.js';
 import accessControlPolicyReducer from './accessControlPolicies.js';
 import showModalReducer from './showModal.js';
-import selectedReducer from './selected.js';
+import selectedFilesReducer from './selectedFiles.js';
 import {combineReducers} from 'redux';
 
 const allReducers = combineReducers({
@@ -12,7 +12,7 @@ const allReducers = combineReducers({
     filter: filterReducer,
     accessControlPolicies: accessControlPolicyReducer,
     showModal: showModalReducer,
-    selected: selectedReducer 
+    selectedFiles: selectedFilesReducer 
 })
 
 export default allReducers;

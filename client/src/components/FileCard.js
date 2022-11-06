@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function FileCard(props) {
     const {file, depth, isRoot} = props;
     const dispatch = useDispatch();
-    const selectedFiles = useSelector(state => state.selected);
+    const selectedFiles = useSelector(state => state.selectedFiles);
     const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
 
     function handleCheck(event) {

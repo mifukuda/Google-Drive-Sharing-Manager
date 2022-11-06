@@ -4,8 +4,34 @@ import FileCard from './FileCard';
 
 export default function HomeScreen(props) {
     const snapshot = useSelector(state => state.snapshot.files);
-    const selectedFiles = useSelector(state => state.selected);
+    const selectedFiles = useSelector(state => state.selectedFiles);
     const {updating} = props;
+
+    // Building list from search results
+    function buildList(snapshot) {
+        for(let i = 0; i < snapshot.length; i++) {
+            directory.push(<FileCard file={snapshot[i]} depth={0} key={key++} isRoot={false}/>);
+        }
+    }
+
+    // DFS: returns directory structure (each file/folder is a FileCard)
+    function buildTree(snapshot) {
+        directory.push(<FileCard file={snapshot} depth={0} key={key++} isRoot={true}/>);
+        //directory.push("Name: " + snapshot.name + ", Depth: " + 0);
+        buildTreeHelper(snapshot, 1)
+    }
+
+    // DFS: depth used for indentation
+    function buildTreeHelper(root, depth) {
+        if (root.children) {
+            for(let i = 0; i < root.children.length; i++) {
+                directory.push(<FileCard file={root.children[i]} depth={depth} key={key++} isRoot={false}/>);
+                //directory.push("Name: " + root.children[i].name + ", Depth: " + depth);
+                buildTreeHelper(root.children[i], depth + 1);
+            }
+        }
+    }
+
     /*let snapshot = {
         drive_roots: [
             {
@@ -122,31 +148,6 @@ export default function HomeScreen(props) {
         } catch (error) {
             console.log(error);
             directory = [];
-        }
-    }
-
-    // Building list from search results
-    function buildList(snapshot) {
-        for(let i = 0; i < snapshot.length; i++) {
-            directory.push(<FileCard file={snapshot[i]} depth={0} key={key++} isRoot={false}/>);
-        }
-    }
-
-    // DFS: returns directory structure (each file/folder is a FileCard)
-    function buildTree(snapshot) {
-        directory.push(<FileCard file={snapshot} depth={0} key={key++} isRoot={true}/>);
-        //directory.push("Name: " + snapshot.name + ", Depth: " + 0);
-        buildTreeHelper(snapshot, 1)
-    }
-
-    // DFS: depth used for indentation
-    function buildTreeHelper(root, depth) {
-        if (root.children) {
-            for(let i = 0; i < root.children.length; i++) {
-                directory.push(<FileCard file={root.children[i]} depth={depth} key={key++} isRoot={false}/>);
-                //directory.push("Name: " + root.children[i].name + ", Depth: " + depth);
-                buildTreeHelper(root.children[i], depth + 1);
-            }
         }
     }
 

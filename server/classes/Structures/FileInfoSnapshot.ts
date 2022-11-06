@@ -60,7 +60,6 @@ export class FileInfoSnapshot {
 
     async save(callback: (err: Error) => void): Promise<Types.ObjectId> {
         const files = this.drive_roots.flatMap((d: DriveRoot) => d.getModel())
-<<<<<<< HEAD:server/classes/FileInfoSnapshot.ts
         const snapshotModel = new Models.FileSnapshotModel({ user_id: this._id, files: files })
         let res: any
         try {
@@ -69,21 +68,6 @@ export class FileInfoSnapshot {
             console.log("Error saving file snapshot: ", e)
         }
         return res._id
-=======
-        const snapshotModel = new Models.FileSnapshotModel(
-            {
-                user_id: this.userId,
-                files: files
-            }
-        )
-
-        snapshotModel.save((err, result) => {
-            if(err){
-                console.log("Error saving file snapshot: ", err)
-            }
-        })
-
->>>>>>> origin/retrieveSnapshots:server/classes/Structures/FileInfoSnapshot.ts
     }
 
     static async createNew(userId:Types.ObjectId, roots: DriveRoot[]): Promise<FileInfoSnapshot>{

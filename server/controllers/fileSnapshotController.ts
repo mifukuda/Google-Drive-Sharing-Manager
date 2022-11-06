@@ -1,8 +1,7 @@
-import { Request, Response} from 'express';
-import { fstat } from 'fs';
-import { GoogleDriveAdapter } from '../classes/DriveAdapter/DriveAdapter';
-import { DriveRoot } from '../classes/FilesClasses/DriveRoot';
-import { FileInfoSnapshot } from '../classes/Structures/FileInfoSnapshot';
+import { Request, Response } from 'express';
+import { GoogleDriveAdapter } from '../classes/DriveAdapter';
+import { DriveRoot } from '../classes/FilesClasses';
+import { FileInfoSnapshot } from '../classes/Structures';
 import Models from '../db/Models';
 
 const createSnapshot = async (req: Request, res: Response) => {
@@ -52,4 +51,4 @@ const updateSnap = (req: Request, res: Response) => {
     })
 }
 
-export { createSnapshot, getSnap, updateSnap }
+export { createSnapshot, getSnap, updateSnap };

@@ -1,11 +1,10 @@
 const google = require('googleapis').google 
 import { Request, Response } from 'express'
-const CONFIG = require('../configs.js')
 import jwt from 'jsonwebtoken'
-import Models from "../db/Models"
-import { GoogleDriveAdapter } from "../classes/DriveAdapter/DriveAdapter"
-import { ObjectId, Types } from 'mongoose'
-import { UserProfile } from "../classes/UserClasses/UserProfile"
+import { Types } from 'mongoose'
+import { GoogleDriveAdapter } from "../classes/DriveAdapter"
+import { UserProfile } from "../classes/UserClasses"
+const CONFIG = require('../configs.js')
 
 // Create an OAuth2 client object for google
 const OAuth2 = google.auth.OAuth2

@@ -1,13 +1,9 @@
-import { DriveRoot } from "../FilesClasses/DriveRoot"
-import { DriveFile } from "../FilesClasses/DriveFile"
-import { Query } from "../UserClasses/Query"
-import { operatorToQueryPredicate, QueryPredicate } from "../../predicates"
-import Models from "../../db/Models"
 import { Types } from "mongoose"
-import { fileSnapshotModel } from "../db/Models/FileSnapshotSchema"
-import { DriveFolder } from "./DriveFolder"
-import { Permission } from "./Permission"
-import { User } from "./User"
+import { Permission } from "."
+import Models from "../../db/Models"
+import { operatorToQueryPredicate, QueryPredicate } from "../../predicates"
+import { DriveFile, DriveFolder, DriveRoot } from "../FilesClasses"
+import { Query, User } from "../UserClasses"
 
 export class FileInfoSnapshot {
     constructor (
@@ -19,7 +15,7 @@ export class FileInfoSnapshot {
     ) {}
 
     static async retrieve(id: Types.ObjectId): Promise<FileInfoSnapshot> {
-        let snapshot: any = await fileSnapshotModel.findById(id)
+        let snapshot: any = await Models.FileSnapshotModel.findById(id)
         let roots: DriveRoot[] = []
         let idToDriveFile: Map<string, [DriveFile, Types.ObjectId[]]> = new Map<string, [DriveFile, Types.ObjectId[]]>()
         snapshot.files.forEach((file: any) => {

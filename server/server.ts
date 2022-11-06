@@ -1,22 +1,20 @@
 //library imports
-import { Request, Response } from 'express'
-import { FileInfoSnapshot } from './classes/Structures/FileInfoSnapshot'
-import { Query } from './classes/UserClasses/Query'
-import { GoogleDriveAdapter } from './classes/DriveAdapter/DriveAdapter'
-import express from 'express'
 import cookie_parser from 'cookie-parser'
-import jwt from 'jsonwebtoken'
 import cors from 'cors'
+import express, { Request, Response } from 'express'
 import fileUpload, { UploadedFile } from 'express-fileupload'
+import jwt from 'jsonwebtoken'
+import { Types } from 'mongoose'
+import { GoogleDriveAdapter } from './classes/DriveAdapter'
+import { FileInfoSnapshot } from './classes/Structures'
+import { Query } from './classes/UserClasses'
+import { auth_client } from './controllers'
+import db_connect from './db'
+import Models from "./db/Models"
+import { auth_router, snapshot_router } from './routers'
 
 //file imports
 const CONFIG = require('./configs.js');
-import { auth_router } from './routers/authRouter'
-import { snapshot_router } from './routers/fileSnapshot'
-import { auth_client } from './controllers/authController'
-import db_connect from './db'
-import Models from "./db/Models"
-import { Types } from 'mongoose'
 
 
 //starting the express server

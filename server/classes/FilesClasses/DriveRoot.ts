@@ -1,7 +1,7 @@
 import { DriveFile } from "./DriveFile"
 import { DriveFolder } from "./DriveFolder"
-import { User } from "./User"
-import Models from "../db/Models"
+import { User } from "../UserClasses/User"
+import Models from "../../db/Models"
 import { Types } from "mongoose"
 
 export class DriveRoot extends DriveFolder {

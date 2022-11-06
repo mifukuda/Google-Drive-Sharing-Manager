@@ -1,8 +1,8 @@
-import { DriveRoot } from "./DriveRoot"
-import { DriveFile } from "./DriveFile"
-import { Query } from "./Query"
-import { operatorToQueryPredicate, QueryPredicate } from "../predicates"
-import Models from "../db/Models"
+import { DriveRoot } from "../FilesClasses/DriveRoot"
+import { DriveFile } from "../FilesClasses/DriveFile"
+import { Query } from "../UserClasses/Query"
+import { operatorToQueryPredicate, QueryPredicate } from "../../predicates"
+import Models from "../../db/Models"
 import { Types } from "mongoose"
 import { fileSnapshotModel } from "../db/Models/FileSnapshotSchema"
 import { DriveFolder } from "./DriveFolder"
@@ -12,9 +12,10 @@ import { User } from "./User"
 export class FileInfoSnapshot {
     constructor (
         public _id: Types.ObjectId,
-        public date_created: Date, 
+        public userId: Types.ObjectId,
         public drive_roots: DriveRoot[], 
-        public date_updated: Date
+        public date_updated: Date,
+        public date_created: Date
     ) {}
 
     static async retrieve(id: Types.ObjectId): Promise<FileInfoSnapshot> {
@@ -59,6 +60,7 @@ export class FileInfoSnapshot {
 
     async save(callback: (err: Error) => void): Promise<Types.ObjectId> {
         const files = this.drive_roots.flatMap((d: DriveRoot) => d.getModel())
+<<<<<<< HEAD:server/classes/FileInfoSnapshot.ts
         const snapshotModel = new Models.FileSnapshotModel({ user_id: this._id, files: files })
         let res: any
         try {
@@ -67,6 +69,49 @@ export class FileInfoSnapshot {
             console.log("Error saving file snapshot: ", e)
         }
         return res._id
+=======
+        const snapshotModel = new Models.FileSnapshotModel(
+            {
+                user_id: this.userId,
+                files: files
+            }
+        )
+
+        snapshotModel.save((err, result) => {
+            if(err){
+                console.log("Error saving file snapshot: ", err)
+            }
+        })
+
+>>>>>>> origin/retrieveSnapshots:server/classes/Structures/FileInfoSnapshot.ts
+    }
+
+    static async createNew(userId:Types.ObjectId, roots: DriveRoot[]): Promise<FileInfoSnapshot>{
+        //convert the tree structure to a list of documents
+        const files = roots.flatMap((d: DriveRoot) => d.getModel())
+        
+        //create new model
+        let snapshotModel: any = new Models.FileSnapshotModel(
+            {
+                user_id: userId,
+                files: files
+            }
+        )
+
+        //save the model
+        try{
+           snapshotModel = await snapshotModel.save()
+        }catch (err){
+            console.log("Error saving snapshot model: ", err)
+        }
+        
+        return new FileInfoSnapshot(
+            snapshotModel._id,
+            snapshotModel.userId,
+            roots, 
+            snapshotModel.updatedAt,
+            snapshotModel.createdAt
+        )
     }
 
     toString(): string {

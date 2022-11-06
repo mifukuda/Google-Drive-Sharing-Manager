@@ -8,7 +8,6 @@ import { Query, User } from "../UserClasses"
 export class FileInfoSnapshot {
     constructor (
         public _id: Types.ObjectId,
-        public userId: Types.ObjectId,
         public drive_roots: DriveRoot[], 
         public date_updated: Date,
         public date_created: Date
@@ -37,7 +36,7 @@ export class FileInfoSnapshot {
                 child.parent = (file as DriveFolder)
             })
         })
-        return new FileInfoSnapshot(snapshot._id, snapshot.createdAt, roots, snapshot.updatedAt)
+        return new FileInfoSnapshot(snapshot._id, roots, snapshot.createdAt, snapshot.updatedAt)
     }
 
     applyQuery(query: Query): DriveFile[] {
@@ -56,7 +55,7 @@ export class FileInfoSnapshot {
 
     async save(callback: (err: Error) => void): Promise<Types.ObjectId> {
         const files = this.drive_roots.flatMap((d: DriveRoot) => d.getModel())
-        const snapshotModel = new Models.FileSnapshotModel({ user_id: this._id, files: files })
+        const snapshotModel = new Models.FileSnapshotModel({ files: files })
         let res: any
         try {
             res = await snapshotModel.save()
@@ -71,12 +70,7 @@ export class FileInfoSnapshot {
         const files = roots.flatMap((d: DriveRoot) => d.getModel())
         
         //create new model
-        let snapshotModel: any = new Models.FileSnapshotModel(
-            {
-                user_id: userId,
-                files: files
-            }
-        )
+        let snapshotModel: any = new Models.FileSnapshotModel({ files: files })
 
         //save the model
         try{
@@ -87,7 +81,6 @@ export class FileInfoSnapshot {
         
         return new FileInfoSnapshot(
             snapshotModel._id,
-            snapshotModel.userId,
             roots, 
             snapshotModel.updatedAt,
             snapshotModel.createdAt

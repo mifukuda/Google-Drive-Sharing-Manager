@@ -1,5 +1,5 @@
 import express, { Router } from "express"
-import { login, auth_callback } from "../controllers/auth_controller"
+import { login, auth_callback } from "../controllers/authController"
 
 const router: Router = express.Router()
 

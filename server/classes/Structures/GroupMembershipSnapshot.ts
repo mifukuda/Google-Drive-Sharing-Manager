@@ -1,5 +1,5 @@
-import { Group } from "./Group"
-import { User } from "./User"
+import { Group } from "../UserClasses/Group"
+import { User } from "../UserClasses/User"
 import { UploadedFile } from 'express-fileupload'
 
 export class GroupMembershipSnapshot {

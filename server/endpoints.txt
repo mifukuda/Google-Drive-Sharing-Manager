@@ -1,0 +1,39 @@
+AUTH ENDPOINTS
+    /auth/login
+    
+
+SNAPSHOT ENDPOINTS
+    /snapshot/create
+        inputs: {}
+        output: {snapshot}
+
+    /snapshot/get 
+        inputs: {snapshot_id: String}
+        output: {jsonString}
+
+    /snapshot/update
+        inputs: {
+            snapshot_id: String,
+            fileArray: [file_id: id],
+            operation: {}
+        },
+        output: {success: true}
+
+    /snapshot/checkPolicies
+        inputs: {
+            snapshot_id: String,
+            ACP_id: String    
+        }
+
+    /snapshot/analyze
+
+
+    /snapshots/query
+
+
+USER ENDPOINTS
+
+    /user/getUserProfile
+
+    /user/getACP
+

@@ -1,6 +1,6 @@
-const snapshotReducer = (state = {}, action) => {
+const searchResultsReducer = (state = {}, action) => {
     switch(action.type) {
-        case 'SET_SNAPSHOT':
+        case 'SET_SEARCH_RESULTS':
             return action.payload;
         case 'SORT_BY_NAME':
             return {...state, files: state.files.slice().sort((a, b) => { return (a.name).localeCompare(b.name); })};
@@ -13,4 +13,4 @@ const snapshotReducer = (state = {}, action) => {
     }
 }
 
-export default snapshotReducer;
+export default searchResultsReducer;

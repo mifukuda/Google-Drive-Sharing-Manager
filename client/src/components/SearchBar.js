@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useDispatch} from 'react-redux';
-import {getFilteredSnapshotFromBackend, showModal} from '../actions';
+import {getFilteredSnapshotFromBackend, setFilter, showModal} from '../actions';
 import {Form, Button} from 'react-bootstrap';
 
 export default function SearchBar() {
@@ -12,7 +12,12 @@ export default function SearchBar() {
     function handleSubmit(event) {
         if(event.key === 'Enter') {
             event.preventDefault();
-            dispatch(getFilteredSnapshotFromBackend('', text));
+            if(text === '') {
+                dispatch(setFilter(''));
+            }
+            else{
+                dispatch(getFilteredSnapshotFromBackend('', text));
+            }
         }
     }
 

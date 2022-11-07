@@ -12,7 +12,7 @@ export function getSnapshotFromBackend() {
 export function getFilteredSnapshotFromBackend(id, query) {
   return async (dispatch) => {
     return apis.getFilteredSnapshot(id, {query: query}).then(response => {
-      if(response.status === 200) {dispatch(setSnapshot(response));}
+      if(response.status === 200) {dispatch(setSearchResults(response));}
     });
   };
 }
@@ -42,6 +42,14 @@ const setSnapshot = (response) => {
     };
 }
 
+const setSearchResults = (response) => {
+  console.log(response);
+  return {
+      type: 'SET_SEARCH_RESULTS',
+      payload: response.data
+  };
+}
+
 const setAccessControlPolicies = (response) => {
     console.log(response);
     return {
@@ -56,6 +64,13 @@ const addAccessControlPolicy = (response) => {
       type: 'ADD_ACCESS_CONTROL_POLICY',
       payload: response.data
     }
+}
+
+const setFilter = (text) => {
+  return {
+      type: 'SET_FILTER',
+      payload: text
+  };
 }
 
 const showModal = () => {
@@ -107,6 +122,7 @@ export {
   hideModal,
   selectFile,
   unselectFile,
+  setFilter,
   sortByName,
   sortByDateOld,
   sortByDateNew

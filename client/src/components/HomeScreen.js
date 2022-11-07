@@ -10,11 +10,11 @@ import SideBar from "./SideBar";
 
 export default function FileCard() {
     const dispatch = useDispatch();
-    const snapshot = useSelector(state => state.snapshot);
+    const snapshot = useSelector(state => state.currentSnapshot);
     //Return default snapshot (most recent) from backend
     useEffect(() => {
         console.log("Fetching from backend.");
-        if(snapshot === '') {
+        if(Object.keys(snapshot).length === 0) {
             dispatch(getSnapshotFromBackend());
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }

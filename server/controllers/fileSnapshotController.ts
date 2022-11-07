@@ -5,16 +5,11 @@ import { FileInfoSnapshot } from '../classes/Structures';
 import { Query } from '../classes/UserClasses'
 import Models from '../db/Models';
 import { Types } from 'mongoose';
+import { getModel } from '../middleware/getUserModel'
 
 const createSnapshot = async (req: Request, res: Response) => {
     //get the user UserProfile
-    let user: any = null
-    try{
-        user = await Models.UserModel.findById((req.cookies.jwt))
-    }catch(err){
-        console.log("Error querying user profile.", err)
-        return res.status(400).json({status: "Failed"})
-    }
+    let user: any = await getModel(req.cookies.jwt)
 
     //create the snapshot
     const drive = new GoogleDriveAdapter(user.driveToken)

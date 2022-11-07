@@ -7,7 +7,7 @@ import { Group, User } from "../UserClasses"
 export class DriveFolder extends DriveFile {
     constructor (
         _id: string,
-        id: string, 
+        driveId: string, 
         parent: DriveFolder | null, 
         date_created: Date,
         date_modified: Date,
@@ -18,7 +18,7 @@ export class DriveFolder extends DriveFile {
         mime_type: string,
         public children: DriveFile[]
     ) {
-        super("NEEDS TO BE REPLACED", id, parent, date_created, date_modified, name, owner, permissions, shared_by, mime_type)
+        super(_id, driveId, parent, date_created, date_modified, name, owner, permissions, shared_by, mime_type)
     }
 
     getSubtree(): DriveFile[] {
@@ -32,7 +32,7 @@ export class DriveFolder extends DriveFile {
         //make the model for this folder
         let file: any = new Models.FileModel(
             {
-                drive_id: this.id,
+                drive_id: this.driveId,
                 name: this.name,
                 owner: this.owner,
                 sharedBy: this.shared_by,
@@ -43,7 +43,7 @@ export class DriveFolder extends DriveFile {
             }
         )
 
-        file._id = new Types.ObjectId()
+        file._id = this._id
         fileArr.push(file)
         return fileArr 
     }
@@ -60,7 +60,7 @@ export class DriveFolder extends DriveFile {
     }
 
     toString(depth: number): string {
-        let parent = (this.parent ? this.parent.id : "null")
+        let parent = (this.parent ? this.parent.driveId : "null")
         let s = "\t".repeat(depth) + "Type: " + this.constructor.name + ", Name: " + this.name + ", Parent = " + parent + "\n"
         for (let i = 0; i < this.children.length; i++) {
             let child: DriveFile = this.children[i]

@@ -10,7 +10,16 @@ import allReducers from './reducers';
 
 // development
 const composedEnhancer = compose(applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-const store = configureStore({reducer: allReducers}, undefined, composedEnhancer);
+const store = configureStore(
+  { 
+    reducer: allReducers,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    })
+  }, 
+  undefined, 
+  composedEnhancer);
 
 // production (probably...)
 // const store = configureStore ({reducer: allReducers}, [thunk], false);

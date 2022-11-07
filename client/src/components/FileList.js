@@ -3,127 +3,11 @@ import {useSelector} from "react-redux";
 import FileCard from './FileCard';
 
 export default function HomeScreen(props) {
-    const snapshot = useSelector(state => state.snapshot.files);
-    const selectedFiles = useSelector(state => state.selected);
+    const snapshot = useSelector(state => state.currentSnapshot.files);
+    const searchResults = useSelector(state => state.searchResults);
+    const filter = useSelector(state => state.filter);
+    const selectedFiles = useSelector(state => state.selectedFiles);
     const {updating} = props;
-    /*let snapshot = {
-        drive_roots: [
-            {
-                id: '1',
-                parent: null,
-                date_created: '2022-10-14T16:12:34.563Z',
-                date_modified: '2022-10-14T16:12:34.563Z',
-                name: 'Root',
-                children: [
-                    {
-                        id: '2',
-                        parent: '1',
-                        date_created: '2022-10-14T16:12:34.563Z',
-                        date_modified: '2022-10-14T16:12:34.563Z',
-                        name: 'Artwork',
-                        children: [
-                        {
-                            id: '4',
-                            parent: '2',
-                            date_created: '2022-10-14T16:12:34.563Z',
-                            date_modified: '2022-10-14T16:12:34.563Z',
-                            name: 'amythehedgehogr34.jpg',
-                            children: null
-                        },
-                        {
-                            id: '5',
-                            parent: '2',
-                            date_created: '2022-10-14T16:12:34.563Z',
-                            date_modified: '2022-10-14T16:12:34.563Z',
-                            name: 'idk.png',
-                            children: null
-                        }]
-                    },
-                    {
-                        id: '3',
-                        parent: '1',
-                        date_created: '2022-10-14T16:12:34.563Z',
-                        date_modified: '2022-10-14T16:12:34.563Z',
-                        name: 'Research',
-                        children: [
-                            {
-                                id: '6',
-                                parent: '3',
-                                date_created: '2022-10-14T16:12:34.563Z',
-                                date_modified: '2022-10-14T16:12:34.563Z',
-                                name: 'pokimane_feet_pics.jpg',
-                                children: null
-                            },
-                            {
-                                id: '7',
-                                parent: '3',
-                                date_created: '2022-10-14T16:12:34.563Z',
-                                date_modified: '2022-10-14T16:12:34.563Z',
-                                name: 'pokimane_12_30_2021.mp4',
-                                children: null
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                id: '1',
-                parent: null,
-                date_created: '2022-10-14T16:12:34.563Z',
-                date_modified: '2022-10-14T16:12:34.563Z',
-                name: 'Shared Drive',
-                children: [
-                    {
-                        id: '2',
-                        parent: '1',
-                        date_created: '2022-10-14T16:12:34.563Z',
-                        date_modified: '2022-10-14T16:12:34.563Z',
-                        name: 'Homework',
-                        children: [
-                        {
-                            id: '4',
-                            parent: '2',
-                            date_created: '2022-10-14T16:12:34.563Z',
-                            date_modified: '2022-10-14T16:12:34.563Z',
-                            name: 'horses.jpg',
-                            children: null
-                        },
-                        {
-                            id: '5',
-                            parent: '2',
-                            date_created: '2022-10-14T16:12:34.563Z',
-                            date_modified: '2022-10-14T16:12:34.563Z',
-                            name: 'foxfurryart.png',
-                            children: null
-                        }]
-                    }
-                ]
-            }
-        ]
-    }
-    */
-    let key = 0;
-    let directory = [];
-    if(updating) {
-        buildList(selectedFiles);
-    }
-    else if(snapshot) {
-        try {
-            // For search results
-            if(Array.isArray(snapshot)) {
-                buildList(snapshot);
-            }
-            // For entire snapshot
-            else if (Object.keys(snapshot).length !== 0) {
-                for(let i = 0; i < snapshot.drive_roots.length; i++) {
-                    buildTree(snapshot.drive_roots[i]);
-                }
-            }
-        } catch (error) {
-            console.log(error);
-            directory = [];
-        }
-    }
 
     // Building list from search results
     function buildList(snapshot) {
@@ -147,6 +31,29 @@ export default function HomeScreen(props) {
                 //directory.push("Name: " + root.children[i].name + ", Depth: " + depth);
                 buildTreeHelper(root.children[i], depth + 1);
             }
+        }
+    }
+
+    let key = 0;
+    let directory = [];
+    if(updating) {
+        buildList(selectedFiles);
+    }
+    else if(snapshot) {
+        try {
+            // For search results
+            if(filter) {
+                buildList(searchResults.files);
+            }
+            // For entire snapshot
+            else if (Object.keys(snapshot).length !== 0) {
+                for(let i = 0; i < snapshot.drive_roots.length; i++) {
+                    buildTree(snapshot.drive_roots[i]);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+            directory = [];
         }
     }
 

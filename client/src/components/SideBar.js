@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import SnapshotSelector from './SnapshotSelector'
 
 // Put links for take snapshot, compare snapshot, manage policy requirements
 export default function SideBar() {
@@ -10,6 +11,7 @@ export default function SideBar() {
                 <h1 className="sidebarlogo">Microservices</h1>
                 <h2 className="sidebarlogo">Drive Sharing Manager</h2>
                 <button className="sidebarbutton">+ New Snapshot</button>
+                <SnapshotSelector/>
                 <ul>
                     <li>
                         <Link to="/analyze" className="sidebarlink">Analyze Sharing</Link>

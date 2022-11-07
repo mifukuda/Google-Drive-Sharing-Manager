@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function FileCard(props) {
     const {file, depth, isRoot} = props;
     const dispatch = useDispatch();
-    const selectedFiles = useSelector(state => state.selected);
+    const selectedFiles = useSelector(state => state.selectedFiles);
     const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
 
     function handleCheck(event) {
@@ -21,6 +21,9 @@ export default function FileCard(props) {
         }
         event.stopPropagation();
     }
+
+    // Render list of permissions
+    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {element.role}: {element.granted_to.email}, {element.granted_to.display_name} (id: {element.id})</p>);
 
     // Render directory with indents
     let indent = 3*depth;
@@ -62,6 +65,7 @@ export default function FileCard(props) {
                         id="checkbox"
                         style={{marginRight:"16px"}}
                         onClick={(event) => handleCheck(event)}
+                        onChange={() => {}}
                         checked={isChecked}
                     />
                     {img}
@@ -70,7 +74,13 @@ export default function FileCard(props) {
                     </div>
                 </Accordion.Header>
                 <Accordion.Body>
-                <p>ID: {file.id}, Date Created: {file.date_created}, Date Modified: {file.date_modified}</p>
+                    <p><b>ID:</b> {file.id}</p>
+                    <p><b>Owner Name:</b> {file.owner.display_name}</p>
+                    <p><b>Owner Email:</b> {file.owner.email}</p>
+                    <p><b>Date Created:</b> {file.date_created}</p>
+                    <p><b>Date Modified:</b> {file.date_modified}</p>
+                    <p><b>Permissions:</b></p>
+                    {permissionList}
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>

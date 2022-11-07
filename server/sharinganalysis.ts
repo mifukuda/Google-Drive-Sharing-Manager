@@ -23,8 +23,8 @@ export const analyzeDeviantSharing  = (selection: DriveFile[], threshold: number
             if(numFiles > 0){
                 let largestEntry = [...permissionsToFileId.values()].reduce((x, y) => x.length > y.length? x: y)
                 // let commonFile: DriveFile = fileIdToFile.get(largestEntry[0]) as any
-                let commonFile = JSON.parse(JSON.stringify((fileIdToFile.get(largestEntry[0]) as any).permissions, null, '\t'))
                 if(largestEntry.length / numFiles >= threshold){
+                    let commonFile = JSON.parse(JSON.stringify((fileIdToFile.get(largestEntry[0]) as any).permissions, null, '\t'))
                     // deviantlyShared.set(commonFile, [])
                     permissionsToFileId.forEach((value, key) => {
                         if(JSON.stringify(value) !== JSON.stringify(largestEntry)){

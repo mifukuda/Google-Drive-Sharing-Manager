@@ -1,2 +1,3 @@
 export * from "./authRouter"
-export * from "./fileSnapshot"
+export * from "./fileSnapshotRouter"
+export * from "./userProfileRouter"

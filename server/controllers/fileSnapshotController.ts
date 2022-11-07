@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { GoogleDriveAdapter } from '../classes/DriveAdapter';
 import { DriveRoot } from '../classes/FilesClasses';
 import { FileInfoSnapshot } from '../classes/Structures';
+import { Query } from '../classes/UserClasses'
 import Models from '../db/Models';
 import { Types } from 'mongoose';
 
@@ -61,4 +62,32 @@ const updateSnap = async (req: Request, res: Response) => {
     })
 }
 
-export { createSnapshot, getSnap, updateSnap, getSnapshotInfo };
+const checkPolicies = async (req: Request, res: Response) => {
+    res.status(200).json({ 
+        status: 'OK' 
+    })
+}
+
+const analyzeSharing = async (req: Request, res: Response) => {
+    res.status(200).json({ 
+        status: 'OK' 
+    })
+}
+
+const querySnap = async (req: Request, res: Response) => {
+    let query = req.body.query
+    let prop = query.split(":")[0]
+    let val = query.split(":")[1]
+    let id = new Types.ObjectId(req.body.id)
+    let fileSnapshot = await FileInfoSnapshot.retrieve(id)
+    let query_results = fileSnapshot.applyQuery(new Query(prop, val)).map(f => {
+        return f.serialize()
+    })
+    res.status(200).json({
+        message: "OK",
+        query_results: query_results
+    })
+}
+
+
+export { createSnapshot, getSnap, updateSnap, getSnapshotInfo, checkPolicies, analyzeSharing, querySnap };

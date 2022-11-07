@@ -1,6 +1,5 @@
 const google = require('googleapis').google 
 import { Request, Response, NextFunction } from 'express';
-import { Types } from 'mongoose'
 const jwt = require('jsonwebtoken')
 const CONFIG = require('../configs.js')
 

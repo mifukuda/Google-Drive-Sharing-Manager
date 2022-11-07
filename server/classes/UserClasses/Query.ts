@@ -1,5 +1,3 @@
-
-
 export class Query {
     date_queried: Date
     constructor (

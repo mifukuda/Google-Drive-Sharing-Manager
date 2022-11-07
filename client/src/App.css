@@ -1,16 +1,185 @@
+body {
+  font-size: 100%;
+}
+
 .filelist {
   background-color: #ededed;
   margin: auto;
   height: 500px;
-  width: 60%;
-  overflow-y: scroll; 
+  width: 70%;
   white-space: nowrap;
   border: 2px solid black;
-  padding: 1%;
+  overflow-y: hidden;
+}
+
+.filelistheader {
+  display: flex;
+  align-items: center;
+  padding: 2%;
+  height: 10%;
+}
+
+.filelistinner {
+  padding: 2%;
+  height: 90%;
+  overflow-y: scroll;
 }
 
 .welcomescreen {
   margin-top: 15%;
   width: 100%;
   text-align: center;
+}
+
+.homescreen {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.homescreencenter {
+  display: inline-block;
+  width: 82%
+}
+
+.homescreenheader {
+  display: flex;
+  margin-top: 2%;
+  margin-bottom: 1%;
+  padding: 0;
+}
+
+.homescreentitle {
+  margin-left: 15%;
+  margin-right: 52%;
+}
+
+.querycontrols {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2%;
+}
+
+.sidebar {
+  display: inline-block;
+  width: 18%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar1 {
+  padding-top: 10%;
+  padding-left: 10%;
+  background-color: rgb(74, 74, 223);
+  color: white;
+  height: 60%;
+}
+
+.sidebar2 {
+  padding-top: 10%;
+  padding-left: 10%;
+  background-color: white;
+  color: rgb(74, 74, 223);
+  height: 40%;
+  border: 2px solid rgb(74, 74, 223);;
+}
+
+.sidebarselection {
+  background-color: white;
+}
+
+.sidebarbutton {
+  margin-top: 10%;
+  margin-bottom: 5%;
+  width: 82%;
+  height: 15%;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: rgb(74, 74, 223);
+  background-color: white;
+  border-radius: 10px;
+}
+
+.sidebarbutton:hover {
+  filter: invert(30%);
+}
+
+a.sidebarlink {
+  color: white;
+  text-decoration: none;
+}
+
+a.sidebarlink:hover {
+  color: gray;
+}
+
+h1.sidebarlogo {
+  font-size: 2.0em;
+  margin-bottom: 0;
+}
+
+h2.sidebarlogo {
+  font-size: 1.2em;
+  margin-bottom: 0;
+}
+
+.analyzescreen {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.analyzescreencenter {
+  margin: auto;
+  width: 85%;
+}
+
+.analyzescreenheader {
+  display: flex;
+  align-items: center;
+  padding-left: 2%;
+  height: 10%;
+  color: white;
+  background-color: rgb(74, 74, 223);
+}
+
+.analyzescreensubtitle {
+  margin-top: 4%;
+  margin-left: 5%;
+}
+
+.analyzescreenheadertitle {
+  padding-right: 73%;
+}
+
+.deviantsharinglist {
+  background-color: white;
+  margin: auto;
+  width: 90%;
+  height: 800px;
+  border: 2px solid rgb(74, 74, 223);
+  border-radius: 20px;
+}
+
+.sharingdifferenceslist {
+  background-color: white;
+  margin: auto;
+  width: 90%;
+  height: 800px;
+  border: 2px solid rgb(74, 74, 223);
+  border-radius: 20px;
+}
+
+.exitbutton {
+  background:none;
+}
+
+.exitbutton:hover{
+  filter: invert(30%);
+}
+
+.querybuilderlist {
+  background-color: #ededed;
+  height: 300px;
+  overflow-y: scroll;
 }

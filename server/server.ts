@@ -1,22 +1,20 @@
 //library imports
-import { Request, Response } from 'express'
-import { FileInfoSnapshot } from './classes/Structures/FileInfoSnapshot'
-import { Query } from './classes/UserClasses/Query'
-import { GoogleDriveAdapter } from './classes/DriveAdapter/DriveAdapter'
-import express from 'express'
 import cookie_parser from 'cookie-parser'
-import jwt from 'jsonwebtoken'
 import cors from 'cors'
+import express, { Request, Response } from 'express'
 import fileUpload, { UploadedFile } from 'express-fileupload'
+import jwt from 'jsonwebtoken'
+import { Types } from 'mongoose'
+import { GoogleDriveAdapter } from './classes/DriveAdapter'
+import { FileInfoSnapshot } from './classes/Structures'
+import { Query } from './classes/UserClasses'
+import { auth_client } from './controllers'
+import db_connect from './db'
+import Models from "./db/Models"
+import { auth_router, snapshot_router } from './routers'
 
 //file imports
 const CONFIG = require('./configs.js');
-import { auth_router } from './routers/authRouter'
-import { snapshot_router } from './routers/fileSnapshot'
-import { auth_client } from './controllers/authController'
-import db_connect from './db'
-import Models from "./db/Models"
-import { Types } from 'mongoose'
 
 
 //starting the express server
@@ -63,13 +61,44 @@ app.get('/', async (req: Request, res: Response) => {
 	return res.send("Hello Linux Stans")
 })
 
-// app.post('/uploadgroup', function (req, res) {
-// 	if (!req.files || Object.keys(req.files).length === 0) {
-// 		return res.status(400).send('No files were uploaded.');
-// 	}
-// 	// let group: GroupMembershipSnapshot = new GroupMembershipSnapshot("somename", req.files.memberlist as UploadedFile, new Date())
-// 	// console.log(group.members)
-// })
+app.get('/api/getAccessControlPolicies', async (req: Request, res: Response) => {
+  console.log("inside access policies")
+  let mock_access_control_policies = [{
+      "id" : "falskdjf",
+      "name": "Policy1",
+      "grp" : false,
+      "AR": [{ "email": "minato1@gmail", "display_name": "Minato Fukuda"}, { "email": "minato8@gmail", "display_name": "Minato Fukuda"}],
+      "AW": [{ "email": "minato2@gmail", "display_name": "Minato Fukuda"}],
+      "DR": [{ "email": "minato3@gmail", "display_name": "Minato Fukuda"}],
+      "DW": [{ "email": "minato4@gmail", "display_name": "Minato Fukuda"}],
+      "query": "somequery"
+    },
+    {
+      "id" : "asdklfj",
+      "name": "Policy2",
+      "grp" : false,
+      "AR": [{ "email": "qamber1@gmail", "display_name": "Qamber Jafri"}],
+      "AW": [{ "email": "qamber2@gmail", "display_name": "Qamber Jafri"}, { "email": "qamber8@gmail", "display_name": "Qamber Jafri"}],
+      "DR": [{ "email": "qamber3@gmail", "display_name": "Qamber Jafri"}],
+      "DW": [{ "email": "qamber4@gmail", "display_name": "Qamber Jafri"}],
+      "query": "somequery2" 
+    }
+  ]
+  res.send({ access_control_policies: mock_access_control_policies })
+})
+
+app.post('/api/addAccessControlPolicy', async (req: Request, res: Response) => {
+  // validate request body
+  res.send(req.body)
+})
+
+app.post('/uploadgroup', function(req, res) {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  // let group: GroupMembershipSnapshot = new GroupMembershipSnapshot("somename", req.files.memberlist as UploadedFile, new Date())
+  // console.log(group.members)
+})
 
 // app.get('/api/getSnapshot', async (req: Request, res: Response) => {
 // 	let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)

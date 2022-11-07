@@ -1,9 +1,7 @@
+import { Types } from "mongoose";
+import Models from "../../db/Models";
+import { AccessControlPolicy, FileInfoSnapshot, GroupMembershipSnapshot } from "../Structures";
 import { Query } from "./Query";
-import { AccessControlPolicy } from "../Structures/AccessControlPolicy";
-import { FileInfoSnapshot } from "../Structures/FileInfoSnapshot";
-import { GroupMembershipSnapshot } from '../Structures/GroupMembershipSnapshot'
-import { Types, FilterQuery} from "mongoose"
-import Models from "../../db/Models"
 
 export class UserProfile {
     constructor (

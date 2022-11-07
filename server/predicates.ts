@@ -1,5 +1,5 @@
-import { DriveFile } from "./classes/FilesClasses/DriveFile"
-import { Permission, permission_level } from "./classes/Structures/Permission"
+import { DriveFile } from "./classes/FilesClasses/"
+import { Permission, permission_level } from "./classes/Structures"
 
 export type QueryPredicate = (value: string, operand: DriveFile) => boolean
 

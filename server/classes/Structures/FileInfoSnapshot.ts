@@ -1,25 +1,20 @@
-import { DriveRoot } from "../FilesClasses/DriveRoot"
-import { DriveFile } from "../FilesClasses/DriveFile"
-import { Query } from "../UserClasses/Query"
-import { operatorToQueryPredicate, QueryPredicate } from "../../predicates"
-import Models from "../../db/Models"
 import { Types } from "mongoose"
-import { fileSnapshotModel } from "../db/Models/FileSnapshotSchema"
-import { DriveFolder } from "./DriveFolder"
-import { Permission } from "./Permission"
-import { User } from "./User"
+import { Permission } from "."
+import Models from "../../db/Models"
+import { operatorToQueryPredicate, QueryPredicate } from "../../predicates"
+import { DriveFile, DriveFolder, DriveRoot } from "../FilesClasses"
+import { Query, User } from "../UserClasses"
 
 export class FileInfoSnapshot {
     constructor (
         public _id: Types.ObjectId,
-        public userId: Types.ObjectId,
         public drive_roots: DriveRoot[], 
         public date_updated: Date,
         public date_created: Date
     ) {}
 
     static async retrieve(id: Types.ObjectId): Promise<FileInfoSnapshot> {
-        let snapshot: any = await fileSnapshotModel.findById(id)
+        let snapshot: any = await Models.FileSnapshotModel.findById(id)
         let roots: DriveRoot[] = []
         let idToDriveFile: Map<string, [DriveFile, Types.ObjectId[]]> = new Map<string, [DriveFile, Types.ObjectId[]]>()
         snapshot.files.forEach((file: any) => {
@@ -41,7 +36,7 @@ export class FileInfoSnapshot {
                 child.parent = (file as DriveFolder)
             })
         })
-        return new FileInfoSnapshot(snapshot._id, snapshot.createdAt, roots, snapshot.updatedAt)
+        return new FileInfoSnapshot(snapshot._id, roots, snapshot.createdAt, snapshot.updatedAt)
     }
 
     applyQuery(query: Query): DriveFile[] {
@@ -60,8 +55,7 @@ export class FileInfoSnapshot {
 
     async save(callback: (err: Error) => void): Promise<Types.ObjectId> {
         const files = this.drive_roots.flatMap((d: DriveRoot) => d.getModel())
-<<<<<<< HEAD:server/classes/FileInfoSnapshot.ts
-        const snapshotModel = new Models.FileSnapshotModel({ user_id: this._id, files: files })
+        const snapshotModel = new Models.FileSnapshotModel({ files: files })
         let res: any
         try {
             res = await snapshotModel.save()
@@ -69,21 +63,6 @@ export class FileInfoSnapshot {
             console.log("Error saving file snapshot: ", e)
         }
         return res._id
-=======
-        const snapshotModel = new Models.FileSnapshotModel(
-            {
-                user_id: this.userId,
-                files: files
-            }
-        )
-
-        snapshotModel.save((err, result) => {
-            if(err){
-                console.log("Error saving file snapshot: ", err)
-            }
-        })
-
->>>>>>> origin/retrieveSnapshots:server/classes/Structures/FileInfoSnapshot.ts
     }
 
     static async createNew(userId:Types.ObjectId, roots: DriveRoot[]): Promise<FileInfoSnapshot>{
@@ -91,12 +70,7 @@ export class FileInfoSnapshot {
         const files = roots.flatMap((d: DriveRoot) => d.getModel())
         
         //create new model
-        let snapshotModel: any = new Models.FileSnapshotModel(
-            {
-                user_id: userId,
-                files: files
-            }
-        )
+        let snapshotModel: any = new Models.FileSnapshotModel({ files: files })
 
         //save the model
         try{
@@ -107,7 +81,6 @@ export class FileInfoSnapshot {
         
         return new FileInfoSnapshot(
             snapshotModel._id,
-            snapshotModel.userId,
             roots, 
             snapshotModel.updatedAt,
             snapshotModel.createdAt

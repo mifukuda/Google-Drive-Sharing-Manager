@@ -1,9 +1,9 @@
-import { Request, Response} from 'express';
-import { fstat } from 'fs';
-import { GoogleDriveAdapter } from '../classes/DriveAdapter/DriveAdapter';
-import { DriveRoot } from '../classes/FilesClasses/DriveRoot';
-import { FileInfoSnapshot } from '../classes/Structures/FileInfoSnapshot';
+import { Request, Response } from 'express';
+import { GoogleDriveAdapter } from '../classes/DriveAdapter';
+import { DriveRoot } from '../classes/FilesClasses';
+import { FileInfoSnapshot } from '../classes/Structures';
 import Models from '../db/Models';
+import { Types } from 'mongoose';
 
 const createSnapshot = async (req: Request, res: Response) => {
     //get the user UserProfile
@@ -39,17 +39,26 @@ const createSnapshot = async (req: Request, res: Response) => {
 }
 
 
+const getSnapshotInfo = async (req: Request, res: Response) => {
+    let user: any = await Models.UserModel.findById((req.cookies.jwt)).populate({ path: 'fileSnapshots', model: 'FileSnapshots' })
+    let snapshot_info = user.fileSnapshots.map((s: any) => { return { "_id": s.id, "createdAt": s.createdAt }})
+    res.status(200).json({ message: "OK", snapshotInfo: snapshot_info })
+}
 
-const getSnap = (req: Request, res: Response) => {
-    res.status(200).json({
-        status: 'OK'
+
+const getSnap = async (req: Request, res: Response) => {
+    let id = new Types.ObjectId(req.body.id)
+    let fileSnapshot = await FileInfoSnapshot.retrieve(id)
+    return res.status(200).json({
+        message: "OK",
+        fileSnapshot: fileSnapshot.serialize()
     })
 }
 
-const updateSnap = (req: Request, res: Response) => {
+const updateSnap = async (req: Request, res: Response) => {
     res.status(200).json({ 
         status: 'OK' 
     })
 }
 
-export { createSnapshot, getSnap, updateSnap }
+export { createSnapshot, getSnap, updateSnap, getSnapshotInfo };

@@ -3,12 +3,26 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {createStore, applyMiddleware, compose} from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import {Provider} from 'react-redux';
 import thunk from "redux-thunk";
 import allReducers from './reducers';
 
+// development
 const composedEnhancer = compose(applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-const store = createStore(allReducers, undefined, composedEnhancer);
+const store = configureStore(
+  { 
+    reducer: allReducers,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    })
+  }, 
+  undefined, 
+  composedEnhancer);
+
+// production (probably...)
+// const store = configureStore ({reducer: allReducers}, [thunk], false);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

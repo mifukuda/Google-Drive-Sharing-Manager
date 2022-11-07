@@ -4,6 +4,7 @@ import { DriveAdapter } from "."
 import { DriveFile, DriveFolder, DriveRoot } from "../FilesClasses"
 import { googleDrivePermissionToOurs, Permission } from "../Structures"
 import { Group, User } from "../UserClasses"
+import { Types } from 'mongoose'
 const CONFIG = require('../../configs.js')
 
 
@@ -90,13 +91,13 @@ export class GoogleDriveAdapter extends DriveAdapter {
         const GoogleFile = require('googleapis').File
         let roots: DriveRoot[] = []
         let my_drive_rootID:any = (await drive.files.get({ auth: this.auth_client, fileId: "root" })).data.id
-        roots.push(new DriveRoot("NEEDS TO BE CHANGED", my_drive_rootID, "My Drive", [], false))
-        let shared_with_me_root = new DriveRoot("NEEDS TO BE CHANGED", "shared_with_me", "Shared with me", [], false)
+        roots.push(new DriveRoot(new Types.ObjectId().toString(), my_drive_rootID, "My Drive", [], false))
+        let shared_with_me_root = new DriveRoot(new Types.ObjectId().toString(), "shared_with_me", "Shared with me", [], false)
         roots.push(shared_with_me_root)
-        sharedDrives.forEach((s: any) => {roots.push(new DriveRoot("NEEDS TO BE CHANGED", s.id, s.name, [], true))});
+        sharedDrives.forEach((s: any) => {roots.push(new DriveRoot(new Types.ObjectId().toString(), s.id, s.name, [], true))});
         
         let idToDriveFiles: Map<string, [DriveFile, string | null]> = new Map<string, [DriveFile, string | null]>()
-        roots.forEach((d: DriveRoot) => {idToDriveFiles.set(d.id, [d, null])})
+        roots.forEach((d: DriveRoot) => {idToDriveFiles.set(d.driveId, [d, null])})
     
         allFiles.forEach((file: any) => { // construct nodes
             if (!file) 
@@ -107,13 +108,13 @@ export class GoogleDriveAdapter extends DriveAdapter {
             let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
             let permissions: Permission[] = file.permissions ? file.permissions.map((p: any) => {
                 let granted_to: User | Group = new User(p.emailAddress, file.owners[0].displayName)
-                return new Permission("NEEDS TO BE CHANGED", p.id, granted_to, googleDrivePermissionToOurs[p.role])
+                return new Permission(new Types.ObjectId().toString(), p.id, granted_to, googleDrivePermissionToOurs[p.role])
             }) : []
             if (mimeType === "application/vnd.google-apps.folder") {
-                idToDriveFiles.set(file.id, [new DriveFolder("NEEDS TO BE CHANGED", file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, []), parentID])
+                idToDriveFiles.set(file.id, [new DriveFolder(new Types.ObjectId().toString(), file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, []), parentID])
             }
             else {
-                idToDriveFiles.set(file.id, [new DriveFile("NEEDS TO BE CHANGED", file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType), parentID])
+                idToDriveFiles.set(file.id, [new DriveFile(new Types.ObjectId().toString(), file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType), parentID])
             }
         })
     

@@ -6,12 +6,12 @@ import { User } from "../UserClasses/User"
 export class DriveRoot extends DriveFolder {
     constructor (
         _id: string,
-        id: string, 
+        driveId: string, 
         drive_name: string, 
         children: DriveFile[], 
         public is_shared_drive: boolean
     ) {
-        super("NEEDS TO BE REPLACED", id, null, new Date(), new Date(), drive_name, new User("", ""), [], null, "", children)
+        super(_id, driveId, null, new Date(), new Date(), drive_name, new User("", ""), [], null, "", children)
     }
 
     getModel(): Object[] {
@@ -21,7 +21,7 @@ export class DriveRoot extends DriveFolder {
         //make the model for this folder
         let file: any = new Models.FileModel(
             {
-                drive_id: this.id,
+                drive_id: this.driveId,
                 name: this.name,
                 owner: this.owner,
                 sharedBy: this.shared_by,
@@ -33,7 +33,7 @@ export class DriveRoot extends DriveFolder {
             }
         )
 
-        file._id = new Types.ObjectId()
+        file._id = this._id
         fileArr.push(file)
         return fileArr 
     }

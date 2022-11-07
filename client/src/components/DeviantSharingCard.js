@@ -4,7 +4,7 @@ import {Card, Container, Row, Col} from "react-bootstrap";
 export default function SharingDifferencesCard(props) {
     const roles = ["Viewer", "Commenter", "Editor", "Owner"];
     let {majorityPermissions, deviantFile} = props
-    let deviantPermissions = deviantFile.permissions.map((element, index) => <p>{index + 1}. {element.granted_to.email}, {element.granted_to.display_name} ({roles[element.role]})</p>);
+    let deviantPermissions = deviantFile.permissions.map((element, index) => <p key={index}>{index + 1}. {element.granted_to.email}, {element.granted_to.display_name} ({roles[element.role]})</p>);
     deviantPermissions.unshift(<p><b>Deviant Permissions</b></p>);
     return (
         <Card style={{padding:"2%"}}>

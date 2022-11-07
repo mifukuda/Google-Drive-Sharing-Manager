@@ -99,7 +99,7 @@ export default function SharingDifferencesList() {
     }
 
     function buildListHelper(result) {
-        cards = cards.concat(result[1].map((element, i) => <SharingDifferencesCard parent={result[0]} child={element}/>))
+        cards = cards.concat(result[1].map((element, i) => <SharingDifferencesCard key={key++} parent={result[0]} child={element}/>))
     }
 
     return (

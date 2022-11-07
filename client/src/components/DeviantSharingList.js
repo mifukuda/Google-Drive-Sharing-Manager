@@ -86,9 +86,9 @@ export default function DeviantSharingList() {
     }
 
     function buildListHelper(result) {
-        let majorityPermissions = result[0].map((element, i) =>  <p>{i + 1}. {element.granted_to.email}, {element.granted_to.display_name} ({roles[element.role]})</p>)
+        let majorityPermissions = result[0].map((element, i) =>  <p key={i}>{i + 1}. {element.granted_to.email}, {element.granted_to.display_name} ({roles[element.role]})</p>)
         majorityPermissions.unshift(<p><b>Majority Permissions</b></p>);
-        cards = cards.concat(result[1].map((element, i) => <DeviantSharingCard majorityPermissions={majorityPermissions} deviantFile={element}/>))
+        cards = cards.concat(result[1].map((element, i) => <DeviantSharingCard key={key++} majorityPermissions={majorityPermissions} deviantFile={element}/>))
     }
 
     return (

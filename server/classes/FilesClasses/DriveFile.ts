@@ -1,8 +1,7 @@
-import { DriveFolder } from "./DriveFolder"
-import { User } from "./User"
-import { Group } from "./Group"
-import { Permission } from "./Permission"
-import Models from "../db/Models"
+import { DriveFolder } from "."
+import { User, Group } from "../UserClasses"
+import { Permission } from "../Structures"
+import Models from "../../db/Models"
 
 export class DriveFile {
     constructor (

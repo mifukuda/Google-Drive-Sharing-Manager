@@ -1,5 +1,4 @@
-import { Group } from "./Group";
-import { GroupModel } from "./Group";
+import { Group } from "../UserClasses";
 
 export class AccessControlPolicy {
     constructor (

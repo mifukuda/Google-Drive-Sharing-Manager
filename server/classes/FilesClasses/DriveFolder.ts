@@ -1,9 +1,8 @@
-import { DriveFile } from "./DriveFile"
-import { User } from "./User"
-import { Group } from "./Group"
-import { Permission } from "./Permission"
-import Models from "../db/Models"
 import { Types } from "mongoose"
+import { DriveFile } from "."
+import Models from "../../db/Models"
+import { Permission } from "../Structures"
+import { Group, User } from "../UserClasses"
 
 export class DriveFolder extends DriveFile {
     constructor (

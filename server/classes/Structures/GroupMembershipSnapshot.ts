@@ -1,6 +1,5 @@
-import { Group } from "./Group"
-import { User } from "./User"
 import { UploadedFile } from 'express-fileupload'
+import { User } from "../UserClasses"
 
 export class GroupMembershipSnapshot {
     members: User[]

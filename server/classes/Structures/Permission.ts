@@ -1,6 +1,5 @@
-import { Group } from "./Group"
-import { User } from "./User"
-import Models from "../db/Models"
+import Models from "../../db/Models"
+import { Group, User } from "../UserClasses"
 
 
 export enum permission_level {

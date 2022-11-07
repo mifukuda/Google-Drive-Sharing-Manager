@@ -1,4 +1,5 @@
 import React from "react";
+import SharingDifferencesCard from "./SharingDifferencesCard";
 
 export default function SharingDifferencesList() {
     let key = 0;
@@ -88,17 +89,22 @@ export default function SharingDifferencesList() {
         ]
     ]
 
-    function buildList(results) {
+    let cards = []
+    buildList(data);
 
+    function buildList(results) {
+        for(let i=0; i < results.length; i++) {
+            buildListHelper(results[i]);
+        }
     }
 
     function buildListHelper(result) {
-
+        cards = cards.concat(result[1].map((element, i) => <SharingDifferencesCard parent={result[0]} child={element}/>))
     }
-    
+
     return (
         <div className="sharingdifferenceslist">
-            CUM
+            {cards}
         </div>
     );
 }

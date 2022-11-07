@@ -1,6 +1,5 @@
 import React from "react";
 import {useNavigate } from "react-router-dom";
-import RedundantSharingList from "./RedundantSharingList";
 import DeviantSharingList from "./DeviantSharingList";
 import SharingDifferencesList from "./SharingDifferencesList";
 
@@ -20,11 +19,9 @@ export default function AnalyzeScreen() {
                     onClick={(event) => handleClose(event)}/>
             </div>
             <div className="analyzescreencenter">
-                <h2 className="analyzescreensubtitle">Redundant Sharing</h2>
-                <RedundantSharingList/>
-                <h2 className="analyzescreensubtitle">Deviant Sharing</h2>
+                <h2 className="analyzescreensubtitle">Deviant Sharing &#128520;</h2>
                 <DeviantSharingList/>
-                <h2 className="analyzescreensubtitle">Sharing Differences</h2>
+                <h2 className="analyzescreensubtitle">Sharing Differences &#128373;</h2>
                 <SharingDifferencesList/>
             </div>
         </div>

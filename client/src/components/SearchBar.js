@@ -1,11 +1,14 @@
-import React, {useState} from "react";
-import {useDispatch} from 'react-redux';
+import React, {useState, useEffect} from "react";
+import {useDispatch, useSelector} from 'react-redux';
 import {getFilteredSnapshotFromBackend, setFilter, showModal} from '../actions';
 import {Form, Button} from 'react-bootstrap';
 
-export default function SearchBar() {
+export default function SearchBar(props) {
     // Stores current text within SearchBar
-    const [text, setText] = useState('');
+    const [text, setText] = useState(props.filter);
+    useEffect(() => {
+        setText(props.filter);
+    }, [props.filter])
     const dispatch = useDispatch();
 
     // Send (id, query) to backend; update global state with filtered snapshot
@@ -39,7 +42,7 @@ export default function SearchBar() {
                         Search
                     </Form.Label>
                     <Form.Control placeholder="Search for files..." 
-                        onChange={(event) => setText(event.target.value)} onKeyPress={(event) => handleSubmit(event)}/>
+                        value={text} onChange={(event) => setText(event.target.value)} onKeyPress={(event) => handleSubmit(event)}/>
                 </Form.Group>
             </Form>
             <Button variant="dark" style={{marginTop: "2.4%", bottom: 0, width: '10%', height: '10%'}} onClick={(event) => handleShowModal(event)}>Build Query</Button>

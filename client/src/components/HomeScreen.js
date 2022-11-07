@@ -11,6 +11,7 @@ import SideBar from "./SideBar";
 export default function FileCard() {
     const dispatch = useDispatch();
     const snapshot = useSelector(state => state.currentSnapshot);
+    const filter = useSelector(state => state.filter);
     //Return default snapshot (most recent) from backend
     useEffect(() => {
         console.log("Fetching from backend.");
@@ -28,7 +29,7 @@ export default function FileCard() {
             <SideBar/>
             <div className="homescreencenter">
                 <HomeScreenHeader/>
-                <SearchBar/>
+                <SearchBar filter={filter}/>
                 <div className="filelist">
                     <FileListHeader/>
                     <FileList updating={false}/>

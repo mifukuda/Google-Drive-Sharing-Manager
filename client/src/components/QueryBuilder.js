@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useSelector, useDispatch} from "react-redux"
-import {hideModal} from "../actions";
+import {getFilteredSnapshotFromBackend, hideModal} from "../actions";
 import {Modal, Button, Dropdown, Container, Row, Col, Form, Card} from 'react-bootstrap';
 
 
@@ -42,6 +42,16 @@ export default function QueryBuilder() {
     // Delete query from list
     function handleDelete(query) {
         setQueries(queries.filter(item => item !== query));
+    }
+
+    // Submit search
+    function handleSearch() {
+        if (queries.length === 0) {
+            return;
+        }
+        handleHideModal();
+        let queryString = queries.join('&');
+        dispatch(getFilteredSnapshotFromBackend('', queryString));
     }
 
     // List of operators to be displayed
@@ -110,7 +120,7 @@ export default function QueryBuilder() {
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button>Search</Button>
+                <Button onClick={(event) => handleSearch()}>Search</Button>
                 <Button variant="secondary" onClick={(event) => handleHideModal(event)}>Close</Button>
             </Modal.Footer>
         </Modal>

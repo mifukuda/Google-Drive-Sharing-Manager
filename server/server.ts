@@ -117,20 +117,41 @@ app.post('/api/query', async (req: Request, res: Response) => {
   res.send({id: "", files: drivefiles, filter: req.body.query})
 })
 
-app.get('/api/analyzeSharing', async (req: Request, res: Response) => {
-  console.log("analyzing sharing.")
+app.post('/api/analyzeSharing/deviantSharing', async (req: Request, res: Response) => {
+  console.log("analyzing deviant sharing.")
   let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
   auth_client.setCredentials(decoded_token)
+
   let google_drive_adapter = new GoogleDriveAdapter()
   let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
   let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())   
   // let all_files: DriveFile[] = snapshot.drive_roots[0].getSubtree()
-  let output: DriveFile[] = []
+
   // deviantSharing(all_files, 0.4).forEach((x) => output.push(x.serialize()))
-  let x: Map<string, [Permission[], Permission[]]>  = calculateSharingChanges(all_files, all_files)
-  console.log(output)
+  let x = deviantSharing(all_files, .6)
+  // let x = calculatePermissionDiffences(all_files)
+  // let x: Map<string, [Permission[], Permission[]]>  = calculateSharingChanges(all_files, all_files)
+
+  // let result = []
+
+  console.log(x)
   console.log("done")
-  res.send({})
+  res.send([...x])
+})
+
+app.post('/api/analyzeSharing/sharingDifferences', async (req: Request, res: Response) => {
+  console.log("analyzing sharing differences.")
+  let decoded_token = jwt.decode(req.cookies.jwt, CONFIG.JWT_secret)
+  auth_client.setCredentials(decoded_token)
+
+  let google_drive_adapter = new GoogleDriveAdapter()
+  let snapshot: FileInfoSnapshot = await google_drive_adapter.createFileInfoSnapshot()
+  let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())   
+
+  let x = calculatePermissionDiffences(all_files)
+  console.log(x)
+  console.log("done")
+  res.send([...x])
 })
 
 // app.post('/api/getAccessControlPolicies', async (req: Request, res: Response) => {

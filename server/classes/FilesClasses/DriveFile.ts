@@ -11,9 +11,9 @@ export class DriveFile {
         public date_created: Date,
         public date_modified: Date,
         public name: string,
-        public owner: Group | User | null,
+        public owner: User | null, //| Group
         public permissions: Permission[],
-        public shared_by: Group | User | null,
+        public shared_by: User | null, // Group
         public mime_type: string
     ) {}
 
@@ -26,8 +26,8 @@ export class DriveFile {
             {
                 drive_id: this.driveId,
                 name: this.name,
-                owner: this.owner,
-                sharedBy: this.shared_by,
+                owner: this.owner?.getModel(),
+                sharedBy: this.shared_by?.getModel(),
                 mime_type: this.mime_type,
                 type: "FILE",
                 permissions: this.permissions.map(p => p.getModel()),

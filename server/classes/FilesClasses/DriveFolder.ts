@@ -12,9 +12,9 @@ export class DriveFolder extends DriveFile {
         date_created: Date,
         date_modified: Date,
         name: string, 
-        owner: Group | User | null, 
+        owner: User | null, //| Group
         permissions: Permission[], 
-        shared_by: Group | User | null, 
+        shared_by: User | null, //| Group 
         mime_type: string,
         public children: DriveFile[]
     ) {
@@ -34,8 +34,8 @@ export class DriveFolder extends DriveFile {
             {
                 drive_id: this.driveId,
                 name: this.name,
-                owner: this.owner,
-                sharedBy: this.shared_by,
+                owner: this.owner?.getModel(),
+                sharedBy: this.shared_by?.getModel(),
                 mime_type: this.mime_type,
                 type: "FOLDER",
                 permissions: this.permissions.map(p => p.getModel()),

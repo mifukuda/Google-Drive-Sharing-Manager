@@ -7,6 +7,7 @@ import {Modal, Button, Dropdown, Container, Row, Col, Form, Card} from 'react-bo
 export default function QueryBuilder() {
     const dispatch = useDispatch();
     const showModal = useSelector(state => state.showModal);
+    const currentSnapshot = useSelector(state => state.currentSnapshot);
     const [operatorSelection, setOperatorSelection] = useState("drive:");
     const [searchTerm, setSearchTerm] = useState("");
     const [queries, setQueries] = useState([]);
@@ -51,7 +52,7 @@ export default function QueryBuilder() {
         }
         handleHideModal();
         let queryString = queries.join('&');
-        dispatch(getFilteredSnapshotFromBackend('', queryString));
+        dispatch(getFilteredSnapshotFromBackend(currentSnapshot._id, queryString));
     }
 
     // List of operators to be displayed
@@ -60,7 +61,7 @@ export default function QueryBuilder() {
         .map((x, i) => <Dropdown.Item key={i} onClick={(event) => handleUpdateDisplay(x)}>{x}</Dropdown.Item>);
     // Map queries to cards w/ delete button
     const queryList = queries.map((x, i) => 
-        <Card>
+        <Card key={i}>
             <Card.Body style={{fontSize:"1.3em"}}>
                 <Container>
                     <Row>

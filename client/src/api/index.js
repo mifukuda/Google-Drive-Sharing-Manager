@@ -12,7 +12,7 @@ export const createSnapshot = (payload) => api.post('/create/', payload);
 // Get default snapshot
 export const getSnapshot = (payload) => api.post('/get/', payload);
 // Apply filter to snapshot
-export const getFilteredSnapshot = (id, payload) => api.post(`/query/${id}`, payload);
+export const getFilteredSnapshot = (payload) => api.post('/query/', payload);
 
 // Get all access control policies
 export const getAccessControlPolicies = () => api.get(`/getAccessControlPolicies/`) 

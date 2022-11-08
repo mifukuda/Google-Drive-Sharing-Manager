@@ -43,7 +43,7 @@ export default function HomeScreen(props) {
         try {
             // For search results
             if(filter) {
-                buildList(searchResults.files);
+                buildList(searchResults.query_results);
             }
             // For entire snapshot
             else if (Object.keys(snapshot).length !== 0) {

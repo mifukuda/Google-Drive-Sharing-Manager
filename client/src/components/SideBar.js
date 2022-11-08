@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import SnapshotSelector from './SnapshotSelector'
 import {useDispatch} from "react-redux";
-import {createSnapshotInBackend, getAllSnapshotInfoFromBackend} from "../actions";
+import {createSnapshotInBackend} from "../actions";
 
 // Put links for take snapshot, compare snapshot, manage policy requirements
 export default function SideBar() {

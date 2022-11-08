@@ -46,7 +46,7 @@ export function getSnapshotFromBackend(id) {
 
 export function getFilteredSnapshotFromBackend(id, query) {
   return async (dispatch) => {
-    return apis.getFilteredSnapshot(id, {query: query}).then(response => {
+    return apis.getFilteredSnapshot({query: query, snapshot_id: id}).then(response => {
       if(response.status === 200) {dispatch(setSearchResults(response));}
     });
   };

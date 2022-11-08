@@ -12,7 +12,7 @@ import { auth_client } from './controllers'
 import db_connect from './db'
 import Models from "./db/Models"
 import { auth_router, snapshot_router } from './routers'
-import {calculatePermissionDiffences, analyzeDeviantSharing} from './sharinganalysis'
+import {calculatePermissionDifferences, analyzeDeviantSharing} from './sharinganalysis'
 import { DriveRoot, DriveFile } from './classes/FilesClasses/'
 
 //file imports

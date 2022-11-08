@@ -6,7 +6,7 @@ import { Query } from '../classes/UserClasses'
 import Models from '../db/Models';
 import { Types } from 'mongoose';
 import { getModel } from '../middleware/getUserModel'
-import { analyzeDeviantSharing, calculatePermissionDiffences } from '../sharinganalysis'
+import { analyzeDeviantSharing, calculatePermissionDifferences } from '../sharinganalysis'
 
 
 const createSnapshot = async (req: Request, res: Response) => {
@@ -84,12 +84,14 @@ const deviantSharing = async (req: Request, res: Response) => {
     // let snapshot: DriveFile[] = await google_drive_adapter.getFileRoots()
     // let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())   
     let all_files: DriveFile[] = await google_drive_adapter.getFileRoots()
-
-    let x = analyzeDeviantSharing(all_files, req.body.threshold)
-  
-    console.log(x)
-    console.log("done")
-    res.send([...x])
+    if(all_files !== null){
+        all_files= all_files.flatMap((d: DriveFile) => d.getSubtree())   
+        let result = analyzeDeviantSharing(all_files, req.body.threshold)
+    
+        console.log(result)
+        console.log("done")
+        res.send([...result])
+    }
 }
 
 const sharingDifferences = async (req: Request, res: Response) => {
@@ -99,14 +101,17 @@ const sharingDifferences = async (req: Request, res: Response) => {
 
     let google_drive_adapter = new GoogleDriveAdapter(user.driveToken)
     // let snapshot: DriveFile[] = await google_drive_adapter.getFileRoots()
-    // let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())   
-    let all_files: DriveFile[] = await google_drive_adapter.getFileRoots()
+    let all_files: DriveFile[] = await google_drive_adapter.getFileRoots() 
+    if(all_files !== null){
+        all_files= all_files.flatMap((d: DriveFile) => d.getSubtree())   
+        let result = calculatePermissionDifferences(all_files)
+        console.log(result)
+        console.log("done")
+        res.send([...result])
+        
+    }
 
-    let x = calculatePermissionDiffences(all_files)
   
-    console.log(x)
-    console.log("done")
-    res.send([...x])
 }  
 
 const querySnap = async (req: Request, res: Response) => {

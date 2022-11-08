@@ -22,27 +22,17 @@ export const analyzeDeviantSharing  = (selection: DriveFile[], threshold: number
             })
             if(numFiles > 0){
                 let largestEntry = [...permissionsToFileId.values()].reduce((x, y) => x.length > y.length? x: y)
-                // let commonFile: DriveFile = fileIdToFile.get(largestEntry[0]) as any
                 if(largestEntry.length / numFiles >= threshold){
-                    let commonFile = JSON.parse(JSON.stringify((fileIdToFile.get(largestEntry[0]) as any).permissions, null, '\t'))
-                    // deviantlyShared.set(commonFile, [])
+                    let commonFile = JSON.parse(JSON.stringify("NO PERMISSION", null, '\t'))
+                    // if(largestEntry.length > 0 && fileIdToFile.has(largestEntry[0]) && (fileIdToFile.get(largestEntry[0]) as any).permissions !== null){
+                        commonFile = JSON.parse(JSON.stringify((fileIdToFile.get(largestEntry[0]) as any).permissions, null, '\t'))
+                    // }
                     permissionsToFileId.forEach((value, key) => {
                         if(JSON.stringify(value) !== JSON.stringify(largestEntry)){
                             value.forEach((fileId) => {
-                                // deviantlyShared.push(fileIdToFile.get(fileId) as DriveFile)
-                                // deviantlyShared.has(commonFile)
-                                //     ? deviantlyShared.set(commonFile, (deviantlyShared.get(commonFile) as any).concat([fileIdToFile.get(fileId)]))
-                                //     : deviantlyShared.set(commonFile, [fileIdToFile.get(fileId) as any])
-
-                                // deviantlyShared.set(commonFile, (deviantlyShared.get(commonFile) as any).concat([fileIdToFile.get(fileId)]))
-
-                                // deviantlyShared.has(commonFile)
-                                // ? deviantlyShared.set(commonFile, (deviantlyShared.get(commonFile) as any).concat([(fileIdToFile.get(fileId) as any).serialize()]))
-                                // : deviantlyShared.set(commonFile, [(fileIdToFile.get(fileId) as any).serialize()])
-
                                 let curr = (fileIdToFile.get(fileId) as any)
-                                curr.source = folder.name
                                 console.log("brah ",curr)
+                                curr.source = folder.name
 
                                 deviantlyShared.has(commonFile)
                                 ? deviantlyShared.set(commonFile, (deviantlyShared.get(commonFile) as any).concat([curr.serialize()]))
@@ -73,7 +63,7 @@ export const calculateSharingChanges = (selection1: DriveFile[], selection2: Dri
     return idToPermissions
 }
 
-export const calculatePermissionDiffences = (selection: DriveFile[]) => {
+export const calculatePermissionDifferences = (selection: DriveFile[]) => {
     let differentlyShared : Set<DriveFile> = new Set<DriveFile>()
     let result : Map<string, string[]> = new Map<string, string[]>
 

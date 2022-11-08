@@ -22,9 +22,9 @@ export class FileInfoSnapshot {
             let permissions: Permission[] = file.permissions.map((p: any) => new Permission(p._id.toString(), p.drive_id, new User(p.grantedTo.email,  p.grantedTo.display_name), p.role))
             let drivefile: DriveFile
             switch (file.type) {
-                case "ROOT": drivefile = new DriveRoot(file._id.toString(), file.drive_id, "", [], false); roots.push(drivefile as DriveRoot); break
-                case "FILE": drivefile = new DriveFile(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, new User(file.owner.email, file.owner.display_name), permissions, new User(file.sharedBy?.email, file.sharedBy?.display_name), file.mime_type); break
-                case "FOLDER": drivefile = new DriveFolder(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, new User(file.owner.email, file.owner.display_name), permissions, new User(file.sharedBy?.email, file.sharedBy?.display_name), file.mime_type, []); break
+                case "ROOT": drivefile = new DriveRoot(file._id.toString(), file.drive_id, file.name, [], false); roots.push(drivefile as DriveRoot); break
+                case "FILE": drivefile = new DriveFile(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, (file.owner ? new User(file.owner.email, file.owner.display_name) : null), permissions, new User(file.sharedBy?.email, file.sharedBy?.display_name), file.mime_type); break
+                case "FOLDER": drivefile = new DriveFolder(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, (file.owner ? new User(file.owner.email, file.owner.display_name) : null), permissions, new User(file.sharedBy?.email, file.sharedBy?.display_name), file.mime_type, []); break
                 default: throw new Error("file does not have a valid type")
             }
             idToDriveFile.set(file._id.toString(), [drivefile, file.children])

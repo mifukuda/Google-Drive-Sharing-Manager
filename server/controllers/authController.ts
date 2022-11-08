@@ -65,27 +65,13 @@ const auth_callback = async (req: Request, res: Response) => {
         )
     }
 
-    // let userProfile: any = null
-    // try{
-    //     userProfile = await Models.UserModel.findById(payload.sub)
-    // }catch(err){
-    //     console.log("Error querying user profile.", err)
-    // }
-
-    // const idToSign: String = (userProfile._id as Types.ObjectId).toString()
-    // console.log(idToSign)
-
     return res.cookie("jwt", jwt.sign({
         _id: (userProfile._id as Types.ObjectId).toString()
     }, CONFIG.JWT_secret), {
         httpOnly: true,
         secure: true,
         sameSite: "none"
-    }).status(200).json({
-        message: "OK",
-        email: userProfile.email,
-        name: userProfile.name
-    })
+    }).status(200).redirect("http://localhost:3000/home")
 }
 
 export { login, auth_callback, auth_client }

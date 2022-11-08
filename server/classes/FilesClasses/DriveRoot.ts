@@ -11,7 +11,7 @@ export class DriveRoot extends DriveFolder {
         children: DriveFile[], 
         public is_shared_drive: boolean
     ) {
-        super(_id, driveId, null, new Date(), new Date(), drive_name, new User("", ""), [], null, "", children)
+        super(_id, driveId, null, new Date(), new Date(), drive_name, null, [], null, "", children)
     }
 
     getModel(): Object[] {
@@ -23,7 +23,6 @@ export class DriveRoot extends DriveFolder {
             {
                 drive_id: this.driveId,
                 name: this.name,
-                owner: this.owner?.getModel(),
                 sharedBy: this.shared_by?.getModel(),
                 mime_type: this.mime_type,
                 type: "ROOT",

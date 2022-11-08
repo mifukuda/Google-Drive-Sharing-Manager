@@ -24,7 +24,7 @@ export default function FileCard(props) {
     }
 
     // Render list of permissions
-    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {element.granted_to.email}, {element.granted_to.display_name} (id: {element.id})</p>);
+    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {element.granted_to.email}, {element.granted_to.display_name} (id: {element._id})</p>);
 
     // Render directory with indents
     let indent = 3*depth;
@@ -75,9 +75,9 @@ export default function FileCard(props) {
                     </div>
                 </Accordion.Header>
                 <Accordion.Body>
-                    <p><b>ID:</b> {file.id}</p>
-                    <p><b>Owner Name:</b> file.owner.display_name</p>
-                    <p><b>Owner Email:</b> file.owner.email</p>
+                    <p><b>ID:</b> {file._id}</p>
+                    {file.owner ? <p><b>Owner Name:</b> {file.owner.display_name}</p> : null}
+                    {file.owner ?  <p><b>Owner Email:</b> {file.owner.email}</p> : null}
                     <p><b>Date Created:</b> {new Date(file.date_created).toString()}</p>
                     <p><b>Date Modified:</b> {new Date(file.date_modified).toString()}</p>
                     <p><b>Permissions:</b></p>

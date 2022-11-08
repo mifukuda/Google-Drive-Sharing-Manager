@@ -7,6 +7,8 @@ import Models from '../db/Models';
 import { Types } from 'mongoose';
 import { getModel } from '../middleware/getUserModel'
 import { analyzeDeviantSharing, calculatePermissionDiffences } from '../sharinganalysis'
+
+
 const createSnapshot = async (req: Request, res: Response) => {
     //get the user UserProfile
     let user: any = await getModel(req.cookies.jwt)
@@ -37,6 +39,10 @@ const createSnapshot = async (req: Request, res: Response) => {
 
 const getSnapshotInfo = async (req: Request, res: Response) => {
     let user: any = await Models.UserModel.findById((req.cookies.jwt)).populate({ path: 'fileSnapshots', model: 'FileSnapshots' })
+    if (!user) {
+        console.log("User not found.")
+        return res.status(400).json({message: "Failed"})
+    }
     let snapshot_info = user.fileSnapshots.map((s: any) => { return { "_id": s.id, "createdAt": s.createdAt }})
     res.status(200).json({ message: "OK", snapshotInfo: snapshot_info })
 }
@@ -107,11 +113,16 @@ const querySnap = async (req: Request, res: Response) => {
     let query = req.body.query
     let prop = query.split(":")[0]
     let val = query.split(":")[1]
-    let id = new Types.ObjectId(req.body.id)
-    let fileSnapshot = await FileInfoSnapshot.retrieve(id)
-    let query_results = fileSnapshot.applyQuery(new Query(prop, val)).map(f => {
-        return f.serialize()
-    })
+    let id = new Types.ObjectId(req.body.snapshot_id)
+    let query_results
+    try {
+        let fileSnapshot = await FileInfoSnapshot.retrieve(id)
+        query_results = fileSnapshot.applyQuery(new Query(prop, val)).map(f => {
+            return f.serialize()
+        })
+    } catch (err) {
+        return res.status(400).json({message: "Failed"}) 
+    }
     res.status(200).json({
         message: "OK",
         query_results: query_results

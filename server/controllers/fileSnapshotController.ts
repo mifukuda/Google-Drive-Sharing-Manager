@@ -125,6 +125,7 @@ const querySnap = async (req: Request, res: Response) => {
     }
     res.status(200).json({
         message: "OK",
+        query: query,
         query_results: query_results
     })
 }

@@ -7,7 +7,7 @@ import { Query, User } from "../UserClasses"
 
 export class FileInfoSnapshot {
     constructor (
-        public _id: Types.ObjectId,
+        public _id: string,
         public drive_roots: DriveRoot[], 
         public date_updated: Date,
         public date_created: Date
@@ -36,7 +36,7 @@ export class FileInfoSnapshot {
                 child.parent = (file as DriveFolder)
             })
         })
-        return new FileInfoSnapshot(snapshot._id, roots, snapshot.createdAt, snapshot.updatedAt)
+        return new FileInfoSnapshot(snapshot._id.toString(), roots, snapshot.createdAt, snapshot.updatedAt)
     }
 
     applyQuery(query: Query): DriveFile[] {
@@ -80,7 +80,7 @@ export class FileInfoSnapshot {
         }
         
         return new FileInfoSnapshot(
-            snapshotModel._id,
+            snapshotModel._id.toString(),
             roots, 
             snapshotModel.updatedAt,
             snapshotModel.createdAt

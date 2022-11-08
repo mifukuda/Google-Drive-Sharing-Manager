@@ -23,7 +23,7 @@ SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
         error status: 400
 
 
-    GET /get (Implemented)
+    POST /get (Implemented)
         description: returns entire file info snapshot from database given the
         snapshot's database ID
         input body: {id: <string>}
@@ -32,7 +32,7 @@ SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
         error status: 400
 
 
-    GET /update (NOT Implemented)
+    POST /update (NOT Implemented)
         input body: {
             snapshot_id: String,
             files: [file_id: id],
@@ -42,7 +42,7 @@ SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
         success status: 200
 
 
-    GET /checkpolicies (NOT Implemented)
+    POST /checkpolicies (NOT Implemented)
         description: returns list of files that violate access control policies
         input_body: {
             snapshot_id: <string>,

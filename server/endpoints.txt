@@ -1,39 +1,69 @@
 AUTH ENDPOINTS
-    /auth/login
+    GET /auth/login (Implemented)
+        
+    GET /auth/callback (Implemented)
     
 
-SNAPSHOT ENDPOINTS
-    /snapshot/create
-        inputs: {}
-        output: {snapshot}
+SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
+    GET /create (Implemented)
+        description: create file info snapshot based on current drive state and
+        store to database
+        input body: None
+        response body: {fileSnapshot: <serialized snapshot>}
+        success status: 200
+        error status: 400
+    
 
-    /snapshot/get 
-        inputs: {snapshot_id: String}
-        output: {jsonString}
+    GET /getinfo (Implemented)
+        description: get basic high-level info about file info snapshots that
+        can be later used to selectively query detailed snapshot info from /get
+        input body: None
+        response body: { snapshotInfo: [{_id: <string>, createdAt: <string>}, ...]}
+        success status: 200
+        error status: 400
 
-    /snapshot/update
-        inputs: {
+
+    GET /get (Implemented)
+        description: returns entire file info snapshot from database given the
+        snapshot's database ID
+        input body: {id: <string>}
+        response body: {fileSnapshot: <serialized snapshot>}
+        success status: 200
+        error status: 400
+
+
+    GET /update (NOT Implemented)
+        input body: {
             snapshot_id: String,
-            fileArray: [file_id: id],
-            operation: {}
+            files: [file_id: id],
+            permissions: [],
         },
-        output: {success: true}
+        response body: {success: true}
+        success status: 200
 
-    /snapshot/checkPolicies
-        inputs: {
-            snapshot_id: String,
-            ACP_id: String    
+
+    GET /checkPolicies (NOT Implemented)
+        description: returns list of files that violate access control policies
+        input_body: {
+            snapshot_id: <string>,
+            acp_id: <string>    
         }
+        response body: [{ file: <file name> }, ...]
+        response status: 200
 
-    /snapshot/analyze
+    GET /analyze/deviantSharing (NOT Implemented)
 
+    GET /analyze/sharingDifferences (NOT Implemented)
 
-    /snapshots/query
+    POST /query (NOT Implemented)
+        description: returns flat list of files that match query for given snapshot
+        input_body: { query: <string>, snapshot_id: <string> }
+        response body: { query_results: [ <serialized file info snapshot>, ...]}
 
 
 USER ENDPOINTS
 
-    /user/getUserProfile
-
-    /user/getACP
-
+    GET /user/getAccessControlPolicies (NOT Implemented)
+        description: returns list of all access control policies for user
+        input_body: None
+        response body: {[ file: <file name> ], ...}

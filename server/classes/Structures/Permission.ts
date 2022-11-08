@@ -23,7 +23,7 @@ export class Permission {
     constructor (
         public _id: string,
         public driveId: string, 
-        public granted_to: Group | User, 
+        public granted_to: User, //Group
         public role: permission_level
     ) {}
 
@@ -31,7 +31,7 @@ export class Permission {
         return new Models.PermissionModel({
             _id: new Types.ObjectId(this._id),
             drive_id: this.driveId,
-            grantedTo: this.granted_to,
+            grantedTo: this.granted_to.getModel(),
             role: this.role
         })
     }

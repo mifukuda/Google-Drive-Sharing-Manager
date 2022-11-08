@@ -4,13 +4,13 @@ import { verifyToken } from '../middleware/jwtVerification';
 
 const router = express.Router();
 
-router.post('/create', verifyToken, createSnapshot)
-router.get('/get', verifyToken, getSnap)
+router.get('/create', verifyToken, createSnapshot)
+router.post('/get', verifyToken, getSnap)
 router.post('/update', verifyToken, updateSnap)
 router.get('/getinfo', verifyToken, getSnapshotInfo)
-router.get('/checkpolicies', verifyToken, checkPolicies)
+router.post('/checkpolicies', verifyToken, checkPolicies)
 router.post('/analyze/deviantSharing', verifyToken, deviantSharing)
 router.post('/analyze/sharingDifferences', verifyToken, sharingDifferences)
-router.get('/query', verifyToken, querySnap)
+router.post('/query', verifyToken, querySnap)
 
 export { router as snapshot_router };

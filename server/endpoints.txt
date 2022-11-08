@@ -42,7 +42,7 @@ SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
         success status: 200
 
 
-    GET /checkPolicies (NOT Implemented)
+    GET /checkpolicies (NOT Implemented)
         description: returns list of files that violate access control policies
         input_body: {
             snapshot_id: <string>,
@@ -58,7 +58,7 @@ SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
     POST /query (NOT Implemented)
         description: returns flat list of files that match query for given snapshot
         input_body: { query: <string>, snapshot_id: <string> }
-        response body: { query_results: [ <serialized file info snapshot>, ...]}
+        response body: { query: <string>, query_results: [ <serialized file info snapshot>, ...] }
 
 
 USER ENDPOINTS

@@ -9,6 +9,7 @@ export default function FileCard(props) {
     const dispatch = useDispatch();
     const selectedFiles = useSelector(state => state.selectedFiles);
     const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
+    const roles = ["Viewer", "Commenter", "Editor", "Owner"];
 
     function handleCheck(event) {
         if(isChecked) {
@@ -23,7 +24,7 @@ export default function FileCard(props) {
     }
 
     // Render list of permissions
-    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {element.role}: {element.granted_to.email}, {element.granted_to.display_name} (id: {element.id})</p>);
+    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {element.granted_to.email}, {element.granted_to.display_name} (id: {element.id})</p>);
 
     // Render directory with indents
     let indent = 3*depth;
@@ -75,10 +76,10 @@ export default function FileCard(props) {
                 </Accordion.Header>
                 <Accordion.Body>
                     <p><b>ID:</b> {file.id}</p>
-                    <p><b>Owner Name:</b> {file.owner.display_name}</p>
-                    <p><b>Owner Email:</b> {file.owner.email}</p>
-                    <p><b>Date Created:</b> {file.date_created}</p>
-                    <p><b>Date Modified:</b> {file.date_modified}</p>
+                    <p><b>Owner Name:</b> file.owner.display_name</p>
+                    <p><b>Owner Email:</b> file.owner.email</p>
+                    <p><b>Date Created:</b> {new Date(file.date_created).toString()}</p>
+                    <p><b>Date Modified:</b> {new Date(file.date_modified).toString()}</p>
                     <p><b>Permissions:</b></p>
                     {permissionList}
                 </Accordion.Body>

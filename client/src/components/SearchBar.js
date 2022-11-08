@@ -4,6 +4,7 @@ import {getFilteredSnapshotFromBackend, setFilter, showModal} from '../actions';
 import {Form, Button} from 'react-bootstrap';
 
 export default function SearchBar(props) {
+    const currentSnapshot = useSelector(state => state.currentSnapshot);
     // Stores current text within SearchBar
     const [text, setText] = useState(props.filter);
     useEffect(() => {
@@ -19,7 +20,7 @@ export default function SearchBar(props) {
                 dispatch(setFilter(''));
             }
             else{
-                dispatch(getFilteredSnapshotFromBackend('', text));
+                dispatch(getFilteredSnapshotFromBackend(currentSnapshot._id, text));
             }
         }
     }

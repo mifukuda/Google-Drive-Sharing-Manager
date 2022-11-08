@@ -23,8 +23,8 @@ export class DriveRoot extends DriveFolder {
             {
                 drive_id: this.driveId,
                 name: this.name,
-                owner: this.owner,
-                sharedBy: this.shared_by,
+                owner: this.owner?.getModel(),
+                sharedBy: this.shared_by?.getModel(),
                 mime_type: this.mime_type,
                 type: "ROOT",
                 isSharedDrive: true,

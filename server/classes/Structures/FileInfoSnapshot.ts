@@ -15,15 +15,16 @@ export class FileInfoSnapshot {
 
     static async retrieve(id: Types.ObjectId): Promise<FileInfoSnapshot> {
         let snapshot: any = await Models.FileSnapshotModel.findById(id)
+        // console.log("snapshot: ", JSON.stringify(snapshot, null, "\t"))
         let roots: DriveRoot[] = []
         let idToDriveFile: Map<string, [DriveFile, Types.ObjectId[]]> = new Map<string, [DriveFile, Types.ObjectId[]]>()
         snapshot.files.forEach((file: any) => {
-            let permissions: Permission[] = file.permissions.map((p: any) => new Permission(p._id, p.drive_id, new User("none",  "none"), p.role))
+            let permissions: Permission[] = file.permissions.map((p: any) => new Permission(p._id.toString(), p.drive_id, new User(p.grantedTo.email,  p.grantedTo.display_name), p.role))
             let drivefile: DriveFile
             switch (file.type) {
-                case "ROOT": drivefile = new DriveRoot(file._id, file.drive_id, "", [], false); roots.push(drivefile as DriveRoot); break
-                case "FILE": drivefile = new DriveFile(file._id, file.drive_id, null, new Date(), new Date(), file.name, new User("none",  "none"), permissions, new User("none",  "none"), file.mime_type); break
-                case "FOLDER": drivefile = new DriveFolder(file._id, file.drive_id, null, new Date(), new Date(), file.name, new User("none",  "none"), permissions, new User("none",  "none"), file.mime_type, []); break
+                case "ROOT": drivefile = new DriveRoot(file._id.toString(), file.drive_id, "", [], false); roots.push(drivefile as DriveRoot); break
+                case "FILE": drivefile = new DriveFile(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, new User(file.owner.email, file.owner.display_name), permissions, new User(file.sharedBy?.email, file.sharedBy?.display_name), file.mime_type); break
+                case "FOLDER": drivefile = new DriveFolder(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, new User(file.owner.email, file.owner.display_name), permissions, new User(file.sharedBy?.email, file.sharedBy?.display_name), file.mime_type, []); break
                 default: throw new Error("file does not have a valid type")
             }
             idToDriveFile.set(file._id.toString(), [drivefile, file.children])

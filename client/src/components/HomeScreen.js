@@ -13,6 +13,7 @@ export default function HomeScreen() {
     const allSnapshotInfo = useSelector(state => state.allSnapshotInfo);
     const snapshot = useSelector(state => state.currentSnapshot);
     const filter = useSelector(state => state.filter);
+
     //Return default snapshot (most recent) from backend
     useEffect(() => {
         if(allSnapshotInfo.length === 0) {
@@ -21,6 +22,7 @@ export default function HomeScreen() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     return (
         <div className="homescreen">
             <QueryBuilder/>

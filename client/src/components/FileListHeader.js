@@ -35,7 +35,7 @@ export default function FileListHeader() {
 
             <Dropdown.Menu>
                 <Dropdown.Item active={sortField === "NAME"} onClick={() => handleSortByName()}>Name (A-Z)</Dropdown.Item>
-                <Dropdown.Item active={sortField === "DATEOLD"} onClick={() => handleSortByDateOld()}>Newest (Modified)</Dropdown.Item>
+                <Dropdown.Item active={sortField === "DATEOLD"} onClick={() => handleSortByDateOld()}>Newest (Date Modified)</Dropdown.Item>
                 <Dropdown.Item active={sortField === "DATENEW"} onClick={() => handleSortByDateNew()}>Oldest (Date Modified)</Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>

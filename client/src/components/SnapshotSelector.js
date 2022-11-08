@@ -12,7 +12,7 @@ export default function SnapshotSelector() {
         dispatch(getSnapshotFromBackend(snapshot._id));
     }
 
-    let snapshots = allSnapshotInfo.map((x, i) => <Dropdown.Item key={i} active={currentSnapshot._id === x._id}onClick={() => handleUpdateDisplay(x)}>{new Date(x.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}</Dropdown.Item>)
+    let snapshots = allSnapshotInfo.map((x, i) => <Dropdown.Item key={i} active={currentSnapshot._id === x._id} onClick={() => handleUpdateDisplay(x)}>{new Date(x.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}</Dropdown.Item>)
 
     return (
         <Dropdown>

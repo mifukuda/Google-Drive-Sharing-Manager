@@ -55,7 +55,7 @@ SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
 
     GET /analyze/sharingDifferences (NOT Implemented)
 
-    POST /query (NOT Implemented)
+    POST /query (Implemented)
         description: returns flat list of files that match query for given snapshot
         input_body: { query: <string>, snapshot_id: <string> }
         response body: { query: <string>, query_results: [ <serialized file info snapshot>, ...] }
@@ -63,7 +63,7 @@ SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
 
 USER ENDPOINTS
 
-    GET /user/getAccessControlPolicies (NOT Implemented)
+    GET /getAccessControlPolicies (NOT Implemented)
         description: returns list of all access control policies for user
         input_body: None
         response body: {[ file: <file name> ], ...}

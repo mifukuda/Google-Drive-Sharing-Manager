@@ -6,7 +6,7 @@ export default function HomeScreen(props) {
     const snapshot = useSelector(state => state.currentSnapshot);
     const searchResults = useSelector(state => state.searchResults);
     const filter = useSelector(state => state.filter);
-    const selectedFiles = useSelector(state => state.selectedFiles);
+    //const selectedFiles = useSelector(state => state.selectedFiles);
     const {updating} = props;
 
     // Building list from search results
@@ -36,10 +36,10 @@ export default function HomeScreen(props) {
 
     let key = 0;
     let directory = [];
-    if(updating) {
+    /*if(updating) {
         buildList(selectedFiles);
-    }
-    else if(snapshot) {
+    }*/
+    if(snapshot) {
         try {
             // For search results
             if(filter) {

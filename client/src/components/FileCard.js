@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useSelector, useDispatch} from "react-redux"
+import {useDispatch} from "react-redux"
 import {selectFile, unselectFile} from "../actions";
 import {Accordion, Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,8 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function FileCard(props) {
     const {file, depth, isRoot} = props;
     const dispatch = useDispatch();
-    const selectedFiles = useSelector(state => state.selectedFiles);
-    const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
+    //const selectedFiles = useSelector(state => state.selectedFiles);
+    //const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
+    const [isChecked, setIsChecked] = useState(false);
     const roles = ["Viewer", "Commenter", "Editor", "Owner"];
 
     function handleCheck(event) {

@@ -46,7 +46,7 @@ export default function SearchBar(props) {
                         value={text} onChange={(event) => setText(event.target.value)} onKeyPress={(event) => handleSubmit(event)}/>
                 </Form.Group>
             </Form>
-            <Button variant="dark" style={{marginTop: "2.4%", bottom: 0, width: '10%', height: '10%'}} onClick={(event) => handleShowModal(event)}>Build Query</Button>
+            <Button variant="dark" style={{marginTop: 'auto', width: '10%', height: '15%'}} onClick={(event) => handleShowModal(event)}>Build Query</Button>
         </div>
     );
 }

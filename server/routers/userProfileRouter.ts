@@ -5,7 +5,7 @@ import { verifyToken } from '../middleware/jwtVerification';
 const router = express.Router();
 
 router.post('/savequery', verifyToken, saveQuery)
-router.post('/getacp', verifyToken, getAccessControlPolicies)
+router.get('/getallacps', verifyToken, getAccessControlPolicies)
 router.post('/addacp', verifyToken, addAccessControlPolicy)
 router.post('/deleteacp', verifyToken, deleteAccessControlPolicy)
 

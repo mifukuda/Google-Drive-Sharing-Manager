@@ -1,8 +1,7 @@
 import { UploadedFile } from 'express-fileupload'
-import { User } from "../UserClasses"
 
 export class GroupMembershipSnapshot {
-    members: User[]
+    members: string[]
     constructor (
         public group_name: string,
         public file: UploadedFile,
@@ -10,14 +9,9 @@ export class GroupMembershipSnapshot {
     ) {
         let emails: Set<string> = new Set<string>()
         let text: string = file.data.toString()
-        let pattern: RegExp = /mailto:[^\"]*\"/g
-        Array.from(text.matchAll(pattern)).forEach((match) => {
+        Array.from(text.matchAll(/mailto:[^\"]*\"/g)).forEach((match) => {
             emails.add(match[0].slice(match[0].indexOf(":") + 1, -1))
         })
-        this.members = [...emails].map((email: string) => new User(email, email))
-    }
-
-    save_to_db(): void {
-        // needs implementation
+        this.members = [...emails]
     }
 }

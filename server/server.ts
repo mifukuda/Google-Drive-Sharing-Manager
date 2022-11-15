@@ -11,7 +11,7 @@ import { Query } from './classes/UserClasses'
 import { auth_client } from './controllers'
 import db_connect from './db'
 import Models from "./db/Models"
-import { auth_router, snapshot_router, user_profile_router } from './routers'
+import { auth_router, snapshot_router, user_profile_router, group_snapshot_router } from './routers'
 import {calculatePermissionDifferences, analyzeDeviantSharing} from './sharinganalysis'
 import { DriveRoot, DriveFile } from './classes/FilesClasses/'
 
@@ -39,6 +39,7 @@ app.use(cors(corsOptions));
 app.use('/auth', auth_router)
 app.use('/fileSnapshot', snapshot_router)
 app.use('/user', user_profile_router)
+app.use('/group', group_snapshot_router)
 
 //connect to the database
 db_connect()

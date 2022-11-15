@@ -4,7 +4,7 @@ AUTH ENDPOINTS
     GET /auth/callback (Implemented)
     
 
-SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
+FILE INFO SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
     GET /create (Implemented)
         description: create file info snapshot based on current drive state and
         store to database
@@ -87,3 +87,10 @@ USER ENDPOINTS (all endpoints below are prepended with /user/)
         description: deletes acp from user profile
         input_body: { acp_id: <string> }
         response_body: None
+
+
+GROUP MEMBERSHIP SNAPSHOT ENDPOINTS (all endpoints below are prepended with /group/)
+    POST /uploadgroupsnapshot
+        description: parses html members page and saves emails to database
+        input_body: { name: <string>, memberlist: <file> }
+        response_body: { id: <string> }

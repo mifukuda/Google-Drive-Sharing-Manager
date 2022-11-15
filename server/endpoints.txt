@@ -90,7 +90,7 @@ USER ENDPOINTS (all endpoints below are prepended with /user/)
 
 
 GROUP MEMBERSHIP SNAPSHOT ENDPOINTS (all endpoints below are prepended with /group/)
-    POST /uploadgroupsnapshot
+    POST /uploadgroupsnapshot (Implemented)
         description: parses html members page and saves emails to database
         input_body: { name: <string>, memberlist: <file> }
         response_body: { id: <string> }

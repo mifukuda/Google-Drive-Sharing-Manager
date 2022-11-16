@@ -4,7 +4,7 @@ AUTH ENDPOINTS
     GET /auth/callback (Implemented)
     
 
-SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
+FILE INFO SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
     GET /create (Implemented)
         description: create file info snapshot based on current drive state and
         store to database
@@ -40,30 +40,57 @@ SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
         },
         response body: {success: true}
         success status: 200
-
+        error status: 400
 
     POST /checkpolicies (NOT Implemented)
         description: returns list of files that violate access control policies
         input_body: {
             snapshot_id: <string>,
-            acp_id: <string>    
+            acp_ids: [<string>, ...]
         }
-        response body: [{ file: <file name> }, ...]
-        response status: 200
+        response body: [{ file: <file name>, violation: }, ...] # needs to be fixed
+        success status: 200
+        error status: 400
 
     GET /analyze/deviantSharing (NOT Implemented)
 
     GET /analyze/sharingDifferences (NOT Implemented)
 
-    POST /query (NOT Implemented)
+    POST /query (Implemented)
         description: returns flat list of files that match query for given snapshot
         input_body: { query: <string>, snapshot_id: <string> }
         response body: { query: <string>, query_results: [ <serialized file info snapshot>, ...] }
 
 
-USER ENDPOINTS
-
-    GET /user/getAccessControlPolicies (NOT Implemented)
-        description: returns list of all access control policies for user
+USER ENDPOINTS (all endpoints below are prepended with /user/)
+    GET /getsavedqueries (NOT Implemented)
+        description: retrieves all queries saved under user profile
         input_body: None
-        response body: {[ file: <file name> ], ...}
+        response_body: { queries: [<string>, ...] }
+
+    POST /savequery (NOT Implemented)
+        description: saves input query to query history in user profile
+        input_body: { query: <string> }
+        response_body: None
+
+    GET /getallacps (NOT Implemented)
+        description: returns list of all access control policies for user given userid
+        input_body: None
+        response body: [{ _id: <string>, query: <string>, AR: [<emails>, ...], DR: [<emails>, ...], AW: [<emails>, ...], DW: [<emails>, ...], is_group: <boolean> }, ...]
+    
+    POST /addacp (NOT Implemented)
+        description: adds acp to user profile
+        input_body: { query: <string>, AR: [<emails>, ...], DR: [<emails>, ...], AW: [<emails>, ...], DW: [<emails>, ...], is_group: <boolean> }
+        response_body: { _id: <string>, query: <string>, AR: [<emails>, ...], DR: [<emails>, ...], AW: [<emails>, ...], DW: [<emails>, ...], is_group: <boolean> }
+
+    POST /deleteacp (NOT Implemented)
+        description: deletes acp from user profile
+        input_body: { acp_id: <string> }
+        response_body: None
+
+
+GROUP MEMBERSHIP SNAPSHOT ENDPOINTS (all endpoints below are prepended with /group/)
+    POST /uploadgroupsnapshot (Implemented)
+        description: parses html members page and saves emails to database
+        input_body: { name: <string>, memberlist: <file> }
+        response_body: { id: <string> }

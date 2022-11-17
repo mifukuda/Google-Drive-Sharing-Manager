@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useSelector, useDispatch} from "react-redux"
+import {useDispatch} from "react-redux"
 import {selectFile, unselectFile} from "../actions";
 import {Accordion, Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,8 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function FileCard(props) {
     const {file, depth, isRoot} = props;
     const dispatch = useDispatch();
-    const selectedFiles = useSelector(state => state.selectedFiles);
-    const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
+    //const selectedFiles = useSelector(state => state.selectedFiles);
+    //const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
+    const [isChecked, setIsChecked] = useState(false);
     const roles = ["Viewer", "Commenter", "Editor", "Owner"];
 
     function handleCheck(event) {
@@ -24,7 +25,7 @@ export default function FileCard(props) {
     }
 
     // Render list of permissions
-    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {element.granted_to.email}, {element.granted_to.display_name} (id: {element._id})</p>);
+    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {(Object.keys(element.granted_to) === 0) ? (element.granted_to.email + ", " + element.granted_to.display_name) : (element.driveId)} (id: {element._id})</p>);
 
     // Render directory with indents
     let indent = 3*depth;

@@ -17,7 +17,7 @@ export default function SnapshotSelector() {
     return (
         <Dropdown>
             <Dropdown.Toggle style={{width: '82%', marginBottom:"5%"}} variant="info" id="sortdropdown">
-                {new Date(currentSnapshot.date_created).toLocaleString("en-US", {timeZone: "America/New_York"})}
+                {(Object.keys(currentSnapshot).length !== 0) ? new Date(currentSnapshot.date_created).toLocaleString("en-US", {timeZone: "America/New_York"}) : "No Snapshots"}
             </Dropdown.Toggle>
 
             <Dropdown.Menu style={{width: '82%'}}>

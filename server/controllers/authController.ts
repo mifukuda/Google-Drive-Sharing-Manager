@@ -18,6 +18,7 @@ const login = (req: Request, res: Response) => {
     // Obtain the google login link 
     const auth_url = auth_client.generateAuthUrl({
         access_type: 'offline', // Does not require user to constantly give consent
+        prompt: 'consent',
         scope: CONFIG.oauth_credentials.scopes 
     })
     return res.redirect(auth_url)

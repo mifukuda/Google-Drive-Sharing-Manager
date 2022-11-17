@@ -10,6 +10,7 @@ import {uploadGroupSnapshot} from "../api/group.js";
 export default function SideBar() {
     const dispatch = useDispatch();
     const [file, setFile] = useState();
+    const [status, setStatus] = useState(<p>Status: </p>)
     
     function handleTakeSnapshot() {
         console.log("Creating a new snapshot.")
@@ -26,7 +27,13 @@ export default function SideBar() {
         formData.append('memberlist', file);
         formData.append('name', file.name);
         uploadGroupSnapshot(formData).then((response) => {
-            console.log(response.data);
+            console.log(response);
+            if(response.status === 200) {
+                setStatus(<p style={{color: 'green'}}>Status: Success!</p>);
+            }
+            else {
+                setStatus(<p style={{color: 'red'}}>Status: Error</p>)
+            }
         });
     }
 
@@ -44,6 +51,7 @@ export default function SideBar() {
                 <h3 className="sidebarlogo">Upload Group Snapshot:</h3>
                 <input type="file" onChange={(event) => handleSelectFile(event)}/>
                 <button className="uploadbutton" onClick={() => handleUploadGroup()}>+ Upload Group</button>
+                {status}
                 <h3 className="sidebarlogo">On Selected:</h3>
                 <ul>
                     <li>

@@ -25,7 +25,7 @@ export default function FileCard(props) {
     }
 
     // Render list of permissions
-    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {element.granted_to.email}, {element.granted_to.display_name} (id: {element._id})</p>);
+    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {(Object.keys(element.granted_to) === 0) ? (element.granted_to.email + ", " + element.granted_to.display_name) : (element.driveId)} (id: {element._id})</p>);
 
     // Render directory with indents
     let indent = 3*depth;

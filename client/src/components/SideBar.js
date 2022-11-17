@@ -21,6 +21,7 @@ export default function SideBar() {
     }
 
     function handleUploadGroup() {
+        if(!file) return;
         const formData = new FormData();
         formData.append('memberlist', file);
         formData.append('name', file.name);

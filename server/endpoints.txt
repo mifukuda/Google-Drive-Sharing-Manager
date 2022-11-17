@@ -32,13 +32,17 @@ FILE INFO SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapsh
         error status: 400
 
 
-    POST /update (NOT Implemented)
+    POST /update (Implemented)
+        description: performs batch sharing operations to sets of files
         input body: {
-            snapshot_id: String,
-            files: [file_id: id],
-            permissions: [],
+            snapshotID: string,
+            fileDbIDs: [<string>, ...], # fileDbIDs are just the _id field of the Mongoose Schema
+            operation: "add_readers" or "add_writers" or "add_commenters" or
+            "remove_readers" or "remove_writers" or "remove_commenters" or
+            "unshare",
+            emails: [<string>, ...] # all operations except for unshare require a list of emails!!!!
         },
-        response body: {success: true}
+        response body: {message: "success"}
         success status: 200
         error status: 400
 

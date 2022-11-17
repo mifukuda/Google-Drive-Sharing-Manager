@@ -1,5 +1,4 @@
-import { DriveFile, DriveRoot } from "../FilesClasses"
-import { Group } from "../UserClasses"
+import { DriveRoot } from "../FilesClasses"
 
 
 export abstract class DriveAdapter {
@@ -8,5 +7,5 @@ export abstract class DriveAdapter {
         this.driveToken = driveToken
     }
     abstract getFileRoots(): Promise<DriveRoot[]>
-    abstract updateSharing(files: DriveFile[], permissions: Group[]): Promise<void>
+    abstract addPermission(fileDriveID: string, email: string, role: string): Promise<any> 
 }

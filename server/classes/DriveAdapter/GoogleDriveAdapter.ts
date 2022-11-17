@@ -134,9 +134,31 @@ export class GoogleDriveAdapter extends DriveAdapter {
         return roots
     }
 
-    async updateSharing(files: DriveFile[], permissions: Group[]): Promise<void> {
-
+    async deletePermission(fileDriveID: string, permissionDriveID: string) {
+        const drive = google.drive('v3');
+        console.log("fileDriveId: ", fileDriveID)
+        let response = await drive.permissions.delete({
+            auth: this.auth_client,
+            fileId: fileDriveID,
+            permissionId: permissionDriveID
+        })
+        if (!response) throw new Error("Response undefined")
     }
 
-    
+    async addPermission(fileDriveID: string, email: string, role: string): Promise<any> {
+        const drive = google.drive('v3');
+        console.log("fileDriveId: ", fileDriveID)
+        let response = await drive.permissions.create({
+            auth: this.auth_client,
+            fileId: fileDriveID,
+            requestBody: {
+                type: "user",
+                emailAddress: email,
+                role: role
+            }
+        })
+        console.log("add readers response.data = ", response.data)
+        if (!response) throw new Error("Response undefined")
+        return response
+    }
 }

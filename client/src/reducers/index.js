@@ -6,6 +6,7 @@ import accessControlPolicyReducer from './accessControlPolicies.js';
 import showModalReducer from './showModal.js';
 import selectedFilesReducer from './selectedFiles.js';
 import searchResultsReducer from './searchResults.js';
+import stagedFilesReducer from './stagedFiles.js';
 import {combineReducers} from 'redux';
 
 const allReducers = combineReducers({
@@ -16,7 +17,8 @@ const allReducers = combineReducers({
     filter: filterReducer,
     accessControlPolicies: accessControlPolicyReducer,
     showModal: showModalReducer,
-    selectedFiles: selectedFilesReducer 
+    selectedFiles: selectedFilesReducer,
+    stagedFiles: stagedFilesReducer
 })
 
 export default allReducers;

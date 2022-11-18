@@ -12,13 +12,13 @@ export default function HomeScreen(props) {
     // Building list from search results
     function buildList(snapshot) {
         for(let i = 0; i < snapshot.length; i++) {
-            directory.push(<FileCard file={snapshot[i]} depth={0} key={key++} isRoot={false}/>);
+            directory.push(<FileCard staged={false} file={snapshot[i]} depth={0} key={key++} isRoot={false}/>);
         }
     }
 
     // DFS: returns directory structure (each file/folder is a FileCard)
     function buildTree(snapshot) {
-        directory.push(<FileCard file={snapshot} depth={0} key={key++} isRoot={true}/>);
+        directory.push(<FileCard staged={false} file={snapshot} depth={0} key={key++} isRoot={true}/>);
         //directory.push("Name: " + snapshot.name + ", Depth: " + 0);
         buildTreeHelper(snapshot, 1)
     }
@@ -27,7 +27,7 @@ export default function HomeScreen(props) {
     function buildTreeHelper(root, depth) {
         if (root.children) {
             for(let i = 0; i < root.children.length; i++) {
-                directory.push(<FileCard file={root.children[i]} depth={depth} key={key++} isRoot={false}/>);
+                directory.push(<FileCard staged={false} file={root.children[i]} depth={depth} key={key++} isRoot={false}/>);
                 //directory.push("Name: " + root.children[i].name + ", Depth: " + depth);
                 buildTreeHelper(root.children[i], depth + 1);
             }

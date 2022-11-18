@@ -5,11 +5,11 @@ import {Accordion, Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function FileCard(props) {
-    const {file, depth, isRoot} = props;
+    const {file, depth, isRoot, staged} = props;
     const dispatch = useDispatch();
     //const selectedFiles = useSelector(state => state.selectedFiles);
     //const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
-    const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(staged);
     const roles = ["Viewer", "Commenter", "Editor", "Owner"];
 
     function handleCheck(event) {
@@ -69,6 +69,7 @@ export default function FileCard(props) {
                         onClick={(event) => handleCheck(event)}
                         onChange={() => {}}
                         checked={isChecked}
+                        defaultChecked={staged}
                     />
                     {img}
                     <div style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>

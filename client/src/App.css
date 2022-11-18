@@ -135,6 +135,14 @@ h3.sidebarlogo {
   font-size: 1.2vw;
 }
 
+.sidebarseparator {
+  width: 90%;
+  border: none;
+  height: 2px;
+  color: rgb(74, 74, 223);
+  background-color:rgb(74, 74, 223);
+}
+
 .uploadbutton {
   margin-top: 4%;
   margin-bottom: 4%;
@@ -177,6 +185,35 @@ h3.sidebarlogo {
 
 .analyzescreenheadertitle {
   padding-right: 73%;
+}
+
+.updatescreenlist {
+  margin: auto;
+  width: 90%;
+  height: 70vh;
+  padding: 0;
+  overflow-y: scroll;
+  border: 3px solid rgb(74, 74, 223);
+}
+
+.userlistelement {
+  display: inline-block;
+  border: 1px solid rgb(74, 74, 223);
+  border-radius: 20px;
+  padding-right: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-right: 1%;
+  margin-top: 0.5%;
+  font-size: 1.1vw;
+}
+
+.permissionadder {
+  width: 90%;
+  margin: auto;
+  margin-top: 3%;
+  overflow-wrap: break-word;
 }
 
 .deviantsharinglist {

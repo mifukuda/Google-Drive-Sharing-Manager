@@ -142,6 +142,13 @@ const unselectFile = (file) => {
   }
 }
 
+const stageFiles = (files) => {
+  return {
+    type: 'STAGE_FILES',
+    payload: files
+  }
+}
+
 const sortByName = () => {
   return {
     type: 'SORT_BY_NAME',
@@ -165,6 +172,7 @@ export {
   hideModal,
   selectFile,
   unselectFile,
+  stageFiles,
   setFilter,
   sortByName,
   sortByDateOld,

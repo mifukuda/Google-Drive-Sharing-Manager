@@ -42,8 +42,15 @@ export default function SearchBar(props) {
                     <Form.Label>
                         Search
                     </Form.Label>
-                    <Form.Control placeholder="Search for files..." 
+                    <Form.Control list="browsers" placeholder="Search for files..." 
                         value={text} onChange={(event) => setText(event.target.value)} onKeyPress={(event) => handleSubmit(event)}/>
+                    <datalist id="browsers">
+                        <option value="Edge"/>
+                        <option value="Firefox"/>
+                        <option value="Chrome"/>
+                        <option value="Opera"/>
+                        <option value="Safari"/>
+                    </datalist>
                 </Form.Group>
             </Form>
             <Button variant="dark" style={{marginTop: 'auto', width: '10%', height: '15%'}} onClick={(event) => handleShowModal(event)}>Build Query</Button>

@@ -73,20 +73,20 @@ export default function UpdateScreen() {
                 </div>
                 <h2 className="analyzescreensubtitle">Add and Remove Permissions &#128101;</h2>
                 <div className="permissionadders">
-                        <PermissionAdder users={addWriters} addType="PUSH_ADD_WRITER" removeType="PULL_ADD_WRITER" role="Add Writers"/>
-                        <hr className="updatescreenbreak"/>
-                        <PermissionAdder users={removeWriters} addType="PUSH_REMOVE_WRITER" removeType="PULL_REMOVE_WRITER" role="Remove Writers"/>
-                        <hr className="updatescreenbreak"/>
-                        <PermissionAdder users={addReaders} addType="PUSH_ADD_READER" removeType="PULL_ADD_READER" role="Add Readers"/>
-                        <hr className="updatescreenbreak"/>
-                        <PermissionAdder users={removeReaders} addType="PUSH_REMOVE_READER" removeType="PULL_REMOVE_READER" role="Remove Readers"/>
-                        <hr className="updatescreenbreak"/>
-                        <PermissionAdder users={addCommenters} addType="PUSH_ADD_COMMENTER" removeType="PULL_ADD_COMMENTER" role="Add Commenters"/>
-                        <hr className="updatescreenbreak"/>
-                        <PermissionAdder users={removeCommenters} addType="PUSH_REMOVE_COMMENTER" removeType="PULL_REMOVE_COMMENTER" role="Remove Commenters"/>
-                        <hr className="updatescreenbreak"/>
-                        <PermissionAdder users={unshare} addType="PUSH_UNSHARE" removeType="PULL_UNSHARE" role="Unshare"/>
-                        <hr className="updatescreenbreak"/>
+                    <PermissionAdder users={addWriters} addType="PUSH_ADD_WRITER" removeType="PULL_ADD_WRITER" role="Add Writers"/>
+                    <hr className="updatescreenbreak"/>
+                    <PermissionAdder users={removeWriters} addType="PUSH_REMOVE_WRITER" removeType="PULL_REMOVE_WRITER" role="Remove Writers"/>
+                    <hr className="updatescreenbreak"/>
+                    <PermissionAdder users={addReaders} addType="PUSH_ADD_READER" removeType="PULL_ADD_READER" role="Add Readers"/>
+                    <hr className="updatescreenbreak"/>
+                    <PermissionAdder users={removeReaders} addType="PUSH_REMOVE_READER" removeType="PULL_REMOVE_READER" role="Remove Readers"/>
+                    <hr className="updatescreenbreak"/>
+                    <PermissionAdder users={addCommenters} addType="PUSH_ADD_COMMENTER" removeType="PULL_ADD_COMMENTER" role="Add Commenters"/>
+                    <hr className="updatescreenbreak"/>
+                    <PermissionAdder users={removeCommenters} addType="PUSH_REMOVE_COMMENTER" removeType="PULL_REMOVE_COMMENTER" role="Remove Commenters"/>
+                    <hr className="updatescreenbreak"/>
+                    <PermissionAdder users={unshare} addType="PUSH_UNSHARE" removeType="PULL_UNSHARE" role="Unshare"/>
+                    <hr className="updatescreenbreak"/>
                 </div>
                 <div className="updatescreenoptions">
                     <Button style={{marginRight:"2%", padding:"1%"}} variant="secondary" onClick={(event) => handleClose(event)}>Cancel</Button>

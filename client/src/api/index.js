@@ -21,6 +21,9 @@ export const addAccessControlPolicy = () => api.post(`/addAccessControlPolicy/`)
 // Update file permissions
 export const updatePermissions = (payload) => api.post('/update/', payload);
 
+// Analyze
+export const performDeviantSharing = () => api.post('/analyze/deviantSharing');
+
 const apis = {
     createSnapshot,
     getAllSnaphotInfo,

@@ -20,7 +20,7 @@ export default function PermissionAdder(props) {
     
     return (
         <div className="permissionadder">
-            <Form style={{marginBottom: "2%"}}>
+            <Form style={{width: "70%", marginBottom: "2%"}}>
                 <Form.Group controlId="formSearchBar">
                     <Form.Label>
                         <b>{role}</b>

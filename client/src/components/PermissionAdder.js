@@ -29,7 +29,7 @@ export default function PermissionAdder(props) {
                 </Form.Group>
             </Form>
             <div>
-                {users.map((element, i) => <UserListElement key={i} name={element} removeType={removeType}/>)}
+                {(users.length === 0) ? "No emails added." : users.map((element, i) => <UserListElement key={i} name={element} removeType={removeType}/>)}
             </div>
         </div>
     );

@@ -6,6 +6,7 @@ import {stageFiles} from "../actions";
 import StagedFileList from './StagedFileList';
 import PermissionAdder from './PermissionAdder';
 import {Button} from 'react-bootstrap';
+import {updatePermissions} from '../api';
 
 export default function UpdateScreen() {
     let navigate = useNavigate();
@@ -53,6 +54,9 @@ export default function UpdateScreen() {
                 emails: emails 
             }
             console.log(body);
+            updatePermissions(body).then((response) => {
+                console.log(response);
+            });
         }
     }
 

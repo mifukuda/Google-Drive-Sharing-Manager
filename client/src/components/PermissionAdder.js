@@ -1,23 +1,21 @@
 import React, {useState} from "react";
+import {useDispatch} from "react-redux";
 import {Form} from "react-bootstrap";
 import UserListElement from './UserListElement.js';
 
 export default function PermissionAdder(props) {
+    const dispatch = useDispatch();
     const [text, setText] = useState('');
-    const {role} = props;
+    const {users, role, addType, removeType} = props;
 
     function handleSubmit(event) {
         if(event.key === 'Enter') {
-            if(text === '') {
-                
-            }
-            else{
-                
-            }
+            event.preventDefault();
+            dispatch({type: addType, payload: text});
         }
     }
 
-    let example = ["minato.fukuda@stonybrook.edu", "mifukuda@cs.stonybrook.edu", "minatofukuda@gmail.com", "minatofukuda2@gmail.com", "minatofukuda@yahoo.com"]
+    //let example = ["minato.fukuda@stonybrook.edu", "mifukuda@cs.stonybrook.edu", "minatofukuda@gmail.com", "minatofukuda2@gmail.com", "minatofukuda@yahoo.com"]
     
     return (
         <div className="permissionadder">
@@ -31,7 +29,7 @@ export default function PermissionAdder(props) {
                 </Form.Group>
             </Form>
             <div>
-                {example.map((element, i) => <UserListElement key={i} name={element}/>)}
+                {users.map((element, i) => <UserListElement key={i} name={element} removeType={removeType}/>)}
             </div>
         </div>
     );

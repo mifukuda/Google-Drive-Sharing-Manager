@@ -42,13 +42,13 @@ export default function UpdateScreen() {
                     <StagedFileList/>
                 </div>
                 <div className="permissionadders">
-                        <PermissionAdder addType="PUSH_ADD_WRITER" removeType="PULL_ADD_WRITER" role="Add Writers"/>
-                        <PermissionAdder addType="PUSH_REMOVE_WRITES" removeType="PULL_REMOVE_WRITER" role="Remove Writers"/>
-                        <PermissionAdder addType="PUSH_ADD_READER" removeType="PULL_ADD_READER" role="Add Readers"/>
-                        <PermissionAdder addType="PUSH_REMOVE_READER" removeType="PULL_REMOVE_READER" role="Remove Readers"/>
-                        <PermissionAdder addType="PUSH_ADD_COMMENTER" removeType="PULL_ADD_COMMENTER" role="Add Commenters"/>
-                        <PermissionAdder addType="PUSH_REMOVE_COMMENTER" removeType="PULL_REMOVE_COMMENTER" role="Remove Commentors"/>
-                        <PermissionAdder addType="PUSH_UNSHARE" removeType="PULL_UNSHARE" role="Unshare"/>
+                        <PermissionAdder users={addWriters} addType="PUSH_ADD_WRITER" removeType="PULL_ADD_WRITER" role="Add Writers"/>
+                        <PermissionAdder users={removeWriters} addType="PUSH_REMOVE_WRITER" removeType="PULL_REMOVE_WRITER" role="Remove Writers"/>
+                        <PermissionAdder users={addReaders} addType="PUSH_ADD_READER" removeType="PULL_ADD_READER" role="Add Readers"/>
+                        <PermissionAdder users={removeReaders} addType="PUSH_REMOVE_READER" removeType="PULL_REMOVE_READER" role="Remove Readers"/>
+                        <PermissionAdder users={addCommenters} addType="PUSH_ADD_COMMENTER" removeType="PULL_ADD_COMMENTER" role="Add Commenters"/>
+                        <PermissionAdder users={removeCommenters} addType="PUSH_REMOVE_COMMENTER" removeType="PULL_REMOVE_COMMENTER" role="Remove Commentors"/>
+                        <PermissionAdder users={unshare} addType="PUSH_UNSHARE" removeType="PULL_UNSHARE" role="Unshare"/>
                 </div>
             </div>
         </div>

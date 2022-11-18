@@ -1,10 +1,19 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useNavigate } from "react-router-dom";
 import DeviantSharingList from "./DeviantSharingList";
 import SharingDifferencesList from "./SharingDifferencesList";
+import {performDeviantSharing} from '../api';
 
 export default function AnalyzeScreen() {
     let navigate = useNavigate();
+
+    //Stage files
+    useEffect(() => {
+        performDeviantSharing().then((response) => {
+            console.log(response);
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Navigate to home page when close button is
     function handleClose(event) {

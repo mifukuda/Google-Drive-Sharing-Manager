@@ -196,6 +196,16 @@ h3.sidebarlogo {
   border: 3px solid rgb(74, 74, 223);
 }
 
+.updatescreenoptions {
+  display: flex;
+  justify-content: right;
+  width: 100%;
+  padding-bottom: 5%;
+  padding-right: 5%;
+  padding-top: 2%;
+  margin: 0;
+}
+
 .userlistelement {
   display: inline-block;
   border: 1px solid rgb(74, 74, 223);

@@ -5,9 +5,11 @@ import {useSelector, useDispatch} from "react-redux";
 import {stageFiles} from "../actions";
 import StagedFileList from './StagedFileList';
 import PermissionAdder from './PermissionAdder';
+import {Button} from 'react-bootstrap';
 
 export default function UpdateScreen() {
     let navigate = useNavigate();
+    const currentSnapshot = useSelector(state => state.currentSnapshot);
     const selectedFiles = useSelector(state => state.selectedFiles);
     const addReaders = useSelector(state => state.addReaders);
     const addWriters = useSelector(state => state.addWriters);
@@ -29,6 +31,31 @@ export default function UpdateScreen() {
         navigate("/home");
     }
 
+    // Submit updates
+    function handleSubmit() {
+        const operations = {"add_readers": addReaders, 
+            "add_writers": addWriters, 
+            "add_commenters": addCommenters, 
+            "remove_readers": removeReaders, 
+            "remove_writers": removeWriters, 
+            "remove_commenters": removeCommenters,
+            "unshare": unshare
+        }  
+        const ids =  selectedFiles.map(file => file._id);
+        for (const [operation, emails] of Object.entries(operations)) {
+            if (emails.length === 0) {
+                continue;
+            }
+            let body = {
+                snapshotID: currentSnapshot._id,
+                fileDbIDs: ids, 
+                operation: operation,
+                emails: emails 
+            }
+            console.log(body);
+        }
+    }
+
     return (
         <div className="analyzescreen">
             <div className="analyzescreenheader">
@@ -41,14 +68,19 @@ export default function UpdateScreen() {
                 <div className="updatescreenlist">
                     <StagedFileList/>
                 </div>
+                <h2 className="analyzescreensubtitle">Add and Remove Permissions &#128101;</h2>
                 <div className="permissionadders">
                         <PermissionAdder users={addWriters} addType="PUSH_ADD_WRITER" removeType="PULL_ADD_WRITER" role="Add Writers"/>
                         <PermissionAdder users={removeWriters} addType="PUSH_REMOVE_WRITER" removeType="PULL_REMOVE_WRITER" role="Remove Writers"/>
                         <PermissionAdder users={addReaders} addType="PUSH_ADD_READER" removeType="PULL_ADD_READER" role="Add Readers"/>
                         <PermissionAdder users={removeReaders} addType="PUSH_REMOVE_READER" removeType="PULL_REMOVE_READER" role="Remove Readers"/>
                         <PermissionAdder users={addCommenters} addType="PUSH_ADD_COMMENTER" removeType="PULL_ADD_COMMENTER" role="Add Commenters"/>
-                        <PermissionAdder users={removeCommenters} addType="PUSH_REMOVE_COMMENTER" removeType="PULL_REMOVE_COMMENTER" role="Remove Commentors"/>
+                        <PermissionAdder users={removeCommenters} addType="PUSH_REMOVE_COMMENTER" removeType="PULL_REMOVE_COMMENTER" role="Remove Commenters"/>
                         <PermissionAdder users={unshare} addType="PUSH_UNSHARE" removeType="PULL_UNSHARE" role="Unshare"/>
+                </div>
+                <div className="updatescreenoptions">
+                    <Button style={{marginRight:"2%", padding:"1%"}} variant="secondary" onClick={(event) => handleClose(event)}>Cancel</Button>
+                    <Button style={{padding:"1%"}} onClick={() => handleSubmit()}>Submit Changes</Button>
                 </div>
             </div>
         </div>

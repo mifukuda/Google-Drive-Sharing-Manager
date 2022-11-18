@@ -11,6 +11,7 @@ export default function PermissionAdder(props) {
     function handleSubmit(event) {
         if(event.key === 'Enter') {
             event.preventDefault();
+            if(text === '') return;
             dispatch({type: addType, payload: text});
         }
     }
@@ -24,7 +25,7 @@ export default function PermissionAdder(props) {
                     <Form.Label>
                         <b>{role}</b>
                     </Form.Label>
-                    <Form.Control placeholder={role} 
+                    <Form.Control placeholder={role + ". Press 'ENTER' to add email."} 
                         value={text} onChange={(event) => setText(event.target.value)} onKeyPress={(event) => handleSubmit(event)}/>
                 </Form.Group>
             </Form>

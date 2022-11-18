@@ -7,7 +7,6 @@ export default function UserListElement(props) {
     const {name, removeType} = props;
 
     function handleRemove() {
-        console.log("HELLO");
         dispatch({type: removeType, payload: name})
     }
 

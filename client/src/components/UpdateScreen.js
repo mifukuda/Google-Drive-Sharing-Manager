@@ -33,7 +33,7 @@ export default function UpdateScreen() {
     }
 
     // Submit updates
-    function handleSubmit() {
+    async function handleSubmit() {
         const operations = {"add_readers": addReaders, 
             "add_writers": addWriters, 
             "add_commenters": addCommenters, 
@@ -54,9 +54,8 @@ export default function UpdateScreen() {
                 emails: emails 
             }
             console.log(body);
-            updatePermissions(body).then((response) => {
-                console.log(response);
-            });
+            let response = await updatePermissions(body);
+            console.log(response);
         }
     }
 

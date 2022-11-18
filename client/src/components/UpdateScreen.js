@@ -9,6 +9,13 @@ import PermissionAdder from './PermissionAdder';
 export default function UpdateScreen() {
     let navigate = useNavigate();
     const selectedFiles = useSelector(state => state.selectedFiles);
+    const addReaders = useSelector(state => state.addReaders);
+    const addWriters = useSelector(state => state.addWriters);
+    const addCommenters = useSelector(state => state.addCommenters);
+    const removeReaders = useSelector(state => state.removeReaders);
+    const removeWriters = useSelector(state => state.removeWriters);
+    const removeCommenters = useSelector(state => state.removeCommenters);
+    const unshare = useSelector(state => state.unshare);
     const dispatch = useDispatch();
 
     //Stage files
@@ -35,10 +42,13 @@ export default function UpdateScreen() {
                     <StagedFileList/>
                 </div>
                 <div className="permissionadders">
-                        <PermissionAdder role="Add Writers"/>
-                        <PermissionAdder role="Remove Writers"/>
-                        <PermissionAdder role="Add Readers"/>
-                        <PermissionAdder role="Remove Readers"/>
+                        <PermissionAdder addType="PUSH_ADD_WRITER" removeType="PULL_ADD_WRITER" role="Add Writers"/>
+                        <PermissionAdder addType="PUSH_REMOVE_WRITES" removeType="PULL_REMOVE_WRITER" role="Remove Writers"/>
+                        <PermissionAdder addType="PUSH_ADD_READER" removeType="PULL_ADD_READER" role="Add Readers"/>
+                        <PermissionAdder addType="PUSH_REMOVE_READER" removeType="PULL_REMOVE_READER" role="Remove Readers"/>
+                        <PermissionAdder addType="PUSH_ADD_COMMENTER" removeType="PULL_ADD_COMMENTER" role="Add Commenters"/>
+                        <PermissionAdder addType="PUSH_REMOVE_COMMENTER" removeType="PULL_REMOVE_COMMENTER" role="Remove Commentors"/>
+                        <PermissionAdder addType="PUSH_UNSHARE" removeType="PULL_UNSHARE" role="Unshare"/>
                 </div>
             </div>
         </div>

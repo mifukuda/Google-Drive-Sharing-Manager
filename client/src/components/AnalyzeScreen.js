@@ -9,7 +9,7 @@ export default function AnalyzeScreen() {
 
     //Stage files
     useEffect(() => {
-        performDeviantSharing().then((response) => {
+        performDeviantSharing({threshold: ".6"}).then((response) => {
             console.log(response);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps

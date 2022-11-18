@@ -22,7 +22,7 @@ export const addAccessControlPolicy = () => api.post(`/addAccessControlPolicy/`)
 export const updatePermissions = (payload) => api.post('/update/', payload);
 
 // Analyze
-export const performDeviantSharing = () => api.post('/analyze/deviantSharing');
+export const performDeviantSharing = (payload) => api.post('/analyze/deviantSharing', payload);
 
 const apis = {
     createSnapshot,

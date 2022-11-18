@@ -4,8 +4,6 @@ import { Permission } from "./classes/Structures/Permission"
 export const analyzeDeviantSharing  = (selection: DriveFile[], threshold: number = .80) => {
     let fileIdToFile: Map<string, DriveFile> = new Map<string, DriveFile>()
     selection.forEach((file: DriveFile) => fileIdToFile.set(file.driveId, file))
-    // let deviantlyShared : DriveFile[] = []
-    // let deviantlyShared : Map<DriveFile, DriveFile[]> = new Map<DriveFile, DriveFile[]>
     let deviantlyShared : Map<string, string[]> = new Map<string, string[]>
     selection.forEach((folder: DriveFile) =>{
 
@@ -13,6 +11,7 @@ export const analyzeDeviantSharing  = (selection: DriveFile[], threshold: number
             let permissionsToFileId: Map<string, string[]> = new Map<string, string[]>() // 
             let numFiles = 0
             folder.children.forEach((file) => {
+                file.permissions.forEach((permission) => {permission._id = "0"})
                 let key: string = JSON.stringify(file.permissions.sort())
                 if (key === undefined || key === JSON.stringify([])){
                     key = "NO PERMISSION"
@@ -23,15 +22,11 @@ export const analyzeDeviantSharing  = (selection: DriveFile[], threshold: number
             if(numFiles > 0){
                 let largestEntry = [...permissionsToFileId.values()].reduce((x, y) => x.length > y.length? x: y)
                 if(largestEntry.length / numFiles >= threshold){
-                    let commonFile = JSON.parse(JSON.stringify("NO PERMISSION", null, '\t'))
-                    // if(largestEntry.length > 0 && fileIdToFile.has(largestEntry[0]) && (fileIdToFile.get(largestEntry[0]) as any).permissions !== null){
-                        commonFile = JSON.parse(JSON.stringify((fileIdToFile.get(largestEntry[0]) as any).permissions, null, '\t'))
-                    // }
+                    let commonFile = JSON.parse(JSON.stringify((fileIdToFile.get(largestEntry[0]) as any).permissions, null, '\t'))
                     permissionsToFileId.forEach((value, key) => {
                         if(JSON.stringify(value) !== JSON.stringify(largestEntry)){
                             value.forEach((fileId) => {
                                 let curr = (fileIdToFile.get(fileId) as any)
-                                console.log("brah ",curr)
                                 curr.source = folder.name
 
                                 deviantlyShared.has(commonFile)
@@ -69,8 +64,10 @@ export const calculatePermissionDifferences = (selection: DriveFile[]) => {
 
     selection.forEach((folder: DriveFile) => {
         if(folder instanceof DriveFolder && folder.children.length > 0){
+            folder.permissions.forEach((permission) => {permission._id = "0"})
             let parentPermissions = JSON.stringify(folder.permissions.sort())
             folder.children.forEach((child : DriveFile) => {
+                child.permissions.forEach((permission) => {permission._id = "0"})
                 let childPermissions = JSON.stringify(child.permissions.sort())
                 if(JSON.stringify(childPermissions) !== JSON.stringify(parentPermissions)){
                     differentlyShared.add(child)

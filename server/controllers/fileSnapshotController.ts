@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 import { GoogleDriveAdapter } from '../classes/DriveAdapter';
 import { DriveRoot, DriveFile, DriveFolder } from '../classes/FilesClasses';
 import { FileInfoSnapshot, googleDrivePermissionToOurs } from '../classes/Structures';
@@ -171,16 +171,23 @@ const deviantSharing = async (req: Request, res: Response) => {
     let user: any = await getModel(req.cookies.jwt)
 
     let google_drive_adapter = new GoogleDriveAdapter(user.driveToken)
-    // let snapshot: DriveFile[] = await google_drive_adapter.getFileRoots()
-    // let all_files: DriveFile[] = snapshot.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())   
     let all_files: DriveFile[] = await google_drive_adapter.getFileRoots()
     if(all_files !== null){
+
         all_files= all_files.flatMap((d: DriveFile) => d.getSubtree())   
         let result = analyzeDeviantSharing(all_files, req.body.threshold)
-    
-        console.log(result)
+        
+        let response : any = {}
+        response.instances = []
+        for(const key of result.keys()){
+            let instance : any = {}
+            instance.majorityPermission = key
+            instance.deviantlyShared = result.get(key)
+            response.instances.push(instance)
+        }
+
         console.log("done")
-        res.send([...result])
+        res.send(response)
     }
 }
 
@@ -190,14 +197,23 @@ const sharingDifferences = async (req: Request, res: Response) => {
     let user: any = await getModel(req.cookies.jwt)
 
     let google_drive_adapter = new GoogleDriveAdapter(user.driveToken)
-    // let snapshot: DriveFile[] = await google_drive_adapter.getFileRoots()
     let all_files: DriveFile[] = await google_drive_adapter.getFileRoots() 
     if(all_files !== null){
+        
         all_files= all_files.flatMap((d: DriveFile) => d.getSubtree())   
         let result = calculatePermissionDifferences(all_files)
-        console.log(result)
+
+        let response : any = {}
+        response.instances = []
+        for(const key of result.keys()){
+            let instance : any = {}
+            instance.parent = key
+            instance.children = result.get(key)
+            response.instances.push(instance)
+        }
+
         console.log("done")
-        res.send([...result])
+        res.send(response)
         
     }
 

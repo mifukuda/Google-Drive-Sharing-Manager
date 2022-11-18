@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import {useSelector, useDispatch} from "react-redux"
-import {hideModal} from "../actions";
+import {getFilteredSnapshotFromBackend, hideModal} from "../actions";
 import {Modal, Button, Dropdown, Container, Row, Col, Form, Card} from 'react-bootstrap';
 
 
 export default function QueryBuilder() {
     const dispatch = useDispatch();
     const showModal = useSelector(state => state.showModal);
+    const currentSnapshot = useSelector(state => state.currentSnapshot);
     const [operatorSelection, setOperatorSelection] = useState("drive:");
     const [searchTerm, setSearchTerm] = useState("");
     const [queries, setQueries] = useState([]);
@@ -44,13 +45,23 @@ export default function QueryBuilder() {
         setQueries(queries.filter(item => item !== query));
     }
 
+    // Submit search
+    function handleSearch() {
+        if (queries.length === 0) {
+            return;
+        }
+        handleHideModal();
+        let queryString = queries.join('&');
+        dispatch(getFilteredSnapshotFromBackend(currentSnapshot._id, queryString));
+    }
+
     // List of operators to be displayed
     const dropdownActions = ["drive:", "owner:", "creator:", "from:", "to:", "readable:", 
         "writable:", "sharable:", "name:", "folder:", "path:", "sharing:"]
         .map((x, i) => <Dropdown.Item key={i} onClick={(event) => handleUpdateDisplay(x)}>{x}</Dropdown.Item>);
     // Map queries to cards w/ delete button
     const queryList = queries.map((x, i) => 
-        <Card>
+        <Card key={i}>
             <Card.Body style={{fontSize:"1.3em"}}>
                 <Container>
                     <Row>
@@ -110,7 +121,7 @@ export default function QueryBuilder() {
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button>Search</Button>
+                <Button onClick={(event) => handleSearch()}>Search</Button>
                 <Button variant="secondary" onClick={(event) => handleHideModal(event)}>Close</Button>
             </Modal.Footer>
         </Modal>

@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getSnapshotFromBackend} from "../actions";
+import {getSnapshotFromBackend, getAllSnapshotInfoFromBackend} from "../actions";
 import FileList from "./FileList";
 import FileListHeader from "./FileListHeader";
 import HomeScreenHeader from "./HomeScreenHeader";
@@ -8,27 +8,28 @@ import QueryBuilder from "./QueryBuilder";
 import SearchBar from "./SearchBar";
 import SideBar from "./SideBar";
 
-export default function FileCard() {
+export default function HomeScreen() {
     const dispatch = useDispatch();
+    const allSnapshotInfo = useSelector(state => state.allSnapshotInfo);
     const snapshot = useSelector(state => state.currentSnapshot);
+    const filter = useSelector(state => state.filter);
+
     //Return default snapshot (most recent) from backend
     useEffect(() => {
-        console.log("Fetching from backend.");
-        if(Object.keys(snapshot).length === 0) {
-            dispatch(getSnapshotFromBackend());
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+        if(allSnapshotInfo.length === 0) {
+            console.log("Fetching all snapshot info from backend.");
+            dispatch(getAllSnapshotInfoFromBackend());
         }
-        else {
-            console.log("Aborting fetch.")
-        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     return (
         <div className="homescreen">
             <QueryBuilder/>
             <SideBar/>
             <div className="homescreencenter">
                 <HomeScreenHeader/>
-                <SearchBar/>
+                <SearchBar filter={filter}/>
                 <div className="filelist">
                     <FileListHeader/>
                     <FileList updating={false}/>

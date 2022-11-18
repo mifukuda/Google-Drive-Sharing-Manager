@@ -1,0 +1,100 @@
+AUTH ENDPOINTS
+    GET /auth/login (Implemented)
+        
+    GET /auth/callback (Implemented)
+    
+
+FILE INFO SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapshot/)
+    GET /create (Implemented)
+        description: create file info snapshot based on current drive state and
+        store to database
+        input body: None
+        response body: {fileSnapshot: <serialized snapshot>}
+        success status: 200
+        error status: 400
+    
+
+    GET /getinfo (Implemented)
+        description: get basic high-level info about file info snapshots that
+        can be later used to selectively query detailed snapshot info from /get
+        input body: None
+        response body: { snapshotInfo: [{_id: <string>, createdAt: <string>}, ...]}
+        success status: 200
+        error status: 400
+
+
+    POST /get (Implemented)
+        description: returns entire file info snapshot from database given the
+        snapshot's database ID
+        input body: {id: <string>}
+        response body: {fileSnapshot: <serialized snapshot>}
+        success status: 200
+        error status: 400
+
+
+    POST /update (Implemented)
+        description: performs batch sharing operations to sets of files
+        input body: {
+            snapshotID: string,
+            fileDbIDs: [<string>, ...], # fileDbIDs are just the _id field of the Mongoose Schema
+            operation: "add_readers" or "add_writers" or "add_commenters" or
+            "remove_readers" or "remove_writers" or "remove_commenters" or
+            "unshare",
+            emails: [<string>, ...] # all operations except for unshare require a list of emails!!!!
+        },
+        response body: {message: "success"}
+        success status: 200
+        error status: 400
+
+    POST /checkpolicies (NOT Implemented)
+        description: returns list of files that violate access control policies
+        input_body: {
+            snapshot_id: <string>,
+            acp_ids: [<string>, ...]
+        }
+        response body: [{ file: <file name>, violation: }, ...] # needs to be fixed
+        success status: 200
+        error status: 400
+
+    GET /analyze/deviantSharing (NOT Implemented)
+
+    GET /analyze/sharingDifferences (NOT Implemented)
+
+    POST /query (Implemented)
+        description: returns flat list of files that match query for given snapshot
+        input_body: { query: <string>, snapshot_id: <string> }
+        response body: { query: <string>, query_results: [ <serialized file info snapshot>, ...] }
+
+
+USER ENDPOINTS (all endpoints below are prepended with /user/)
+    GET /getsavedqueries (NOT Implemented)
+        description: retrieves all queries saved under user profile
+        input_body: None
+        response_body: { queries: [<string>, ...] }
+
+    POST /savequery (NOT Implemented)
+        description: saves input query to query history in user profile
+        input_body: { query: <string> }
+        response_body: None
+
+    GET /getallacps (NOT Implemented)
+        description: returns list of all access control policies for user given userid
+        input_body: None
+        response body: [{ _id: <string>, query: <string>, AR: [<emails>, ...], DR: [<emails>, ...], AW: [<emails>, ...], DW: [<emails>, ...], is_group: <boolean> }, ...]
+    
+    POST /addacp (NOT Implemented)
+        description: adds acp to user profile
+        input_body: { query: <string>, AR: [<emails>, ...], DR: [<emails>, ...], AW: [<emails>, ...], DW: [<emails>, ...], is_group: <boolean> }
+        response_body: { _id: <string>, query: <string>, AR: [<emails>, ...], DR: [<emails>, ...], AW: [<emails>, ...], DW: [<emails>, ...], is_group: <boolean> }
+
+    POST /deleteacp (NOT Implemented)
+        description: deletes acp from user profile
+        input_body: { acp_id: <string> }
+        response_body: None
+
+
+GROUP MEMBERSHIP SNAPSHOT ENDPOINTS (all endpoints below are prepended with /group/)
+    POST /uploadgroupsnapshot (Implemented)
+        description: parses html members page and saves emails to database
+        input_body: { name: <string>, memberlist: <file> }
+        response_body: { id: <string> }

@@ -1,63 +1,90 @@
-import { DriveFile } from "./classes/DriveFile"
-import { DriveFolder } from "./classes/DriveFolder"
-import { Permission } from "./classes/Permission"
+import { DriveFile, DriveFolder } from "./classes/FilesClasses/"
+import { Permission } from "./classes/Structures/Permission"
 
-const deviantSharing  = (selection: DriveFile[], threshold: number = .80) => {
+export const analyzeDeviantSharing  = (selection: DriveFile[], threshold: number = .80) => {
     let fileIdToFile: Map<string, DriveFile> = new Map<string, DriveFile>()
-    selection.forEach((file: DriveFile) => fileIdToFile[file.id] = file)
-    let deviantlyShared : DriveFile[] = []
+    selection.forEach((file: DriveFile) => fileIdToFile.set(file.driveId, file))
+    // let deviantlyShared : DriveFile[] = []
+    // let deviantlyShared : Map<DriveFile, DriveFile[]> = new Map<DriveFile, DriveFile[]>
+    let deviantlyShared : Map<string, string[]> = new Map<string, string[]>
     selection.forEach((folder: DriveFile) =>{
+
         if(folder instanceof DriveFolder){
             let permissionsToFileId: Map<string, string[]> = new Map<string, string[]>() // 
             let numFiles = 0
             folder.children.forEach((file) => {
                 let key: string = JSON.stringify(file.permissions.sort())
-                permissionsToFileId.has(key)? permissionsToFileId[key].push(file.id): permissionsToFileId[key] = [file.id]
+                if (key === undefined || key === JSON.stringify([])){
+                    key = "NO PERMISSION"
+                }
+                permissionsToFileId.has(key)? permissionsToFileId.set(key, (permissionsToFileId.get(key) as string[]).concat([file.driveId])): permissionsToFileId.set(key, [file.driveId])
                 numFiles++
             })
-            let largestEntry = [...permissionsToFileId.values()].reduce((x, y) => x.length > y.length? x: y)
-            if(largestEntry.length / numFiles >= threshold){
-                largestEntry.forEach((entry: string) => {
-                    deviantlyShared.push(fileIdToFile[entry])
-                })
+            if(numFiles > 0){
+                let largestEntry = [...permissionsToFileId.values()].reduce((x, y) => x.length > y.length? x: y)
+                if(largestEntry.length / numFiles >= threshold){
+                    let commonFile = JSON.parse(JSON.stringify("NO PERMISSION", null, '\t'))
+                    // if(largestEntry.length > 0 && fileIdToFile.has(largestEntry[0]) && (fileIdToFile.get(largestEntry[0]) as any).permissions !== null){
+                        commonFile = JSON.parse(JSON.stringify((fileIdToFile.get(largestEntry[0]) as any).permissions, null, '\t'))
+                    // }
+                    permissionsToFileId.forEach((value, key) => {
+                        if(JSON.stringify(value) !== JSON.stringify(largestEntry)){
+                            value.forEach((fileId) => {
+                                let curr = (fileIdToFile.get(fileId) as any)
+                                console.log("brah ",curr)
+                                curr.source = folder.name
+
+                                deviantlyShared.has(commonFile)
+                                ? deviantlyShared.set(commonFile, (deviantlyShared.get(commonFile) as any).concat([curr.serialize()]))
+                                : deviantlyShared.set(commonFile, [curr.serialize()])
+                            })
+                        }
+                    })
+                }
             }
         }
         
     })
+
     return deviantlyShared
 }
 
-const calculateSharingChanges = (selection1: DriveFolder[], selection2: DriveFolder[]) => {
+export const calculateSharingChanges = (selection1: DriveFile[], selection2: DriveFile[]) => {
     let idToPermissions : Map<string, [Permission[], Permission[]]> = new Map<string, [Permission[], Permission[]]>()
     
-    selection2.forEach((file: DriveFile) => idToPermissions[file.id] = [file.permissions.sort(), []])
+    selection2.forEach((file: DriveFile) => idToPermissions.set(file.driveId, [file.permissions.sort(), []]))
     selection1.forEach((file: DriveFile) => {
-        if(idToPermissions.has(file.id)){
-            JSON.stringify(file.permissions.sort()) === JSON.stringify(idToPermissions[file.id])
-            ? idToPermissions.delete(file.id)
-            : idToPermissions[file.id] = [idToPermissions[file.id][0], file.permissions.sort()]
+        if(idToPermissions.has(file.driveId)){
+            JSON.stringify(file.permissions.sort()) === JSON.stringify(idToPermissions.get(file.driveId))
+            ? idToPermissions.delete(file.driveId)
+            : idToPermissions.set(file.driveId, [(idToPermissions.get(file.driveId) as [Permission[], Permission[]])[0], file.permissions.sort()])        
         }
     })
     return idToPermissions
 }
 
-const calculatePermissionDiffences = (selection: DriveFolder[]) => {
+export const calculatePermissionDifferences = (selection: DriveFile[]) => {
     let differentlyShared : Set<DriveFile> = new Set<DriveFile>()
+    let result : Map<string, string[]> = new Map<string, string[]>
 
-    // input will be flatmap of all files, so selection needs to be filtered for only folders
-    selection.forEach((folder: DriveFolder) => {
-        // let parentPermissions =  folder.permissions.map((permssion: Permission) => JSON.stringify(permssion)).sort()
-        if(folder instanceof DriveFolder){
+    selection.forEach((folder: DriveFile) => {
+        if(folder instanceof DriveFolder && folder.children.length > 0){
             let parentPermissions = JSON.stringify(folder.permissions.sort())
             folder.children.forEach((child : DriveFile) => {
-                // let childPermissions =  child.permissions.map((permssion: Permission) => JSON.stringify(permssion)).sort()
                 let childPermissions = JSON.stringify(child.permissions.sort())
                 if(JSON.stringify(childPermissions) !== JSON.stringify(parentPermissions)){
                     differentlyShared.add(child)
+
+                    let parent = folder as any
+                    parent.children = []
+                    result.has(parent.serialize())
+                    ? result.set(parent.serialize(), (result.get(parent) as any).concat([(child as any).serialize()]))
+                    : result.set(parent.serialize(), [(child as any).serialize()])
                 }
             })
         }
     })
 
-    return differentlyShared
+    // return [...differentlyShared]
+    return result
 }

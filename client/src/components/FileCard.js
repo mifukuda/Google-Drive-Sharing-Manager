@@ -1,14 +1,16 @@
 import React, {useState} from "react";
-import {useSelector, useDispatch} from "react-redux"
+import {useDispatch} from "react-redux"
 import {selectFile, unselectFile} from "../actions";
 import {Accordion, Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function FileCard(props) {
-    const {file, depth, isRoot} = props;
+    const {file, depth, isRoot, staged} = props;
     const dispatch = useDispatch();
-    const selectedFiles = useSelector(state => state.selectedFiles);
-    const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
+    //const selectedFiles = useSelector(state => state.selectedFiles);
+    //const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
+    const [isChecked, setIsChecked] = useState(staged);
+    const roles = ["Viewer", "Commenter", "Editor", "Owner"];
 
     function handleCheck(event) {
         if(isChecked) {
@@ -23,7 +25,7 @@ export default function FileCard(props) {
     }
 
     // Render list of permissions
-    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {element.role}: {element.granted_to.email}, {element.granted_to.display_name} (id: {element.id})</p>);
+    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {(Object.keys(element.granted_to).length !== 0) ? (element.granted_to.email + ", " + element.granted_to.display_name) : (element.driveId)} (id: {element._id})</p>);
 
     // Render directory with indents
     let indent = 3*depth;
@@ -67,6 +69,7 @@ export default function FileCard(props) {
                         onClick={(event) => handleCheck(event)}
                         onChange={() => {}}
                         checked={isChecked}
+                        defaultChecked={staged}
                     />
                     {img}
                     <div style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>
@@ -74,11 +77,11 @@ export default function FileCard(props) {
                     </div>
                 </Accordion.Header>
                 <Accordion.Body>
-                    <p><b>ID:</b> {file.id}</p>
-                    <p><b>Owner Name:</b> {file.owner.display_name}</p>
-                    <p><b>Owner Email:</b> {file.owner.email}</p>
-                    <p><b>Date Created:</b> {file.date_created}</p>
-                    <p><b>Date Modified:</b> {file.date_modified}</p>
+                    <p><b>ID:</b> {file._id}</p>
+                    {file.owner ? <p><b>Owner Name:</b> {file.owner.display_name}</p> : null}
+                    {file.owner ?  <p><b>Owner Email:</b> {file.owner.email}</p> : null}
+                    <p><b>Date Created:</b> {new Date(file.date_created).toString()}</p>
+                    <p><b>Date Modified:</b> {new Date(file.date_modified).toString()}</p>
                     <p><b>Permissions:</b></p>
                     {permissionList}
                 </Accordion.Body>

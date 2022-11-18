@@ -3,11 +3,14 @@ import { ACPSchema } from "./ACPSchema"
 
 export const UserSchema = new Schema(
     {
-        drive_id: { type: String, required: true },
-        display_name: {type: String, required: true},
-        fileSnapshots: [{type: Schema.Types.ObjectId, ref: 'fileSnapshotSchema'}],
-        groupSnapshots: [{type: Schema.Types.ObjectId, ref: 'groupSnapshotSchema'}],
-        AccessControlPolicy: {type: ACPSchema} 
+        driveId: {type: String, required: true},
+        driveToken: {type: String, required: true},
+        driveType: {type: String, required: true},
+        displayName: {type: String, required: true},
+        email: {type: String, required: true},
+        fileSnapshots: [{type: Types.ObjectId, ref: 'fileSnapshotSchema'}],
+        groupSnapshots: [{type: Types.ObjectId, ref: 'groupSnapshotSchema'}],
+        AccessControlPolicy: [ACPSchema]
     },
     {
         timestamps: true

@@ -1,11 +1,9 @@
-import { Schema, Types, model } from "mongoose"
-import { driveUserSchema } from "./DriveUserSchema"
+import { Schema, model } from "mongoose"
 
 export const GroupSnapshotSchema = new Schema(
     {
-        user_id: {type: Types.ObjectId, ref:'userSchema'},
-        name: { type: String, required: true},
-        members: [driveUserSchema],
+        name: { type: String, required: true },
+        members: [String],
     },
     {
         timestamps: true

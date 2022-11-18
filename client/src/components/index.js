@@ -3,7 +3,6 @@ import DeviantSharingList from './DeviantSharingList';
 import FileList from './FileList';
 import FileCard from './FileCard';
 import HomeScreen from './HomeScreen';
-import RedundantSharingList from './RedundantSharingList';
 import QueryBuilder from './QueryBuilder';
 import SearchBar from './SearchBar';
 import SharingDifferencesList from './SharingDifferencesList';
@@ -18,7 +17,6 @@ export {
     FileList,
     FileCard,
     HomeScreen,
-    RedundantSharingList,
     QueryBuilder,
     SearchBar,
     SharingDifferencesList,

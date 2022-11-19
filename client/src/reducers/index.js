@@ -4,6 +4,7 @@ import isLoggedInReducer from './isLoggedIn.js';
 import filterReducer from './filter.js';
 import accessControlPolicyReducer from './accessControlPolicies.js';
 import showModalReducer from './showModal.js';
+import showCompareModalReducer from './showCompareModal.js';
 import selectedFilesReducer from './selectedFiles.js';
 import searchResultsReducer from './searchResults.js';
 import stagedFilesReducer from './stagedFiles.js';
@@ -24,6 +25,7 @@ const allReducers = combineReducers({
     filter: filterReducer,
     accessControlPolicies: accessControlPolicyReducer,
     showModal: showModalReducer,
+    showCompareModal: showCompareModalReducer,
     selectedFiles: selectedFilesReducer,
     stagedFiles: stagedFilesReducer,
     addReaders: addReadersReducer,

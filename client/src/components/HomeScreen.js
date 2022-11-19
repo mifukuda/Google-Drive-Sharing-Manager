@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getSnapshotFromBackend, getAllSnapshotInfoFromBackend} from "../actions";
+import CompareModal from './CompareModal';
 import FileList from "./FileList";
 import FileListHeader from "./FileListHeader";
 import HomeScreenHeader from "./HomeScreenHeader";
@@ -26,6 +27,7 @@ export default function HomeScreen() {
     return (
         <div className="homescreen">
             <QueryBuilder/>
+            <CompareModal/>
             <SideBar/>
             <div className="homescreencenter">
                 <HomeScreenHeader/>

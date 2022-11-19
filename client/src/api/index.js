@@ -23,6 +23,7 @@ export const updatePermissions = (payload) => api.post('/update/', payload);
 
 // Analyze
 export const performDeviantSharing = (payload) => api.post('/analyze/deviantSharing', payload);
+//export const performSnapshotComparison = (payload) => api.post('/analyze')
 
 const apis = {
     createSnapshot,

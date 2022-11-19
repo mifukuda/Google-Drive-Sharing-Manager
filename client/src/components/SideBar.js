@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import SnapshotSelector from './SnapshotSelector'
 import {useDispatch} from "react-redux";
-import {createSnapshotInBackend} from "../actions";
+import {createSnapshotInBackend, showCompareModal} from "../actions";
 import {uploadGroupSnapshot} from "../api/group.js";
 
 // Tutorial for uploading files from: https://www.filestack.com/fileschool/react/react-file-upload/
@@ -11,6 +11,11 @@ export default function SideBar() {
     const dispatch = useDispatch();
     const [file, setFile] = useState();
     const [status, setStatus] = useState(<p>Status: </p>);
+
+    function handleShowCompareModal(event) {
+        event.preventDefault();
+        dispatch(showCompareModal());
+    }
     
     function handleTakeSnapshot() {
         console.log("Creating a new snapshot.")
@@ -46,6 +51,11 @@ export default function SideBar() {
                 <h3 className="sidebarlogo" style={{marginTop:"8%"}}>Snapshots:</h3>
                 <button className="sidebarbutton" onClick={() => handleTakeSnapshot()}>+ New Snapshot</button>
                 <SnapshotSelector/>
+                <ul>
+                    <li>
+                        <a className="sidebar1link" href="#" onClick={(event) => handleShowCompareModal(event)}>Compare Snapshots</a>
+                    </li>
+                </ul>
             </div>
             <div className="sidebar2">
                 <h3 className="sidebarlogo">Upload Group Snapshot:</h3>

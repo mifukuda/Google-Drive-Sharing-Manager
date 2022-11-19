@@ -128,6 +128,18 @@ const hideModal = () => {
   }
 }
 
+const showCompareModal = () => {
+  return {
+    type: 'SHOW_COMPARE_MODAL'
+  }
+}
+
+const hideCompareModal = () => {
+  return {
+    type: 'HIDE_COMPARE_MODAL'
+  }
+}
+
 const selectFile = (file) => {
   return {
     type: 'SELECT_FILE',
@@ -170,6 +182,8 @@ const sortByDateNew = () => {
 export {
   showModal,
   hideModal,
+  showCompareModal,
+  hideCompareModal,
   selectFile,
   unselectFile,
   stageFiles,

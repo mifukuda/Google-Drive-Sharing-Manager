@@ -15,6 +15,10 @@ export default function CompareModal() {
         return ((allSnapshotInfo[1] === undefined) ? null : allSnapshotInfo[1])
     });
 
+    function handleCompare() {
+
+    }
+
     function handleCloseCompareModal() {
         dispatch(hideCompareModal());
     }
@@ -55,6 +59,8 @@ export default function CompareModal() {
             </div>
     }
 
+    let error = (snapshot1._id === snapshot2._id) ? <p>Same snapshot selected twice!</p> : null;
+
     return (
         <Modal aria-labelledby="contained-modal-title-vcenter" centered show={showCompareModal}>
             <Modal.Header>
@@ -66,7 +72,8 @@ export default function CompareModal() {
                 {body}
             </Modal.Body>
             <Modal.Footer>
-                <Button disabled={(allSnapshotInfo.length < 2)}>Compare</Button>
+                {error}
+                <Button style={{marginLeft:"10%"}} disabled={(allSnapshotInfo.length < 2) || snapshot1._id === snapshot2._id} onClick={() => handleCompare()}>Compare</Button>
                 <Button variant="secondary" onClick={() => handleCloseCompareModal()}>Cancel</Button>
             </Modal.Footer>
         </Modal>

@@ -17,6 +17,7 @@ import removeCommentersReducer from './removeCommenters.js';
 import unshareReducer from './unshare.js';
 import recentSearchesReducer from './recentSearches.js';
 import deviantSharingResultsReducer from './deviantSharingResults.js';
+import sharingDifferencesResultsReducer from './sharingDifferencesResults.js'
 import {combineReducers} from 'redux';
 
 const allReducers = combineReducers({
@@ -38,7 +39,8 @@ const allReducers = combineReducers({
     removeWriters: removeWritersReducer,
     removeCommenters: removeCommentersReducer,
     unshare: unshareReducer,
-    deviantSharingResults: deviantSharingResultsReducer
+    deviantSharingResults: deviantSharingResultsReducer,
+    sharingDifferencesResults: sharingDifferencesResultsReducer
 })
 
 export default allReducers;

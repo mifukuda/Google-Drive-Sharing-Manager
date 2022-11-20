@@ -93,6 +93,14 @@ export function getDeviantSharingResultsFromBackend(threshold) {
   };
 }
 
+export function getSharingDifferencesResultsFromBackend() {
+  return async (dispatch) => {
+    return apis.performSharingDifferences().then(response => {
+      if(response.status === 200) {dispatch(setSharingDifferencesResults(response));}
+    });
+  };
+}
+
 //ACTIONS
 const setAllSnapshotInfo = (response) => {
   return {
@@ -214,9 +222,22 @@ const clearUpdateScreen = () => {
   }
 }
 
+const clearAnalyzeScreen = () => {
+  return {
+    type: "CLEAR_ANALYZE_SCREEN"
+  }
+}
+
 const setDeviantSharingResults = (response) => {
   return {
     type: "SET_DEVIANT_SHARING_RESULTS",
+    payload: response.data
+  }
+}
+
+const setSharingDifferencesResults = (response) => {
+  return {
+    type: "SET_SHARING_DIFFERENCES_RESULTS",
     payload: response.data
   }
 }
@@ -234,5 +255,6 @@ export {
   sortByDateOld,
   sortByDateNew,
   clearUpdateScreen,
+  clearAnalyzeScreen,
   setDeviantSharingResults
 }

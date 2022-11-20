@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import DeviantSharingList from "./DeviantSharingList";
 import SharingDifferencesList from "./SharingDifferencesList";
-import {getDeviantSharingResultsFromBackend} from '../actions';
+import {getDeviantSharingResultsFromBackend, getSharingDifferencesResultsFromBackend, clearAnalyzeScreen} from '../actions';
 import {useDispatch} from 'react-redux';
 import {Button} from 'react-bootstrap';
 
@@ -14,11 +14,13 @@ export default function AnalyzeScreen() {
     //Stage files
     useEffect(() => {
         dispatch(getDeviantSharingResultsFromBackend(".8"));
+        dispatch(getSharingDifferencesResultsFromBackend());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Navigate to home page when close button is
     function handleClose(event) {
+        dispatch(clearAnalyzeScreen());
         navigate("/home");
     }
 

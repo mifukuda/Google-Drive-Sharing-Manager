@@ -1,6 +1,6 @@
-const deviantSharingResultsReducer = (state = {}, action) => {
+const sharingDifferencesResultsReducer = (state = {}, action) => {
     switch(action.type) {
-        case 'SET_DEVIANT_SHARING_RESULTS':
+        case 'SET_SHARING_DIFFERENCES_RESULTS':
             return action.payload;
         case "CLEAR_ANALYZE_SCREEN":
             return {};
@@ -9,4 +9,4 @@ const deviantSharingResultsReducer = (state = {}, action) => {
     }
 }
 
-export default deviantSharingResultsReducer;
+export default sharingDifferencesResultsReducer;

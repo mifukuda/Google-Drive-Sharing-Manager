@@ -264,20 +264,27 @@ h3.sidebarlogo {
   background-color: white;
   margin: auto;
   width: 90%;
-  height: 800px;
+  height: 85vh;
   border: 3px solid rgb(74, 74, 223);
   overflow-y: scroll;
   padding: 2%;
+  border-radius: 4px;
+}
+
+.sharingdifferenceslistcontainer {
+  height: 95vh;
 }
 
 .sharingdifferenceslist {
   background-color: white;
   margin: auto;
   width: 90%;
-  height: 800px;
+  height: 85vh;
   border: 3px solid rgb(74, 74, 223);
   overflow-y: scroll;
   padding: 2%;
+  margin-bottom: 2%;
+  border-radius: 4px;
 }
 
 .exitbutton {

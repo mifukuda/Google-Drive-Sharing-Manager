@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import {hideCompareModal} from '../actions';
 import {Modal, Button, Dropdown} from 'react-bootstrap';
@@ -8,12 +8,20 @@ export default function CompareModal() {
     const dispatch = useDispatch();
     const showCompareModal = useSelector(state => state.showCompareModal);
     const allSnapshotInfo = useSelector(state => state.allSnapshotInfo);
-    const [snapshot1, setSnapshot1] = useState(() => {
+    const [snapshot1, setSnapshot1] = useState();
+    const [snapshot2, setSnapshot2] = useState();
+
+    useEffect(() => {
+        if(allSnapshotInfo[0] !== undefined) setSnapshot1(allSnapshotInfo[0]);
+        if(allSnapshotInfo[1] !== undefined) setSnapshot2(allSnapshotInfo[1]);
+    }, [allSnapshotInfo])
+
+    /*const [snapshot1, setSnapshot1] = useState(() => {
         return ((allSnapshotInfo[0] === undefined) ? null : allSnapshotInfo[0])
     });
     const [snapshot2, setSnapshot2] = useState(() => {
         return ((allSnapshotInfo[1] === undefined) ? null : allSnapshotInfo[1])
-    });
+    });*/
 
     function handleCompare() {
         handleCloseCompareModal();
@@ -30,7 +38,6 @@ export default function CompareModal() {
     function handleUpdateSelection2(snapshot) {
         setSnapshot2(snapshot);
     }
-
     
     let snapshots1 = snapshot1 ? allSnapshotInfo.map((x, i) => <Dropdown.Item key={i} active={snapshot1._id === x._id} onClick={() => handleUpdateSelection1(x)}>{new Date(x.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}</Dropdown.Item>) : null
     let snapshots2 = snapshot2 ? allSnapshotInfo.map((x, i) => <Dropdown.Item key={i} active={snapshot2._id === x._id} onClick={() => handleUpdateSelection2(x)}>{new Date(x.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}</Dropdown.Item>) : null

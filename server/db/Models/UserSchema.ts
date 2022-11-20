@@ -10,6 +10,7 @@ export const UserSchema = new Schema(
         email: {type: String, required: true},
         fileSnapshots: [{type: Types.ObjectId, ref: 'fileSnapshotSchema'}],
         groupSnapshots: [{type: Types.ObjectId, ref: 'groupSnapshotSchema'}],
+        queryHistory: [{ type: String }],
         AccessControlPolicy: [ACPSchema]
     },
     {

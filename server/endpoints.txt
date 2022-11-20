@@ -67,12 +67,12 @@ FILE INFO SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapsh
 
 
 USER ENDPOINTS (all endpoints below are prepended with /user/)
-    GET /getsavedqueries (NOT Implemented)
+    GET /getsavedqueries (Implemented)
         description: retrieves all queries saved under user profile
         input_body: None
         response_body: { queries: [<string>, ...] }
 
-    POST /savequery (NOT Implemented)
+    POST /savequery (Implemented)
         description: saves input query to query history in user profile
         input_body: { query: <string> }
         response_body: None

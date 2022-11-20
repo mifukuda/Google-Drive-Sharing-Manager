@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import DeviantSharingList from "./DeviantSharingList";
 import SharingDifferencesList from "./SharingDifferencesList";
@@ -9,6 +9,7 @@ import {Button} from 'react-bootstrap';
 export default function AnalyzeScreen() {
     let navigate = useNavigate();
     const dispatch = useDispatch();
+    const [threshold, setThreshold] = useState(80);
 
     //Stage files
     useEffect(() => {
@@ -22,9 +23,14 @@ export default function AnalyzeScreen() {
     }
 
     function handleThresholdChange(event) {
-        let threshold = "" + (event.target.value / 100);
-        console.log(threshold);
-        dispatch(getDeviantSharingResultsFromBackend(threshold));
+        setThreshold(event.target.value);
+    }
+
+    // Perform deviant sharing with new threshold
+    function handleSubmitThreshold() {
+        let thresholdPercent = "" + (threshold / 100);
+        console.log(thresholdPercent);
+        dispatch(getDeviantSharingResultsFromBackend(thresholdPercent));
     }
 
     return (
@@ -38,8 +44,8 @@ export default function AnalyzeScreen() {
                 <h2 className="analyzescreensubtitle">Deviant Sharing &#128520;</h2>
                 <div className="thresholdsetter">
                     <span><b>Set new threshold (%):</b></span>
-                    <input type="number" name="threshold" min="0" max="100" defaultValue="80"/>
-                    <button className="thresholdbutton" onClick={(event) => handleThresholdChange(event)}>Submit</button>
+                    <input type="number" name="threshold" min="0" max="100" defaultValue="80" onChange={(event) => handleThresholdChange(event)}/>
+                    <button className="thresholdbutton" onClick={() => handleSubmitThreshold()}>Submit</button>
                 </div>
                 <DeviantSharingList/>
                 <h2 className="analyzescreensubtitle">Sharing Differences &#128373;</h2>

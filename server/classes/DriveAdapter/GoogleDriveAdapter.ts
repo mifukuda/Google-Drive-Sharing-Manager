@@ -104,10 +104,12 @@ export class GoogleDriveAdapter extends DriveAdapter {
                 throw new Error("file undefined")
             let mimeType: string = file.mimeType
             let parentID : string = (file.parents ? file.parents[0] : "shared_with_me") 
-            let owner = file.owners ? new User(file.owners[0].emailAddress, file.owners[0].displayName) : null
-            let shared_by: User | Group | null = (file.sharingUser ? new User(file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
+            let owner_kind = file.owners ? (file.owners[0].kind === "drive#user" ? "user" : "group"): ""
+            let owner = file.owners ? new User(owner_kind, file.owners[0].emailAddress, file.owners[0].displayName) : null
+            let shared_by_kind = file.sharingUser ? (file.sharingUser.kind === "drive#user" ? "user" : "group"): ""
+            let shared_by: User | null = (file.sharingUser ? new User(shared_by_kind, file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
             let permissions: Permission[] = file.permissions ? file.permissions.map((p: any) => {
-                let granted_to: User | Group = new User(p.emailAddress, p.displayName)
+                let granted_to: User = new User(p.type, p.emailAddress, p.displayName)
                 return new Permission(new Types.ObjectId().toString(), p.id, granted_to, googleDrivePermissionToOurs[p.role])
             }) : []
             if (mimeType === "application/vnd.google-apps.folder") {

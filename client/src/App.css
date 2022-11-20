@@ -3,12 +3,12 @@ body {
 }
 
 .filelist {
-  background-color: #ededed;
+  background-color: #F5F5F5;
   margin: auto;
   height: 70vh;
   width: 70%;
   white-space: nowrap;
-  border: 2px solid black;
+  border: 2px solid rgb(74, 74, 223);
   border-radius: 5px;
   overflow-y: hidden;
 }
@@ -195,7 +195,7 @@ h3.sidebarlogo {
   height: 62vh;
   padding: 0;
   overflow-y: scroll;
-  border: 3px solid rgb(74, 74, 223);
+  border: 2px solid rgb(74, 74, 223);
   border-radius: 5px;
 }
 

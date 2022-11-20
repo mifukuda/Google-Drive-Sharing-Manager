@@ -16,7 +16,7 @@ export default function CompareModal() {
     });
 
     function handleCompare() {
-
+        handleCloseCompareModal();
     }
 
     function handleCloseCompareModal() {
@@ -31,8 +31,9 @@ export default function CompareModal() {
         setSnapshot2(snapshot);
     }
 
-    let snapshots1 = allSnapshotInfo.map((x, i) => <Dropdown.Item key={i} active={snapshot1._id === x._id} onClick={() => handleUpdateSelection1(x)}>{new Date(x.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}</Dropdown.Item>)
-    let snapshots2 = allSnapshotInfo.map((x, i) => <Dropdown.Item key={i} active={snapshot2._id === x._id} onClick={() => handleUpdateSelection2(x)}>{new Date(x.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}</Dropdown.Item>)
+    
+    let snapshots1 = snapshot1 ? allSnapshotInfo.map((x, i) => <Dropdown.Item key={i} active={snapshot1._id === x._id} onClick={() => handleUpdateSelection1(x)}>{new Date(x.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}</Dropdown.Item>) : null
+    let snapshots2 = snapshot2 ? allSnapshotInfo.map((x, i) => <Dropdown.Item key={i} active={snapshot2._id === x._id} onClick={() => handleUpdateSelection2(x)}>{new Date(x.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}</Dropdown.Item>) : null
 
     let body = <p>You only have {allSnapshotInfo.length} snapshot(s). Create more snapshots to use this feature.</p>
     if (allSnapshotInfo.length >= 2) {
@@ -41,7 +42,7 @@ export default function CompareModal() {
                 <p className="comparemodalsubtitle">Snapshot 1:</p>
                 <Dropdown>
                     <Dropdown.Toggle style={{width: '60%', marginBottom:'3%'}} variant="primary" id="dropdown-basic">
-                        {new Date(snapshot1.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}
+                        {snapshot1 ? new Date(snapshot1.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"}) : null}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {snapshots1}
@@ -50,7 +51,7 @@ export default function CompareModal() {
                 <p className="comparemodalsubtitle">Snapshot 2:</p>
                 <Dropdown>
                     <Dropdown.Toggle style={{width: '60%', marginBottom:'3%'}} variant="primary" id="dropdown-basic">
-                        {new Date(snapshot2.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"})}
+                        {snapshot2 ? new Date(snapshot2.createdAt).toLocaleString("en-US", {timeZone: "America/New_York"}) : null}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {snapshots2}
@@ -59,7 +60,7 @@ export default function CompareModal() {
             </div>
     }
 
-    let error = (snapshot1._id === snapshot2._id) ? <p>Same snapshot selected twice!</p> : null;
+    let error = (snapshot1 && snapshot2 && snapshot1._id === snapshot2._id) ? <p>Same snapshot selected twice!</p> : null;
 
     return (
         <Modal aria-labelledby="contained-modal-title-vcenter" centered show={showCompareModal}>
@@ -73,7 +74,7 @@ export default function CompareModal() {
             </Modal.Body>
             <Modal.Footer>
                 {error}
-                <Button style={{marginLeft:"10%"}} disabled={(allSnapshotInfo.length < 2) || snapshot1._id === snapshot2._id} onClick={() => handleCompare()}>Compare</Button>
+                <Button style={{marginLeft:"10%"}} disabled={(allSnapshotInfo.length < 2) || !snapshot1 || !snapshot2 || snapshot1._id === snapshot2._id} onClick={() => handleCompare()}>Compare</Button>
                 <Button variant="secondary" onClick={() => handleCloseCompareModal()}>Cancel</Button>
             </Modal.Footer>
         </Modal>

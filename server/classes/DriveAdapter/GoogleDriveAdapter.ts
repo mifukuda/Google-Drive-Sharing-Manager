@@ -109,6 +109,7 @@ export class GoogleDriveAdapter extends DriveAdapter {
             let shared_by_kind = file.sharingUser ? (file.sharingUser.kind === "drive#user" ? "user" : "group"): ""
             let shared_by: User | null = (file.sharingUser ? new User(shared_by_kind, file.sharingUser.emailAddress, file.sharingUser.displayName) : null)           
             let permissions: Permission[] = file.permissions ? file.permissions.map((p: any) => {
+                if (p.type === "domain") p.emailAddress = p.domain
                 let granted_to: User = new User(p.type, p.emailAddress, p.displayName)
                 return new Permission(new Types.ObjectId().toString(), p.id, granted_to, googleDrivePermissionToOurs[p.role])
             }) : []

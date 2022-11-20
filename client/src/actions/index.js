@@ -85,6 +85,14 @@ export function getRecentSearchesFromBackend() {
   };
 }
 
+export function getDeviantSharingResultsFromBackend(threshold) {
+  return async (dispatch) => {
+    return apis.performDeviantSharing({threshold: threshold}).then(response => {
+      if(response.status === 200) {dispatch(setDeviantSharingResults(response));}
+    });
+  };
+}
+
 //ACTIONS
 const setAllSnapshotInfo = (response) => {
   return {
@@ -206,6 +214,13 @@ const clearUpdateScreen = () => {
   }
 }
 
+const setDeviantSharingResults = (response) => {
+  return {
+    type: "SET_DEVIANT_SHARING_RESULTS",
+    payload: response.data
+  }
+}
+
 export {
   showModal,
   hideModal,
@@ -218,5 +233,6 @@ export {
   sortByName,
   sortByDateOld,
   sortByDateNew,
-  clearUpdateScreen
+  clearUpdateScreen,
+  setDeviantSharingResults
 }

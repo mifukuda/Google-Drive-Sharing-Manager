@@ -1,23 +1,30 @@
 import React, {useEffect} from "react";
-import {useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import DeviantSharingList from "./DeviantSharingList";
 import SharingDifferencesList from "./SharingDifferencesList";
-import {performDeviantSharing} from '../api';
+import {getDeviantSharingResultsFromBackend} from '../actions';
+import {useDispatch} from 'react-redux';
+import {Button} from 'react-bootstrap';
 
 export default function AnalyzeScreen() {
     let navigate = useNavigate();
+    const dispatch = useDispatch();
 
     //Stage files
     useEffect(() => {
-        performDeviantSharing({threshold: ".6"}).then((response) => {
-            console.log(response);
-        });
+        dispatch(getDeviantSharingResultsFromBackend(".8"));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Navigate to home page when close button is
     function handleClose(event) {
         navigate("/home");
+    }
+
+    function handleThresholdChange(event) {
+        let threshold = "" + (event.target.value / 100);
+        console.log(threshold);
+        dispatch(getDeviantSharingResultsFromBackend(threshold));
     }
 
     return (
@@ -29,6 +36,11 @@ export default function AnalyzeScreen() {
             </div>
             <div className="analyzescreencenter">
                 <h2 className="analyzescreensubtitle">Deviant Sharing &#128520;</h2>
+                <div className="thresholdsetter">
+                    <span><b>Set new threshold (%):</b></span>
+                    <input type="number" name="threshold" min="0" max="100" defaultValue="80"/>
+                    <button className="thresholdbutton" onClick={(event) => handleThresholdChange(event)}>Submit</button>
+                </div>
                 <DeviantSharingList/>
                 <h2 className="analyzescreensubtitle">Sharing Differences &#128373;</h2>
                 <SharingDifferencesList/>

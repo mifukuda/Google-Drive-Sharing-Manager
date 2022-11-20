@@ -93,7 +93,7 @@ body {
   margin-bottom: 5%;
   width: 82%;
   height: 20%;
-  font-size: 1.2em;
+  font-size: 1.2vw;
   font-weight: bold;
   color: rgb(74, 74, 223);
   background-color: white;
@@ -153,6 +153,7 @@ h3.sidebarlogo {
   color: rgb(74, 74, 223);
   background-color: white;
   border-radius: 10px;
+  font-size: 1.2vw;
 }
 
 .uploadbutton:hover {
@@ -186,6 +187,28 @@ h3.sidebarlogo {
 
 .analyzescreenheadertitle {
   padding-right: 73%;
+}
+
+.thresholdsetter {
+  display: flex;
+  align-items: center;
+  column-gap: 1%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 5%;
+}
+
+.thresholdbutton {
+  color: rgb(74, 74, 223);
+  background-color: white;
+  border: 2px solid rgb(74, 74, 223);
+  border-radius: 4px;
+}
+
+.thresholdbutton:hover {
+  color: white;
+  background-color: rgb(74, 74, 223);
+  border: 2px solid rgb(74, 74, 223);
 }
 
 .updatescreenlist {

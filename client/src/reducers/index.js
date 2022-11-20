@@ -16,14 +16,16 @@ import removeWritersReducer from './removeWriters.js';
 import removeCommentersReducer from './removeCommenters.js';
 import unshareReducer from './unshare.js';
 import recentSearchesReducer from './recentSearches.js';
+import deviantSharingResultsReducer from './deviantSharingResults.js';
 import {combineReducers} from 'redux';
 
 const allReducers = combineReducers({
+    isLoggedIn: isLoggedInReducer,
     allSnapshotInfo: allSnapshotInfoReducer,
     currentSnapshot: currentSnapshotReducer,
     searchResults: searchResultsReducer,
-    isLoggedIn: isLoggedInReducer,
     filter: filterReducer,
+    recentSearches: recentSearchesReducer,
     accessControlPolicies: accessControlPolicyReducer,
     showModal: showModalReducer,
     showCompareModal: showCompareModalReducer,
@@ -36,7 +38,7 @@ const allReducers = combineReducers({
     removeWriters: removeWritersReducer,
     removeCommenters: removeCommentersReducer,
     unshare: unshareReducer,
-    recentSearches: recentSearchesReducer
+    deviantSharingResults: deviantSharingResultsReducer
 })
 
 export default allReducers;

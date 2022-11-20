@@ -32,7 +32,8 @@ const apis = {
     getFilteredSnapshot,
     getAccessControlPolicies,
     addAccessControlPolicy,
-    updatePermissions
+    updatePermissions,
+    performDeviantSharing
 }
 
 export default apis;

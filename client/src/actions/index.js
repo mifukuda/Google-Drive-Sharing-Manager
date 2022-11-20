@@ -200,6 +200,12 @@ const setRecentSearches = (response) => {
   }
 }
 
+const clearUpdateScreen = () => {
+  return {
+    type: "CLEAR_UPDATE_SCREEN"
+  }
+}
+
 export {
   showModal,
   hideModal,
@@ -211,5 +217,6 @@ export {
   setFilter,
   sortByName,
   sortByDateOld,
-  sortByDateNew
+  sortByDateNew,
+  clearUpdateScreen
 }

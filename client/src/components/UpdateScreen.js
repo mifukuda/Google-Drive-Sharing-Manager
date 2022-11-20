@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 // import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
-import {stageFiles} from "../actions";
+import {stageFiles, clearUpdateScreen} from "../actions";
 import StagedFileList from './StagedFileList';
 import PermissionAdder from './PermissionAdder';
 import {Button} from 'react-bootstrap';
@@ -29,6 +29,7 @@ export default function UpdateScreen() {
 
     // Navigate to home page when close button is pressed
     function handleClose(event) {
+        dispatch(clearUpdateScreen());
         navigate("/home");
     }
 

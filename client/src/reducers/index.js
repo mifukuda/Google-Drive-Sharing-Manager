@@ -15,6 +15,7 @@ import removeReadersReducer from './removeReaders.js';
 import removeWritersReducer from './removeWriters.js';
 import removeCommentersReducer from './removeCommenters.js';
 import unshareReducer from './unshare.js';
+import recentSearchesReducer from './recentSearches.js';
 import {combineReducers} from 'redux';
 
 const allReducers = combineReducers({
@@ -34,7 +35,8 @@ const allReducers = combineReducers({
     removeReaders: removeReadersReducer,
     removeWriters: removeWritersReducer,
     removeCommenters: removeCommentersReducer,
-    unshare: unshareReducer
+    unshare: unshareReducer,
+    recentSearches: recentSearchesReducer
 })
 
 export default allReducers;

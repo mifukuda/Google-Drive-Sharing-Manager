@@ -68,7 +68,7 @@ export default function FileCard(props) {
                         style={{marginRight:"16px"}}
                         onClick={(event) => handleCheck(event)}
                         onChange={() => {}}
-                        checked={isChecked}
+                        // checked={isChecked}
                         defaultChecked={staged}
                     />
                     {img}

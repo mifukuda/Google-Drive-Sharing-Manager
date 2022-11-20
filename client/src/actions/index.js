@@ -1,4 +1,5 @@
 import apis from "../api";
+import userapis from "../api/user.js"
 
 //THUNKS
 export function getAllSnapshotInfoFromBackend() {
@@ -12,6 +13,7 @@ export function getAllSnapshotInfoFromBackend() {
           let allSnapshotInfo = response.data.snapshotInfo.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
           console.log(allSnapshotInfo);
           dispatch(getSnapshotFromBackend(allSnapshotInfo[0]._id));
+          dispatch(getRecentSearchesFromBackend());
         }
         else {
           console.log("Aborting fetch.");
@@ -47,7 +49,14 @@ export function getSnapshotFromBackend(id) {
 export function getFilteredSnapshotFromBackend(id, query) {
   return async (dispatch) => {
     return apis.getFilteredSnapshot({query: query, snapshot_id: id}).then(response => {
-      if(response.status === 200) {dispatch(setSearchResults(response));}
+      if(response.status === 200) {
+        dispatch(setSearchResults(response));
+        userapis.saveSearch({query: query}).then(response => {
+          if (response.status === 200) {
+            dispatch(getRecentSearchesFromBackend());
+          }
+        })
+      }
     });
   };
 }
@@ -68,9 +77,16 @@ export function addAccessControlPolicyToBackend() {
   };
 }
 
+export function getRecentSearchesFromBackend() {
+  return async (dispatch) => {
+    return userapis.getRecentSearches().then(response => {
+      if(response.status === 200) {dispatch(setRecentSearches(response));}
+    });
+  };
+}
+
 //ACTIONS
 const setAllSnapshotInfo = (response) => {
-  console.log(response);
   return {
       type: 'SET_ALL_SNAPSHOT_INFO',
       payload: response.data.snapshotInfo
@@ -78,7 +94,6 @@ const setAllSnapshotInfo = (response) => {
 }
 
 const setSnapshot = (response) => {
-    console.log(response);
     return {
         type: 'SET_SNAPSHOT',
         payload: response.data.fileSnapshot
@@ -86,7 +101,6 @@ const setSnapshot = (response) => {
 }
 
 const setSearchResults = (response) => {
-  console.log(response);
   return {
       type: 'SET_SEARCH_RESULTS',
       payload: response.data
@@ -176,6 +190,13 @@ const sortByDateOld = () => {
 const sortByDateNew = () => {
   return {
     type: 'SORT_BY_DATE_NEW',
+  }
+}
+
+const setRecentSearches = (response) => {
+  return {
+    type: 'SET_RECENT_SEARCHES',
+    payload: response.data.queries
   }
 }
 

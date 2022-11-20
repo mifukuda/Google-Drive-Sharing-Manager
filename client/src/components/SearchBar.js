@@ -5,6 +5,7 @@ import {Form, Button} from 'react-bootstrap';
 
 export default function SearchBar(props) {
     const currentSnapshot = useSelector(state => state.currentSnapshot);
+    const recentSearches = useSelector(state => state.recentSearches);
     // Stores current text within SearchBar
     const [text, setText] = useState(props.filter);
     useEffect(() => {
@@ -35,6 +36,9 @@ export default function SearchBar(props) {
         width: '59%'
     }
 
+    // Show recent searches
+    let options = recentSearches.map((element, i) => <option key={i} value={element}/>);
+
     return (
         <div className="querycontrols">
             <Form style={style}>
@@ -45,11 +49,7 @@ export default function SearchBar(props) {
                     <Form.Control list="browsers" placeholder="Search for files..." 
                         value={text} onChange={(event) => setText(event.target.value)} onKeyPress={(event) => handleSubmit(event)}/>
                     <datalist id="browsers">
-                        <option value="Edge"/>
-                        <option value="Firefox"/>
-                        <option value="Chrome"/>
-                        <option value="Opera"/>
-                        <option value="Safari"/>
+                        {options}
                     </datalist>
                 </Form.Group>
             </Form>

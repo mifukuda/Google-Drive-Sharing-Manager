@@ -7,10 +7,13 @@ const api = axios.create({
 
 // Get info of all user's snapshots
 export const getAllSnaphotInfo = () => api.get('/getinfo/');
+
 // Create snapshot
 export const createSnapshot = () => api.get('/create/');
+
 // Get default snapshot
 export const getSnapshot = (payload) => api.post('/get/', payload);
+
 // Apply filter to snapshot
 export const getFilteredSnapshot = (payload) => api.post('/query/', payload);
 

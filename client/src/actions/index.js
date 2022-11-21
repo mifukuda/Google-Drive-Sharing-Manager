@@ -85,17 +85,19 @@ export function getRecentSearchesFromBackend() {
   };
 }
 
-export function getDeviantSharingResultsFromBackend(threshold) {
+export function getDeviantSharingResultsFromBackend(threshold, id) {
   return async (dispatch) => {
-    return apis.performDeviantSharing({threshold: threshold}).then(response => {
+    console.log("request_dev sharing : ",id)
+    return apis.performDeviantSharing({threshold: threshold, id: id}).then(response => {
       if(response.status === 200) {dispatch(setDeviantSharingResults(response));}
     });
   };
 }
 
-export function getSharingDifferencesResultsFromBackend() {
+export function getSharingDifferencesResultsFromBackend(id) {
   return async (dispatch) => {
-    return apis.performSharingDifferences().then(response => {
+    console.log("request_diff sharing : ",id)
+    return apis.performSharingDifferences({id: id}).then(response => {
       if(response.status === 200) {dispatch(setSharingDifferencesResults(response));}
     });
   };

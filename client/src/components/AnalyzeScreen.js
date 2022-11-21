@@ -3,18 +3,19 @@ import {useNavigate} from "react-router-dom";
 import DeviantSharingList from "./DeviantSharingList";
 import SharingDifferencesList from "./SharingDifferencesList";
 import {getDeviantSharingResultsFromBackend, getSharingDifferencesResultsFromBackend, clearAnalyzeScreen} from '../actions';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Button} from 'react-bootstrap';
 
 export default function AnalyzeScreen() {
     let navigate = useNavigate();
     const dispatch = useDispatch();
     const [threshold, setThreshold] = useState(80);
+    const currentSnapshot = useSelector(state => state.currentSnapshot);
 
     //Stage files
     useEffect(() => {
-        dispatch(getDeviantSharingResultsFromBackend(".8"));
-        dispatch(getSharingDifferencesResultsFromBackend());
+        dispatch(getDeviantSharingResultsFromBackend(".8", currentSnapshot._id));
+        dispatch(getSharingDifferencesResultsFromBackend(currentSnapshot._id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -32,7 +33,7 @@ export default function AnalyzeScreen() {
     function handleSubmitThreshold() {
         let thresholdPercent = "" + (threshold / 100);
         console.log(thresholdPercent);
-        dispatch(getDeviantSharingResultsFromBackend(thresholdPercent));
+        dispatch(getDeviantSharingResultsFromBackend(thresholdPercent, currentSnapshot._id));
     }
 
     return (

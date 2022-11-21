@@ -170,8 +170,12 @@ const deviantSharing = async (req: Request, res: Response) => {
 
     let user: any = await getModel(req.cookies.jwt)
 
-    let google_drive_adapter = new GoogleDriveAdapter(user.driveToken)
-    let all_files: DriveFile[] = await google_drive_adapter.getFileRoots()
+    const id = new Types.ObjectId(req.body.id)
+    console.log(id)
+    const fileSnapshot = await FileInfoSnapshot.retrieve(id)
+    // let google_drive_adapter = new GoogleDriveAdapter(user.driveToken)
+    // let all_files: DriveFile[] = await google_drive_adapter.getFileRoots()
+    let all_files: DriveFile[] = fileSnapshot.drive_roots
     if(all_files !== null){
 
         all_files= all_files.flatMap((d: DriveFile) => d.getSubtree())   
@@ -220,6 +224,11 @@ const sharingDifferences = async (req: Request, res: Response) => {
   
 }  
 
+const sharingChanges = async (req: Request, res: Response) => {
+
+    
+}
+
 const querySnap = async (req: Request, res: Response) => {
     let query = req.body.query
     let prop = query.split(":")[0]
@@ -242,4 +251,4 @@ const querySnap = async (req: Request, res: Response) => {
 }
 
 
-export { createSnapshot, getSnap, updateSnap, getSnapshotInfo, checkPolicies, analyzeSharing, querySnap, deviantSharing, sharingDifferences };
+export { createSnapshot, getSnap, updateSnap, getSnapshotInfo, checkPolicies, analyzeSharing, querySnap, deviantSharing, sharingDifferences, sharingChanges };

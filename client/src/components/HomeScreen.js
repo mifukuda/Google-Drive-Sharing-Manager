@@ -20,10 +20,6 @@ export default function HomeScreen() {
 
     //Return default snapshot (most recent) from backend
     useEffect(() => {
-        /*if(allSnapshotInfo.length === 0) {
-            console.log("Fetching all snapshot info from backend.");
-            dispatch(getAllSnapshotInfoFromBackend());
-        }*/
         console.log(location.state);
         if(location.state && location.state.from === 'analyze') {
             navigate(".", { replace: true });

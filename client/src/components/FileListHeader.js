@@ -28,21 +28,23 @@ export default function FileListHeader() {
     let sortDropdown = "";
     if(queryString) {
         sortDropdown = 
-        <Dropdown>
-            <Dropdown.Toggle style={{width: '100%'}} variant="secondary" id="sortdropdown">
-                Sort
-            </Dropdown.Toggle>
+        <div className="sortdropdown">
+            <Dropdown>
+                <Dropdown.Toggle variant="secondary" id="sortdropdown">
+                    Sort
+                </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-                <Dropdown.Item active={sortField === "NAME"} onClick={() => handleSortByName()}>Name (A-Z)</Dropdown.Item>
-                <Dropdown.Item active={sortField === "DATEOLD"} onClick={() => handleSortByDateOld()}>Newest (Date Modified)</Dropdown.Item>
-                <Dropdown.Item active={sortField === "DATENEW"} onClick={() => handleSortByDateNew()}>Oldest (Date Modified)</Dropdown.Item>
-            </Dropdown.Menu>
-        </Dropdown>
+                <Dropdown.Menu>
+                    <Dropdown.Item active={sortField === "NAME"} onClick={() => handleSortByName()}>Name (A-Z)</Dropdown.Item>
+                    <Dropdown.Item active={sortField === "DATEOLD"} onClick={() => handleSortByDateOld()}>Newest (Date Modified)</Dropdown.Item>
+                    <Dropdown.Item active={sortField === "DATENEW"} onClick={() => handleSortByDateNew()}>Oldest (Date Modified)</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+        </div>
     }
     return (
         <div className="filelistheader">
-            <p style={{marginBottom: "0", marginRight:"75%"}}>Snapshot: {numSelected.length} Selected</p>
+            <p style={{marginBottom: "0"}}>Snapshot: {numSelected.length} Selected</p>
             {sortDropdown}
         </div>
     );

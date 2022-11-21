@@ -22,7 +22,7 @@ export default function AnalyzeScreen() {
     // Navigate to home page when close button is
     function handleClose(event) {
         dispatch(clearAnalyzeScreen());
-        navigate("/home");
+        navigate("/home", {state:{from:'analyze'}});
     }
 
     function handleThresholdChange(event) {

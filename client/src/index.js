@@ -7,12 +7,22 @@ import { configureStore } from '@reduxjs/toolkit';
 import {Provider} from 'react-redux';
 import thunk from "redux-thunk";
 import allReducers from './reducers';
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
+const persistedReducer = persistReducer(persistConfig, allReducers)
 
 // development
 const composedEnhancer = compose(applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const store = configureStore(
   { 
-    reducer: allReducers,
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       immutableCheck: false,
       serializableCheck: false,
@@ -21,12 +31,16 @@ const store = configureStore(
   undefined, 
   composedEnhancer);
 
+  const persistor = persistStore(store)
+
 // production (probably...)
 // const store = configureStore ({reducer: allReducers}, [thunk], false);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
     </Provider>
 );
 

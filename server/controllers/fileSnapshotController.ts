@@ -251,8 +251,8 @@ const sharingChanges = async (req: Request, res: Response) => {
         for(const key of result.keys()){
             let instance : any = {}
             instance.file = key
-            instance.oldPermissions = result.get(key)[0]
-            instance.newPermissions = result.get(key)[1]
+            instance.oldPermissions = result.get(key)[1]
+            instance.newPermissions = result.get(key)[0]
             response.instances.push(instance)
         }
 

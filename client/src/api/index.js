@@ -27,7 +27,7 @@ export const updatePermissions = (payload) => api.post('/update/', payload);
 // Analyze
 export const performDeviantSharing = (payload) => api.post('/analyze/deviantSharing', payload);
 export const performSharingDifferences = (payload) => api.post('/analyze/sharingDifferences', payload);
-//export const performSnapshotComparison = (payload) => api.post('/analyze')
+export const performSnapshotComparison = (payload) => api.post('/analyze/sharingChanges', payload)
 
 const apis = {
     createSnapshot,
@@ -38,7 +38,8 @@ const apis = {
     addAccessControlPolicy,
     updatePermissions,
     performDeviantSharing,
-    performSharingDifferences
+    performSharingDifferences,
+    performSnapshotComparison
 }
 
 export default apis;

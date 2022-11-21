@@ -6,7 +6,7 @@ import { Query } from '../classes/UserClasses'
 import Models from '../db/Models';
 import { Types } from 'mongoose';
 import { getModel } from '../middleware/getUserModel'
-import { analyzeDeviantSharing, calculatePermissionDifferences } from '../sharinganalysis'
+import { analyzeDeviantSharing, calculatePermissionDifferences, calculateSharingChanges } from '../sharinganalysis'
 import { driveUserModel } from '../db/Models/DriveUserSchema';
 
 
@@ -171,10 +171,8 @@ const deviantSharing = async (req: Request, res: Response) => {
     let user: any = await getModel(req.cookies.jwt)
 
     const id = new Types.ObjectId(req.body.id)
-    console.log(id)
+    console.log("snapshot Id: ", id)
     const fileSnapshot = await FileInfoSnapshot.retrieve(id)
-    // let google_drive_adapter = new GoogleDriveAdapter(user.driveToken)
-    // let all_files: DriveFile[] = await google_drive_adapter.getFileRoots()
     let all_files: DriveFile[] = fileSnapshot.drive_roots
     if(all_files !== null){
 
@@ -200,8 +198,10 @@ const sharingDifferences = async (req: Request, res: Response) => {
 
     let user: any = await getModel(req.cookies.jwt)
 
-    let google_drive_adapter = new GoogleDriveAdapter(user.driveToken)
-    let all_files: DriveFile[] = await google_drive_adapter.getFileRoots() 
+    const id = new Types.ObjectId(req.body.id)
+    console.log("snapshot Id: ", id)
+    const fileSnapshot = await FileInfoSnapshot.retrieve(id)
+    let all_files: DriveFile[] = fileSnapshot.drive_roots
     if(all_files !== null){
         
         all_files= all_files.flatMap((d: DriveFile) => d.getSubtree())   
@@ -225,7 +225,41 @@ const sharingDifferences = async (req: Request, res: Response) => {
 }  
 
 const sharingChanges = async (req: Request, res: Response) => {
+    console.log("analyzing sharing changes.")
 
+    let user: any = await getModel(req.cookies.jwt)
+
+    const id1 = new Types.ObjectId(req.body.id1)
+    const id2 = new Types.ObjectId(req.body.id2)
+    console.log("snapshot Id: ", id1, "snapshot Id2: ", id2)
+
+    const fileSnapshot1 = await FileInfoSnapshot.retrieve(id1)
+    let all_files1: DriveFile[] = fileSnapshot1.drive_roots
+
+    const fileSnapshot2 = await FileInfoSnapshot.retrieve(id2)
+    let all_files2: DriveFile[] = fileSnapshot2.drive_roots
+
+    if(all_files1 !== null && all_files2 !== null){
+        
+        all_files1 = all_files1.flatMap((d: DriveFile) => d.getSubtree())   
+        all_files2 = all_files2.flatMap((d: DriveFile) => d.getSubtree())   
+        
+        let result: any = calculateSharingChanges(all_files1, all_files2)
+
+        let response : any = {}
+        response.instances = []
+        for(const key of result.keys()){
+            let instance : any = {}
+            instance.file = key
+            instance.oldPermissions = result.get(key)[0]
+            instance.newPermissions = result.get(key)[1]
+            response.instances.push(instance)
+        }
+
+        console.log("done")
+        res.send(response)
+        
+    }
     
 }
 

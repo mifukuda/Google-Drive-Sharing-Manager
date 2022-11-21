@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import {hideCompareModal} from '../actions';
 import {Modal, Button, Dropdown} from 'react-bootstrap';
+import {performSnapshotCompareFromBackend } from "../actions";
 
 // Button redirects to Google Auth
 export default function CompareModal() {
@@ -24,6 +25,7 @@ export default function CompareModal() {
     });*/
 
     function handleCompare() {
+        dispatch(performSnapshotCompareFromBackend(snapshot1._id, snapshot2._id));
         handleCloseCompareModal();
     }
 

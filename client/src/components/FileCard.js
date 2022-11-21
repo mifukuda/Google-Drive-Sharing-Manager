@@ -77,7 +77,7 @@ export default function FileCard(props) {
                     </div>
                 </Accordion.Header>
                 <Accordion.Body>
-                    <p><b>ID:</b> {file._id}</p>
+                    <p><b>ID:</b> {file.driveId}</p>
                     {file.owner ? <p><b>Owner Name:</b> {file.owner.display_name}</p> : null}
                     {file.owner ?  <p><b>Owner Email:</b> {file.owner.email}</p> : null}
                     <p><b>Date Created:</b> {new Date(file.date_created).toString()}</p>

@@ -30,7 +30,8 @@ export class FileInfoSnapshot {
             idToDriveFile.set(file._id.toString(), [drivefile, file.children])
         })
         idToDriveFile.forEach(([file, childrenIDs]: [DriveFile, Types.ObjectId[]], key: string) => {
-            if (childrenIDs.length === 0) return
+
+            if (childrenIDs === undefined) return
             childrenIDs.forEach((childID: Types.ObjectId) => {
                 let child: DriveFile = (idToDriveFile.get(childID.toString()) as [DriveFile, Types.ObjectId[]])[0];
                 (file as DriveFolder).children.push(child);
@@ -43,7 +44,8 @@ export class FileInfoSnapshot {
     applyQuery(query: Query): DriveFile[] {
         let f: QueryPredicate = operatorToQueryPredicate[query.operator]
         let all_files: DriveFile[] = this.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())     
-        return all_files.filter((d: DriveFile) => f(query.argument, d))
+        return all_files.filter((d: DriveFile) => {
+            return f(query.argument, d)})
     }
     
     serialize(): FileInfoSnapshot {

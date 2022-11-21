@@ -28,7 +28,7 @@ export class DriveRoot extends DriveFolder {
                 type: "ROOT",
                 isSharedDrive: true,
                 permissions: this.permissions.map(p => p.getModel()),
-                children: fileArr.map((f: any) => f ? f._id : null)
+                children: this.children.map((f: any) => f ? (f._id as Types.ObjectId) : null)
             }
         )
 

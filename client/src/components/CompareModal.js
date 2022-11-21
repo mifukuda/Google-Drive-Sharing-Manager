@@ -48,6 +48,7 @@ export default function CompareModal() {
     if (allSnapshotInfo.length >= 2) {
         body =
             <div className="comparemodalbody">
+                <p style={{fontSize :'1.2em', marginBottom: "1.5%"}}>Compare Snapshot 1 to Snapshot 2:</p>
                 <p className="comparemodalsubtitle">Snapshot 1:</p>
                 <Dropdown>
                     <Dropdown.Toggle style={{width: '60%', marginBottom:'3%'}} variant="primary" id="dropdown-basic">
@@ -66,6 +67,7 @@ export default function CompareModal() {
                         {snapshots2}
                     </Dropdown.Menu>
                 </Dropdown>
+                <p>If a file is updated in Snapshot 2 or exists only in Snapshot 2, it will be displayed. Files only in Snapshot 1 will not be displayed.</p>
             </div>
     }
 

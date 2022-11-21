@@ -57,7 +57,7 @@ export default function QueryBuilder() {
 
     // List of operators to be displayed
     const dropdownActions = ["drive:", "owner:", "creator:", "from:", "to:", "readable:", 
-        "writable:", "sharable:", "name:", "folder:", "path:", "sharing:"]
+        "writable:", "sharable:", "name:", "inFolder:", "folder:", "path:", "sharing:"]
         .map((x, i) => <Dropdown.Item key={i} onClick={(event) => handleUpdateDisplay(x)}>{x}</Dropdown.Item>);
     // Map queries to cards w/ delete button
     const queryList = queries.map((x, i) => 

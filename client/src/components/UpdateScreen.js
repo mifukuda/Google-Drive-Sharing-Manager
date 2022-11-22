@@ -34,6 +34,7 @@ export default function UpdateScreen() {
 
     // Submit updates
     async function handleSubmit() {
+        // Map of operations to list of user-provided emails
         const operations = {"add_readers": addReaders, 
             "add_writers": addWriters, 
             "add_commenters": addCommenters, 
@@ -42,8 +43,10 @@ export default function UpdateScreen() {
             "remove_commenters": removeCommenters,
             "unshare": unshare
         }  
+        // Get file ID's for backend request
         const ids =  selectedFiles.map(file => file._id);
         for (const [operation, emails] of Object.entries(operations)) {
+            // No emails provided
             if (emails.length === 0) {
                 continue;
             }
@@ -54,6 +57,7 @@ export default function UpdateScreen() {
                 emails: emails 
             }
             console.log(body);
+            // await - MongoDB version control 
             let response = await updatePermissions(body);
             console.log(response);
         }

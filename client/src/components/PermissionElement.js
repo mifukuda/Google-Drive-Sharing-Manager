@@ -35,9 +35,9 @@ export default function PermissionElement(props) {
     }
 
     function buildGroupList() {
-        let memberList = []
+        let memberList = [<p className="groupmemberelement" key={0}><b>Members:</b></p>]
         for(let i = 0; i < group.length; i++) {
-            memberList.push(<p className="groupmemberelement" key={i}>{i + 1} memberList[i]</p>);
+            memberList.push(<p className="groupmemberelement" key={i + 1}>{i + 1} memberList[i]</p>);
         }
         return memberList;
     }

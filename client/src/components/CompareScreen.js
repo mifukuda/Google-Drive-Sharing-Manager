@@ -15,6 +15,7 @@ export default function AnalyzeScreen() {
         navigate("/home");
     }
 
+    // data.instances to CompareSnapshotCards 
     function buildList(results) {
         for(let i = 0; i < results.instances.length; i++) {
             let instance = results.instances[i];
@@ -39,7 +40,7 @@ export default function AnalyzeScreen() {
             <div className="analyzescreencenter">
                 <h2 className="analyzescreensubtitle">Comparison Results &#128248;</h2>
                 <div className="comparesnapshotlist">
-                    {cards.length}
+                    {cards}
                 </div>
             </div>
         </div>

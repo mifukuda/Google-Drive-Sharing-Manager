@@ -12,7 +12,7 @@ export default function AnalyzeScreen() {
     const [threshold, setThreshold] = useState(80);
     const currentSnapshot = useSelector(state => state.currentSnapshot);
 
-    //Stage files
+    // Get analysis results from the backend
     useEffect(() => {
         dispatch(getDeviantSharingResultsFromBackend(".8", currentSnapshot._id));
         dispatch(getSharingDifferencesResultsFromBackend(currentSnapshot._id));

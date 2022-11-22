@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {useDispatch} from "react-redux"
 import {selectFile, unselectFile} from "../actions";
 import {Accordion, Form} from 'react-bootstrap';
+import PermissionElement from './PermissionElement.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function FileCard(props) {
@@ -25,7 +26,8 @@ export default function FileCard(props) {
     }
 
     // Render list of permissions
-    let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {(Object.keys(element.granted_to).length !== 0) ? (element.granted_to.email + ", " + element.granted_to.display_name) : (element.driveId)} (id: {element._id})</p>);
+    //let permissionList = file.permissions.map((element, index) => <p key={index}>{index + 1}. {roles[element.role]}: {(Object.keys(element.granted_to).length !== 0) ? (element.granted_to.email + ", " + element.granted_to.display_name) : (element.driveId)} (id: {element._id})</p>);
+    let permissionList = file.permissions.map((element, index) => <PermissionElement key={index} index={index} element={element}/>)
 
     // Render directory with indents
     let indent = 3*depth;

@@ -39,7 +39,7 @@ export default function AnalyzeScreen() {
             <div className="analyzescreencenter">
                 <h2 className="analyzescreensubtitle">Comparison Results &#128248;</h2>
                 <div className="comparesnapshotlist">
-                    {cards}
+                    {cards.length}
                 </div>
             </div>
         </div>

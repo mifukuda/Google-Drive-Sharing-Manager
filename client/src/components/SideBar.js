@@ -41,8 +41,8 @@ export default function SideBar() {
         const formData = new FormData();
         formData.append('memberlist', file);
         formData.append('name', file.name);
-        formData.append('groupName', groupName);
-        formData.append('groupEmail'. groupEmail);
+        formData.append('group_name', groupName);
+        formData.append('group_email'. groupEmail);
         uploadGroupSnapshot(formData).then((response) => {
             console.log(response);
             if(response.status === 200) {

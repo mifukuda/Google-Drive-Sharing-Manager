@@ -12,6 +12,7 @@ export default function SideBar() {
     const [file, setFile] = useState();
     const [groupEmail, setGroupEmail] = useState('');
     const [groupName, setGroupName] = useState('');
+    const [timestamp, setTimestamp] = useState('');
     const [status, setStatus] = useState(<p>Status: </p>);
 
     function handleShowCompareModal(event) {
@@ -32,24 +33,37 @@ export default function SideBar() {
         setGroupName(event.target.value);
     }
 
+    function handleChangeTimestamp(event) {
+        setTimestamp(event.target.value);
+    }
+
     function handleSelectFile(event) {
         setFile(event.target.files[0]);
     }
 
     function handleUploadGroup() {
-        if(!file || !groupName || !groupEmail) return;
+        console.log(timestamp);
+        if(isNaN(new Date(timestamp))) {
+            setStatus(<p style={{color: 'red'}}>Status: Incorrect date format.</p>);
+            return;
+        }
+        if(!file || !groupName || !groupEmail) {
+            setStatus(<p style={{color: 'red'}}>Status: Missing info.</p>);
+            return;
+        }
         const formData = new FormData();
         formData.append('memberlist', file);
         formData.append('name', file.name);
         formData.append('group_name', groupName);
         formData.append('group_email', groupEmail);
+        formData.append('timestamp', timestamp);
         uploadGroupSnapshot(formData).then((response) => {
             console.log(response);
             if(response.status === 200) {
                 setStatus(<p style={{color: 'green'}}>Status: Success!</p>);
             }
             else {
-                setStatus(<p style={{color: 'red'}}>Status: Error</p>)
+                setStatus(<p style={{color: 'red'}}>Status: Upload failed!</p>)
             }
         });
     }
@@ -70,14 +84,7 @@ export default function SideBar() {
                 </ul>
             </div>
             <div className="sidebar2">
-                <h3 className="sidebarlogo">Upload Group Snapshot:</h3>
-                <input type="file" onChange={(event) => handleSelectFile(event)}/>
-                <input className="sidebarform" type="text" placeholder="email" onChange={(event) => handleChangeGroupEmail(event)}/>
-                <input className="sidebarform" type="text" placeholder="group name" onChange={(event) => handleChangeGroupName(event)}/>
-                <button className="uploadbutton" onClick={() => handleUploadGroup()}>+ Upload Group</button>
-                {status}
-                <hr className="sidebarseparator"/>
-                <h3 className="sidebarlogo">On Selected:</h3>
+                <h3 className="sidebarlogo">On Selected Files:</h3>
                 <ul>
                     <li>
                         <Link to="/analyze" className="sidebar2link">Analyze Sharing</Link>
@@ -89,6 +96,14 @@ export default function SideBar() {
                         <Link to="/accessControlPolicies" className="sidebar2link">Manage Access Control Policies</Link>
                     </li>
                 </ul>
+                <hr className="sidebarseparator"/>
+                <h3 className="sidebarlogo">Upload Group Snapshot:</h3>
+                <input type="file" onChange={(event) => handleSelectFile(event)}/>
+                <input className="sidebarform" type="text" placeholder="email" onChange={(event) => handleChangeGroupEmail(event)}/>
+                <input className="sidebarform" type="text" placeholder="group name" onChange={(event) => handleChangeGroupName(event)}/>
+                <input className="sidebarform" type="text" placeholder="timestamp" onChange={(event) => handleChangeTimestamp(event)}/>
+                <button className="uploadbutton" onClick={() => handleUploadGroup()}>+ Upload Group</button>
+                {status}
             </div>
         </div>
     );

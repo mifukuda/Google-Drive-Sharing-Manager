@@ -34,7 +34,8 @@ export default function FileCard(props) {
     let width = 100 - 3*depth;
     let style = {
         marginLeft: indent + '%',
-        width: width + '%'
+        width: width + '%',
+        overflow: 'hidden'
     }
     // Render logo
     let img = null;

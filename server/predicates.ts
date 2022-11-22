@@ -69,11 +69,16 @@ const hasPath: QueryPredicate = (value: string, operand: DriveFile) => { // path
     return curr_path === value
 } 
 
+const isSharedWith: QueryPredicate = (value: string, operand: DriveFile) => {
+    switch (value) {
+        case "none": return operand.permissions.length != 0 && !operand.permissions.some((p: Permission) => p.granted_to.email !== operand.owner?.email) // sharing:none | unshared files
+        case "anyone": return operand.permissions.some((p: Permission) => p.granted_to.type === "anyone") // sharing:anyone | files shared with anyone with the link
+        case "individual": return !operand.permissions.some((p: Permission) => p.granted_to.type === "anyone") // sharing:individual | files shared with specific users
+        case "domain": return operand.permissions.some((p: Permission) => p.granted_to.type === "domain" && operand.owner?.email.split("@")[1] === p.granted_to.email) // sharing:domain | files shared with anyone in the owner’s domain (e.g., stonybrook.edu)
+        default: throw new Error("invalid argument for sharing operator")
+    }
+} 
 
-// sharing:none | unshared files
-// sharing:anyone | files shared with anyone with the link
-// sharing:individual | files shared with specific users
-// sharing:domain | files shared with anyone in the owner’s domain (e.g., stonybrook.edu)
 
 export const operatorToQueryPredicate: { [property: string]: QueryPredicate } = {
     "drive": isInDrive,
@@ -87,5 +92,6 @@ export const operatorToQueryPredicate: { [property: string]: QueryPredicate } = 
     "name": isNamedAs,
     "inFolder": isInFolder,
     "folder": isUnderFolder,
-    "path": hasPath
+    "path": hasPath,
+    "sharing": isSharedWith
 }

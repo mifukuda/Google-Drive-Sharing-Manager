@@ -15,16 +15,15 @@ export class FileInfoSnapshot {
 
     static async retrieve(id: Types.ObjectId): Promise<FileInfoSnapshot> {
         let snapshot: any = await Models.FileSnapshotModel.findById(id)
-        // console.log("snapshot: ", JSON.stringify(snapshot, null, "\t"))
         let roots: DriveRoot[] = []
         let idToDriveFile: Map<string, [DriveFile, Types.ObjectId[]]> = new Map<string, [DriveFile, Types.ObjectId[]]>()
         snapshot.files.forEach((file: any) => {
-            let permissions: Permission[] = file.permissions.map((p: any) => new Permission(p._id.toString(), p.drive_id, new User(p.type, p.grantedTo.email,  p.grantedTo.display_name), p.role))
+            let permissions: Permission[] = file.permissions.map((p: any) => new Permission(p._id.toString(), p.drive_id, new User(p.grantedTo.type, p.grantedTo.email,  p.grantedTo.display_name), p.role))
             let drivefile: DriveFile
             switch (file.type) {
                 case "ROOT": drivefile = new DriveRoot(file._id.toString(), file.drive_id, file.name, [], false); roots.push(drivefile as DriveRoot); break
-                case "FILE": drivefile = new DriveFile(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, (file.owner ? new User(file.owner.type, file.owner.email, file.owner.display_name) : null), permissions, new User(file.sharedBy?.type, file.sharedBy?.email, file.sharedBy?.display_name), file.mime_type); break
-                case "FOLDER": drivefile = new DriveFolder(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, (file.owner ? new User(file.owner.type, file.owner.email, file.owner.display_name) : null), permissions, new User(file.sharedBy?.type, file.sharedBy?.email, file.sharedBy?.display_name), file.mime_type, []); break
+                case "FILE": drivefile = new DriveFile(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, (file.owner ? new User(file.owner.type, file.owner.email, file.owner.display_name) : null), permissions, file.sharedBy ? new User(file.sharedBy.type, file.sharedBy.email, file.sharedBy.display_name) : null, file.mime_type); break
+                case "FOLDER": drivefile = new DriveFolder(file._id.toString(), file.drive_id, null, new Date(), new Date(), file.name, (file.owner ? new User(file.owner.type, file.owner.email, file.owner.display_name) : null), permissions, file.sharedBy ? new User(file.sharedBy.type, file.sharedBy.email, file.sharedBy.display_name) : null, file.mime_type, []); break
                 default: throw new Error("file does not have a valid type")
             }
             idToDriveFile.set(file._id.toString(), [drivefile, file.children])
@@ -43,7 +42,9 @@ export class FileInfoSnapshot {
     applyQuery(query: Query): DriveFile[] {
         let f: QueryPredicate = operatorToQueryPredicate[query.operator]
         let all_files: DriveFile[] = this.drive_roots.flatMap((d: DriveRoot) => d.getSubtree())     
-        return all_files.filter((d: DriveFile) => f(query.argument, d))
+        let files_set: Set<DriveFile> = new Set<DriveFile>()
+        all_files.forEach(f => files_set.add(f))
+        return [...files_set].filter((d: DriveFile) => f(query.argument, d))
     }
     
     serialize(): FileInfoSnapshot {

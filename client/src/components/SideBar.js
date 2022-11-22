@@ -42,7 +42,7 @@ export default function SideBar() {
         formData.append('memberlist', file);
         formData.append('name', file.name);
         formData.append('group_name', groupName);
-        formData.append('group_email'. groupEmail);
+        formData.append('group_email', groupEmail);
         uploadGroupSnapshot(formData).then((response) => {
             console.log(response);
             if(response.status === 200) {

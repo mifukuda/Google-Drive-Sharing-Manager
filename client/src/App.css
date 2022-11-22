@@ -186,7 +186,15 @@ h3.sidebarlogo {
 }
 
 .analyzescreenheadertitle {
-  padding-right: 73%;
+  width: 50%;
+}
+
+.analyzescreenheaderbutton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 2%;
+  width: 50%
 }
 
 .thresholdsetter {
@@ -280,6 +288,18 @@ h3.sidebarlogo {
   margin: auto;
   width: 90%;
   height: 85vh;
+  border: 3px solid rgb(74, 74, 223);
+  overflow-y: scroll;
+  padding: 2%;
+  margin-bottom: 2%;
+  border-radius: 4px;
+}
+
+.comparesnapshotlist {
+  background-color: white;
+  margin: auto;
+  width: 90%;
+  height: 70vh;
   border: 3px solid rgb(74, 74, 223);
   overflow-y: scroll;
   padding: 2%;

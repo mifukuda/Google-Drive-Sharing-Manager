@@ -63,8 +63,10 @@ export default function UpdateScreen() {
         <div className="analyzescreen">
             <div className="analyzescreenheader">
                 <h1 className="analyzescreenheadertitle">Update Sharing &#128275;</h1>
-                <input className="exitbutton" type="image" src={require('../images/closebutton.png')} alt="close button" style={{height: "40px"}}
-                    onClick={(event) => handleClose(event)}/>
+                <div className="analyzescreenheaderbutton">
+                    <input className="exitbutton" type="image" src={require('../images/closebutton.png')} alt="close button" style={{height: "40px"}}
+                        onClick={(event) => handleClose(event)}/>
+                </div>
             </div>
             <div className="analyzescreencenter">
                 <h2 className="analyzescreensubtitle">Staged Files &#128194;</h2>

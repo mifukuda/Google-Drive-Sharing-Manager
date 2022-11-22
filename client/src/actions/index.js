@@ -107,7 +107,7 @@ export function performSnapshotCompareFromBackend(id1, id2) {
   return async (dispatch) => {
     console.log("request_sharing changes1 : ", id1, "request_sharing changes2 : ", id2)
     return apis.performSnapshotComparison({id1: id1, id2: id2}).then(response => {
-      if(response.status === 200) {console.log(response);}
+      if(response.status === 200) {dispatch(setSnapshotCompareResults(response));}
     });
   };
 }
@@ -253,6 +253,13 @@ const setSharingDifferencesResults = (response) => {
   }
 }
 
+const setSnapshotCompareResults = (response) => {
+  return {
+    type: "SET_COMPARE_SNAPSHOT_RESULTS",
+    payload: response.data
+  }
+}
+
 export {
   showModal,
   hideModal,
@@ -267,5 +274,5 @@ export {
   sortByDateNew,
   clearUpdateScreen,
   clearAnalyzeScreen,
-  setDeviantSharingResults
+  setDeviantSharingResults,
 }

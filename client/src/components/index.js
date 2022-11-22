@@ -10,6 +10,7 @@ import SideBar from './SideBar';
 import UpdateScreen from './UpdateScreen'
 import WelcomeScreen from './WelcomeScreen';
 import AccessControlPolicies from './AccessControlPolicies';
+import CompareScreen from './CompareScreen';
 
 export {
     AnalyzeScreen,
@@ -23,5 +24,6 @@ export {
     SideBar,
     WelcomeScreen,
     AccessControlPolicies,
-    UpdateScreen
+    UpdateScreen,
+    CompareScreen
 }

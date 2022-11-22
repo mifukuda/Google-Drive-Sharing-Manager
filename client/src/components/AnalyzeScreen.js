@@ -40,8 +40,10 @@ export default function AnalyzeScreen() {
         <div className="analyzescreen">
             <div className="analyzescreenheader">
                 <h1 className="analyzescreenheadertitle">Analysis Results &#128221;</h1>
-                <input className="exitbutton" type="image" src={require('../images/closebutton.png')} alt="close button" style={{height: "40px"}}
-                    onClick={(event) => handleClose(event)}/>
+                <div className="analyzescreenheaderbutton">
+                    <input className="exitbutton" type="image" src={require('../images/closebutton.png')} alt="close button" style={{height: "40px"}}
+                        onClick={(event) => handleClose(event)}/>
+                </div>
             </div>
             <div className="analyzescreencenter">
                 <h2 className="analyzescreensubtitle">Deviant Sharing &#128520;</h2>

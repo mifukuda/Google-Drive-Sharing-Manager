@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useSelector, useDispatch} from 'react-redux';
+import {useNavigate} from "react-router-dom";
 import {hideCompareModal} from '../actions';
 import {Modal, Button, Dropdown} from 'react-bootstrap';
 import {performSnapshotCompareFromBackend } from "../actions";
@@ -7,6 +8,7 @@ import {performSnapshotCompareFromBackend } from "../actions";
 // Button redirects to Google Auth
 export default function CompareModal() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const showCompareModal = useSelector(state => state.showCompareModal);
     const allSnapshotInfo = useSelector(state => state.allSnapshotInfo);
     const [snapshot1, setSnapshot1] = useState();
@@ -26,6 +28,7 @@ export default function CompareModal() {
 
     function handleCompare() {
         dispatch(performSnapshotCompareFromBackend(snapshot1._id, snapshot2._id));
+        navigate("/compare");
         handleCloseCompareModal();
     }
 

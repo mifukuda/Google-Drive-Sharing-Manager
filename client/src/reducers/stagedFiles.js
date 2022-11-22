@@ -4,6 +4,8 @@ const stagedFilesReducer = (state = [], action) => {
             return [...action.payload];
         case 'CLEAR_UPDATE_SCREEN':
             return [];
+        case 'LOG_OUT':
+            return [];
         default:
             return state;
     }

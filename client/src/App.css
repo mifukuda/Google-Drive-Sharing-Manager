@@ -17,15 +17,12 @@ body {
   display: flex;
   align-items: center;
   padding: 2%;
-  height: 8%;
+  height: 10%;
 }
 
 .filelistinner {
-  padding-left: 2%;
-  padding-bottom: 2%;
-  padding-right: 2%;
-  padding-top: 0%;
-  height: 92%;
+  padding: 2%;
+  height: 90%;
   overflow-y: scroll;
 }
 
@@ -54,8 +51,8 @@ body {
 }
 
 .homescreentitle {
+  width: 30%;
   margin-left: 15%;
-  margin-right: 52%;
 }
 
 .querycontrols {
@@ -296,6 +293,14 @@ h3.sidebarlogo {
 
 .exitbutton:hover{
   filter: invert(30%);
+}
+
+.logoutbutton {
+  display:flex;
+  width: 80%;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 15%;
 }
 
 .querybuilderlist {

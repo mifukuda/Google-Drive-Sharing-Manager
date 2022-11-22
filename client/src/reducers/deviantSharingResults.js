@@ -4,6 +4,8 @@ const deviantSharingResultsReducer = (state = {}, action) => {
             return action.payload;
         case "CLEAR_ANALYZE_SCREEN":
             return {};
+        case 'LOG_OUT':
+            return {};
         default:
             return state;
     }

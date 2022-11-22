@@ -6,6 +6,8 @@ const accessControlPolicyReducer = (state = [], action) => {
             let newState = [...state]
             newState.push(action.payload)
             return newState
+        case 'LOG_OUT':
+            return [];
         default:
             return state;
     }

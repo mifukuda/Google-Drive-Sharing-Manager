@@ -144,6 +144,11 @@ h3.sidebarlogo {
   background-color:rgb(74, 74, 223);
 }
 
+.sidebarform {
+  margin-top: 2%;
+  width: 82%;
+}
+
 .uploadbutton {
   margin-top: 4%;
   margin-bottom: 4%;

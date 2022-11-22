@@ -6,3 +6,4 @@ const api = axios.create({
 
 // Upload HTML file containing group membership data
 export const uploadGroupSnapshot = (payload) => api.post('/uploadgroupsnapshot', payload);
+export const getGroupMembers = (payload) => api.post('/getgroupmembers', payload);

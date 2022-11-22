@@ -8,6 +8,7 @@ export default function PermissionAdder(props) {
     const [text, setText] = useState('');
     const {users, role, addType, removeType} = props;
 
+    // Add or remove user email from list
     function handleSubmit(event) {
         if(event.key === 'Enter') {
             event.preventDefault();
@@ -15,8 +16,6 @@ export default function PermissionAdder(props) {
             dispatch({type: addType, payload: text});
         }
     }
-
-    //let example = ["minato.fukuda@stonybrook.edu", "mifukuda@cs.stonybrook.edu", "minatofukuda@gmail.com", "minatofukuda2@gmail.com", "minatofukuda@yahoo.com"]
     
     return (
         <div className="permissionadder">

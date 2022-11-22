@@ -10,6 +10,8 @@ import {uploadGroupSnapshot} from "../api/group.js";
 export default function SideBar() {
     const dispatch = useDispatch();
     const [file, setFile] = useState();
+    const [groupEmail, setGroupEmail] = useState('');
+    const [groupName, setGroupName] = useState('');
     const [status, setStatus] = useState(<p>Status: </p>);
 
     function handleShowCompareModal(event) {
@@ -22,15 +24,25 @@ export default function SideBar() {
         dispatch(createSnapshotInBackend());
     }
 
+    function handleChangeGroupEmail(event) {
+        setGroupEmail(event.target.value);
+    }
+
+    function handleChangeGroupName(event) {
+        setGroupName(event.target.value);
+    }
+
     function handleSelectFile(event) {
         setFile(event.target.files[0]);
     }
 
     function handleUploadGroup() {
-        if(!file) return;
+        if(!file || !groupName || !groupEmail) return;
         const formData = new FormData();
         formData.append('memberlist', file);
         formData.append('name', file.name);
+        formData.append('groupName', groupName);
+        formData.append('groupEmail'. groupEmail);
         uploadGroupSnapshot(formData).then((response) => {
             console.log(response);
             if(response.status === 200) {
@@ -60,6 +72,8 @@ export default function SideBar() {
             <div className="sidebar2">
                 <h3 className="sidebarlogo">Upload Group Snapshot:</h3>
                 <input type="file" onChange={(event) => handleSelectFile(event)}/>
+                <input className="sidebarform" type="text" placeholder="email" onChange={(event) => handleChangeGroupEmail(event)}/>
+                <input className="sidebarform" type="text" placeholder="group name" onChange={(event) => handleChangeGroupName(event)}/>
                 <button className="uploadbutton" onClick={() => handleUploadGroup()}>+ Upload Group</button>
                 {status}
                 <hr className="sidebarseparator"/>

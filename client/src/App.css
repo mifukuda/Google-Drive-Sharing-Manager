@@ -154,12 +154,11 @@ h3.sidebarlogo {
   margin-top: 4%;
   margin-bottom: 4%;
   width: 82%;
-  height: 10%;
-  font-weight: bold;
+  height: 8%;
   color: rgb(74, 74, 223);
   background-color: white;
   border-radius: 10px;
-  font-size: 1.2vw;
+  font-size: 1.0vw;
 }
 
 .uploadbutton:hover {

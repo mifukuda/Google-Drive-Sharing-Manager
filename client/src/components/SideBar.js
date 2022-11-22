@@ -42,7 +42,6 @@ export default function SideBar() {
     }
 
     function handleUploadGroup() {
-        console.log(timestamp);
         if(isNaN(new Date(timestamp))) {
             setStatus(<p style={{color: 'red'}}>Status: Incorrect date format.</p>);
             return;

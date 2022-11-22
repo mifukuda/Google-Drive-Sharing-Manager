@@ -28,4 +28,14 @@ const uploadGroup = async (req: any, res: any) => {
     res.send({ id: saved._id }) 
 }
 
-export { uploadGroup }
+const getGroupMembers = async (req: any, res: any) => {
+    let snapshot: any = await Models.FileSnapshotModel.findById(req.body.snapshot_id)
+    if (!snapshot) res.status(400).send({ message: 'snapshot with given id not found' });
+    // let timestamp = snapshot.createdAt
+    let groupModel: any = await Models.GroupSnapshotModel.findOne({ name: req.body.group_name })
+    if (!groupModel) res.status(400).send({ message: 'group with given name not found' });
+    console.log(groupModel)
+    res.status(200).json({ members: groupModel.members })
+}
+
+export { uploadGroup, getGroupMembers }

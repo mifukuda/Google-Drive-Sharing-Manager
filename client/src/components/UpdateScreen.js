@@ -1,8 +1,7 @@
 import React, {useEffect} from "react";
-// import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
-import {stageFiles} from "../actions";
+import {stageFiles, clearUpdateScreen} from "../actions";
 import StagedFileList from './StagedFileList';
 import PermissionAdder from './PermissionAdder';
 import {Button} from 'react-bootstrap';
@@ -29,6 +28,7 @@ export default function UpdateScreen() {
 
     // Navigate to home page when close button is pressed
     function handleClose(event) {
+        dispatch(clearUpdateScreen());
         navigate("/home");
     }
 
@@ -63,8 +63,10 @@ export default function UpdateScreen() {
         <div className="analyzescreen">
             <div className="analyzescreenheader">
                 <h1 className="analyzescreenheadertitle">Update Sharing &#128275;</h1>
-                <input className="exitbutton" type="image" src={require('../images/closebutton.png')} alt="close button" style={{height: "40px"}}
-                    onClick={(event) => handleClose(event)}/>
+                <div className="analyzescreenheaderbutton">
+                    <input className="exitbutton" type="image" src={require('../images/closebutton.png')} alt="close button" style={{height: "40px"}}
+                        onClick={(event) => handleClose(event)}/>
+                </div>
             </div>
             <div className="analyzescreencenter">
                 <h2 className="analyzescreensubtitle">Staged Files &#128194;</h2>

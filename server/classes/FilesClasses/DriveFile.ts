@@ -22,7 +22,7 @@ export class DriveFile {
     }
 
     getModel(): Object[] {
-        return [new Models.FileModel(
+        let file = new Models.FileModel(
             {
                 drive_id: this.driveId,
                 name: this.name,
@@ -33,7 +33,9 @@ export class DriveFile {
                 permissions: this.permissions.map(p => p.getModel()),
                 children: []
             }
-        )]
+        )
+        file._id = this._id as any
+        return [file]
     }
 
     serialize(): DriveFile {

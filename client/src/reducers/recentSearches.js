@@ -1,6 +1,6 @@
-const allSnapshotInfoReducer = (state = [], action) => {
+const recentSearchesReducer = (state = [], action) => {
     switch(action.type) {
-        case 'SET_ALL_SNAPSHOT_INFO':
+        case 'SET_RECENT_SEARCHES':
             return action.payload;
         case 'LOG_OUT':
             return [];
@@ -9,4 +9,4 @@ const allSnapshotInfoReducer = (state = [], action) => {
     }
 }
 
-export default allSnapshotInfoReducer;
+export default recentSearchesReducer;

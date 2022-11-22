@@ -62,10 +62,11 @@ const isUnderFolder: QueryPredicate = (value: string, operand: DriveFile) => {  
 const hasPath: QueryPredicate = (value: string, operand: DriveFile) => { // path:path | files under the folder with path path; use “/” as separator
     let curr_file: DriveFile = operand
     let curr_path: string = ""
-    while (curr_file.parent != null) {
-        curr_path = curr_file.name + "/" + curr_path
+    while (curr_file.parent != null && curr_file.parent.parent != null) {
         curr_file = curr_file.parent
+        curr_path = curr_file.name + "/" + curr_path
     }
+    // console.log(curr_path)
     return curr_path === value
 } 
 

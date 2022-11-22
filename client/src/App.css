@@ -3,12 +3,13 @@ body {
 }
 
 .filelist {
-  background-color: #ededed;
+  background-color: #F5F5F5;
   margin: auto;
   height: 70vh;
   width: 70%;
   white-space: nowrap;
-  border: 2px solid black;
+  border: 2px solid rgb(74, 74, 223);
+  border-radius: 5px;
   overflow-y: hidden;
 }
 
@@ -50,8 +51,8 @@ body {
 }
 
 .homescreentitle {
+  width: 30%;
   margin-left: 15%;
-  margin-right: 52%;
 }
 
 .querycontrols {
@@ -72,7 +73,7 @@ body {
   padding-left: 10%;
   background-color: rgb(74, 74, 223);
   color: white;
-  height: 40%;
+  height: 43%;
 }
 
 .sidebar2 {
@@ -80,7 +81,7 @@ body {
   padding-left: 10%;
   background-color: white;
   color: rgb(74, 74, 223);
-  height: 60%;
+  height: 57%;
   border: 2px solid rgb(74, 74, 223);;
 }
 
@@ -92,7 +93,7 @@ body {
   margin-bottom: 5%;
   width: 82%;
   height: 20%;
-  font-size: 1.2em;
+  font-size: 1.2vw;
   font-weight: bold;
   color: rgb(74, 74, 223);
   background-color: white;
@@ -152,6 +153,7 @@ h3.sidebarlogo {
   color: rgb(74, 74, 223);
   background-color: white;
   border-radius: 10px;
+  font-size: 1.2vw;
 }
 
 .uploadbutton:hover {
@@ -184,7 +186,37 @@ h3.sidebarlogo {
 }
 
 .analyzescreenheadertitle {
-  padding-right: 73%;
+  width: 50%;
+}
+
+.analyzescreenheaderbutton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 2%;
+  width: 50%
+}
+
+.thresholdsetter {
+  display: flex;
+  align-items: center;
+  column-gap: 1%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 5%;
+}
+
+.thresholdbutton {
+  color: rgb(74, 74, 223);
+  background-color: white;
+  border: 2px solid rgb(74, 74, 223);
+  border-radius: 4px;
+}
+
+.thresholdbutton:hover {
+  color: white;
+  background-color: rgb(74, 74, 223);
+  border: 2px solid rgb(74, 74, 223);
 }
 
 .updatescreenlist {
@@ -194,7 +226,7 @@ h3.sidebarlogo {
   height: 62vh;
   padding: 0;
   overflow-y: scroll;
-  border: 3px solid rgb(74, 74, 223);
+  border: 2px solid rgb(74, 74, 223);
   border-radius: 5px;
 }
 
@@ -240,20 +272,39 @@ h3.sidebarlogo {
   background-color: white;
   margin: auto;
   width: 90%;
-  height: 800px;
+  height: 85vh;
   border: 3px solid rgb(74, 74, 223);
   overflow-y: scroll;
   padding: 2%;
+  border-radius: 4px;
+}
+
+.sharingdifferenceslistcontainer {
+  height: 95vh;
 }
 
 .sharingdifferenceslist {
   background-color: white;
   margin: auto;
   width: 90%;
-  height: 800px;
+  height: 85vh;
   border: 3px solid rgb(74, 74, 223);
   overflow-y: scroll;
   padding: 2%;
+  margin-bottom: 2%;
+  border-radius: 4px;
+}
+
+.comparesnapshotlist {
+  background-color: white;
+  margin: auto;
+  width: 90%;
+  height: 70vh;
+  border: 3px solid rgb(74, 74, 223);
+  overflow-y: scroll;
+  padding: 2%;
+  margin-bottom: 2%;
+  border-radius: 4px;
 }
 
 .exitbutton {
@@ -264,8 +315,32 @@ h3.sidebarlogo {
   filter: invert(30%);
 }
 
+.logoutbutton {
+  display:flex;
+  width: 80%;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 15%;
+}
+
 .querybuilderlist {
   background-color: #ededed;
   height: 300px;
   overflow-y: scroll;
+}
+
+.comparemodalbody {
+  padding-left: 5%;
+}
+
+.comparemodalsubtitle {
+  font-size: 1.3vw;
+  margin-bottom: 1%;
+}
+
+.sortdropdown {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
 }

@@ -39,7 +39,7 @@ export class DriveFolder extends DriveFile {
                 mime_type: this.mime_type,
                 type: "FOLDER",
                 permissions: this.permissions.map(p => p.getModel()),
-                children: fileArr.map((f: any) => f ? f._id : null)
+                children: this.children.map((f: any) => f ? (f._id as Types.ObjectId) : null)
             }
         )
 

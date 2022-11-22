@@ -1,4 +1,5 @@
 import apis from "../api";
+import userapis from "../api/user.js"
 
 //THUNKS
 export function getAllSnapshotInfoFromBackend() {
@@ -12,6 +13,7 @@ export function getAllSnapshotInfoFromBackend() {
           let allSnapshotInfo = response.data.snapshotInfo.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
           console.log(allSnapshotInfo);
           dispatch(getSnapshotFromBackend(allSnapshotInfo[0]._id));
+          dispatch(getRecentSearchesFromBackend());
         }
         else {
           console.log("Aborting fetch.");
@@ -47,7 +49,14 @@ export function getSnapshotFromBackend(id) {
 export function getFilteredSnapshotFromBackend(id, query) {
   return async (dispatch) => {
     return apis.getFilteredSnapshot({query: query, snapshot_id: id}).then(response => {
-      if(response.status === 200) {dispatch(setSearchResults(response));}
+      if(response.status === 200) {
+        dispatch(setSearchResults(response));
+        userapis.saveSearch({query: query}).then(response => {
+          if (response.status === 200) {
+            dispatch(getRecentSearchesFromBackend());
+          }
+        })
+      }
     });
   };
 }
@@ -68,9 +77,43 @@ export function addAccessControlPolicyToBackend() {
   };
 }
 
+export function getRecentSearchesFromBackend() {
+  return async (dispatch) => {
+    return userapis.getRecentSearches().then(response => {
+      if(response.status === 200) {dispatch(setRecentSearches(response));}
+    });
+  };
+}
+
+export function getDeviantSharingResultsFromBackend(threshold, id) {
+  return async (dispatch) => {
+    console.log("request_dev sharing : ",id)
+    return apis.performDeviantSharing({threshold: threshold, id: id}).then(response => {
+      if(response.status === 200) {dispatch(setDeviantSharingResults(response));}
+    });
+  };
+}
+
+export function getSharingDifferencesResultsFromBackend(id) {
+  return async (dispatch) => {
+    console.log("request_diff sharing : ",id)
+    return apis.performSharingDifferences({id: id}).then(response => {
+      if(response.status === 200) {dispatch(setSharingDifferencesResults(response));}
+    });
+  };
+}
+
+export function performSnapshotCompareFromBackend(id1, id2) {
+  return async (dispatch) => {
+    console.log("request_sharing changes1 : ", id1, "request_sharing changes2 : ", id2)
+    return apis.performSnapshotComparison({id1: id1, id2: id2}).then(response => {
+      if(response.status === 200) {dispatch(setSnapshotCompareResults(response));}
+    });
+  };
+}
+
 //ACTIONS
 const setAllSnapshotInfo = (response) => {
-  console.log(response);
   return {
       type: 'SET_ALL_SNAPSHOT_INFO',
       payload: response.data.snapshotInfo
@@ -78,7 +121,6 @@ const setAllSnapshotInfo = (response) => {
 }
 
 const setSnapshot = (response) => {
-    console.log(response);
     return {
         type: 'SET_SNAPSHOT',
         payload: response.data.fileSnapshot
@@ -86,7 +128,6 @@ const setSnapshot = (response) => {
 }
 
 const setSearchResults = (response) => {
-  console.log(response);
   return {
       type: 'SET_SEARCH_RESULTS',
       payload: response.data
@@ -125,6 +166,18 @@ const showModal = () => {
 const hideModal = () => {
   return {
     type: 'HIDE_MODAL'
+  }
+}
+
+const showCompareModal = () => {
+  return {
+    type: 'SHOW_COMPARE_MODAL'
+  }
+}
+
+const hideCompareModal = () => {
+  return {
+    type: 'HIDE_COMPARE_MODAL'
   }
 }
 
@@ -167,14 +220,59 @@ const sortByDateNew = () => {
   }
 }
 
+const setRecentSearches = (response) => {
+  return {
+    type: 'SET_RECENT_SEARCHES',
+    payload: response.data.queries
+  }
+}
+
+const clearUpdateScreen = () => {
+  return {
+    type: "CLEAR_UPDATE_SCREEN"
+  }
+}
+
+const clearAnalyzeScreen = () => {
+  return {
+    type: "CLEAR_ANALYZE_SCREEN"
+  }
+}
+
+const setDeviantSharingResults = (response) => {
+  return {
+    type: "SET_DEVIANT_SHARING_RESULTS",
+    payload: response.data
+  }
+}
+
+const setSharingDifferencesResults = (response) => {
+  return {
+    type: "SET_SHARING_DIFFERENCES_RESULTS",
+    payload: response.data
+  }
+}
+
+const setSnapshotCompareResults = (response) => {
+  return {
+    type: "SET_COMPARE_SNAPSHOT_RESULTS",
+    payload: response.data
+  }
+}
+
 export {
   showModal,
   hideModal,
+  showCompareModal,
+  hideCompareModal,
   selectFile,
   unselectFile,
   stageFiles,
   setFilter,
   sortByName,
   sortByDateOld,
-  sortByDateNew
+  sortByDateNew,
+  clearUpdateScreen,
+  clearAnalyzeScreen,
+  setDeviantSharingResults,
 }

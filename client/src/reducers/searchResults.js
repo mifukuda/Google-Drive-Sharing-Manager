@@ -8,6 +8,8 @@ const searchResultsReducer = (state = {}, action) => {
             return {...state, query_results: state.query_results.slice().sort((a, b) => { return new Date(b.date_modified) - new Date(a.date_modified); })};
         case 'SORT_BY_DATE_NEW':
             return {...state, query_results: state.query_results.slice().sort((a, b) => { return new Date(a.date_modified) - new Date(b.date_modified); })};
+        case 'LOG_OUT':
+            return {};
         default:
             return state;
     }

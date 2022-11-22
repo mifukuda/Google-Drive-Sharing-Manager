@@ -1,8 +1,8 @@
-const showModalReducer = (state = false, action) => {
+const showCompareModalReducer = (state = false, action) => {
     switch(action.type) {
-        case 'SHOW_MODAL':
+        case 'SHOW_COMPARE_MODAL':
             return true;
-        case 'HIDE_MODAL':
+        case 'HIDE_COMPARE_MODAL':
             return false;
         case 'LOG_OUT':
             return false;
@@ -11,4 +11,4 @@ const showModalReducer = (state = false, action) => {
     }
 }
 
-export default showModalReducer;
+export default showCompareModalReducer;

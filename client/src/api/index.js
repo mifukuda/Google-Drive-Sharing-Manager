@@ -7,10 +7,13 @@ const api = axios.create({
 
 // Get info of all user's snapshots
 export const getAllSnaphotInfo = () => api.get('/getinfo/');
+
 // Create snapshot
 export const createSnapshot = () => api.get('/create/');
+
 // Get default snapshot
 export const getSnapshot = (payload) => api.post('/get/', payload);
+
 // Apply filter to snapshot
 export const getFilteredSnapshot = (payload) => api.post('/query/', payload);
 
@@ -23,6 +26,8 @@ export const updatePermissions = (payload) => api.post('/update/', payload);
 
 // Analyze
 export const performDeviantSharing = (payload) => api.post('/analyze/deviantSharing', payload);
+export const performSharingDifferences = (payload) => api.post('/analyze/sharingDifferences', payload);
+export const performSnapshotComparison = (payload) => api.post('/analyze/sharingChanges', payload)
 
 const apis = {
     createSnapshot,
@@ -31,7 +36,10 @@ const apis = {
     getFilteredSnapshot,
     getAccessControlPolicies,
     addAccessControlPolicy,
-    updatePermissions
+    updatePermissions,
+    performDeviantSharing,
+    performSharingDifferences,
+    performSnapshotComparison
 }
 
 export default apis;

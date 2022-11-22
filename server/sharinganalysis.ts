@@ -47,15 +47,29 @@ export const analyzeDeviantSharing  = (selection: DriveFile[], threshold: number
 export const calculateSharingChanges = (selection1: DriveFile[], selection2: DriveFile[]) => {
     let idToPermissions : Map<string, [Permission[], Permission[]]> = new Map<string, [Permission[], Permission[]]>()
     
+    selection1.forEach((file: DriveFile) => file.permissions.forEach(permission => {
+        permission._id = "0"        
+    }))
+    selection2.forEach((file: DriveFile) => file.permissions.forEach(permission => {
+        permission._id = "0"        
+    }))
+
     selection2.forEach((file: DriveFile) => idToPermissions.set(file.driveId, [file.permissions.sort(), []]))
     selection1.forEach((file: DriveFile) => {
         if(idToPermissions.has(file.driveId)){
-            JSON.stringify(file.permissions.sort()) === JSON.stringify(idToPermissions.get(file.driveId))
+            JSON.stringify(file.permissions.sort()) === JSON.stringify((idToPermissions.get(file.driveId) as [Permission[], Permission[]])[0])
             ? idToPermissions.delete(file.driveId)
             : idToPermissions.set(file.driveId, [(idToPermissions.get(file.driveId) as [Permission[], Permission[]])[0], file.permissions.sort()])        
         }
     })
-    return idToPermissions
+    let fileToPermissions : Map<DriveFile, [Permission[], Permission[]]> = new Map<DriveFile, [Permission[], Permission[]]>()
+    selection2.forEach((file: DriveFile) => {
+        if(idToPermissions.has(file.driveId)){
+            file.parent = null
+            fileToPermissions.set(file, (idToPermissions.get(file.driveId) as [Permission[], Permission[]]))
+        }
+    })
+    return fileToPermissions
 }
 
 export const calculatePermissionDifferences = (selection: DriveFile[]) => {

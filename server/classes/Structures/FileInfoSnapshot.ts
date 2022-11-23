@@ -37,7 +37,7 @@ export class FileInfoSnapshot {
                 child.parent = (file as DriveFolder)
             })
         })
-        return new FileInfoSnapshot(snapshot._id.toString(), roots, snapshot.createdAt, snapshot.updatedAt)
+        return new FileInfoSnapshot(snapshot._id.toString(), roots, snapshot.updatedAt, snapshot.createdAt)
     }
 
     applyQuery(query: Query): DriveFile[] {

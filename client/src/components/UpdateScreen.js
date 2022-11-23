@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {stageFiles, clearUpdateScreen} from "../actions";
 import StagedFileList from './StagedFileList';
 import PermissionAdder from './PermissionAdder';
+import UpdateStatusModal from './UpdateStatusModal';
 import {Button, Form} from 'react-bootstrap';
 import {updatePermissions} from '../api';
 
@@ -18,6 +19,8 @@ export default function UpdateScreen() {
     const removeWriters = useSelector(state => state.removeWriters);
     const removeCommenters = useSelector(state => state.removeCommenters);
     const [unshare, setUnshare] = useState(false);
+    const [showStatusModal, setShowStatusModal] = useState(false);
+    const [updateStatus, setUpdateStatus] = useState('');
     const dispatch = useDispatch();
 
     //Stage files
@@ -25,6 +28,11 @@ export default function UpdateScreen() {
         dispatch(stageFiles(selectedFiles));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // Show modal when status changes
+    useEffect(() => {
+        if(updateStatus !== '') setShowStatusModal(true);
+     }, [updateStatus])
 
     // Navigate to home page when close button is pressed
     function handleClose(event) {
@@ -59,10 +67,13 @@ export default function UpdateScreen() {
                 operation: operation,
                 emails: emails 
             }
-            console.log(body);
             // await - MongoDB version control 
             let response = await updatePermissions(body);
-            console.log(response);
+            console.log(response)
+            if(response.status !== 200) {
+                setUpdateStatus("Error: updates not successful.");
+                return;
+            }
         }
         if(unshare) {
             let unshareResponse = await updatePermissions({
@@ -72,7 +83,12 @@ export default function UpdateScreen() {
                 emails: [] 
             });
             console.log(unshareResponse);
+            if(unshareResponse.status !== 200) {
+                setUpdateStatus("Error: updates not successful.");
+                return;
+            }
         }
+        setUpdateStatus("Permissions were successfully updated for all files.");
     }
 
     return (
@@ -85,6 +101,7 @@ export default function UpdateScreen() {
                 </div>
             </div>
             <div className="analyzescreencenter">
+                <UpdateStatusModal show={showStatusModal} status={updateStatus} setShow={setShowStatusModal}/>
                 <h2 className="analyzescreensubtitle">Staged Files &#128194;</h2>
                 <div className="updatescreenlist">
                     <StagedFileList/>
@@ -115,7 +132,8 @@ export default function UpdateScreen() {
                 </div>
                 <div className="updatescreenoptions">
                     <Button style={{marginRight:"2%", padding:"1%"}} variant="secondary" onClick={(event) => handleClose(event)}>Cancel</Button>
-                    <Button style={{padding:"1%"}} onClick={() => handleSubmit()}>Submit Changes</Button>
+                    <Button disabled={selectedFiles.length === 0 || (addReaders.length === 0 && removeReaders.length === 0 && addWriters.length === 0 && removeWriters.length === 0 && addCommenters.length === 0 && removeCommenters.length === 0 && !unshare)}
+                        style={{padding:"1%"}} onClick={() => handleSubmit()}>Submit Changes</Button>
                 </div>
             </div>
         </div>

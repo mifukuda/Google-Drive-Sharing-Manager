@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import {stageFiles, clearUpdateScreen} from "../actions";
 import StagedFileList from './StagedFileList';
 import PermissionAdder from './PermissionAdder';
-import {Button} from 'react-bootstrap';
+import {Button, Form} from 'react-bootstrap';
 import {updatePermissions} from '../api';
 
 export default function UpdateScreen() {
@@ -17,7 +17,7 @@ export default function UpdateScreen() {
     const removeReaders = useSelector(state => state.removeReaders);
     const removeWriters = useSelector(state => state.removeWriters);
     const removeCommenters = useSelector(state => state.removeCommenters);
-    const unshare = useSelector(state => state.unshare);
+    const [unshare, setUnshare] = useState(false);
     const dispatch = useDispatch();
 
     //Stage files
@@ -32,6 +32,10 @@ export default function UpdateScreen() {
         navigate("/home");
     }
 
+    function handleChangeUnshare() {
+        setUnshare(!unshare);
+    }
+
     // Submit updates
     async function handleSubmit() {
         // Map of operations to list of user-provided emails
@@ -40,8 +44,7 @@ export default function UpdateScreen() {
             "add_commenters": addCommenters, 
             "remove_readers": removeReaders, 
             "remove_writers": removeWriters, 
-            "remove_commenters": removeCommenters,
-            "unshare": unshare
+            "remove_commenters": removeCommenters
         }  
         // Get file ID's for backend request
         const ids =  selectedFiles.map(file => file._id);
@@ -60,6 +63,15 @@ export default function UpdateScreen() {
             // await - MongoDB version control 
             let response = await updatePermissions(body);
             console.log(response);
+        }
+        if(unshare) {
+            let unshareResponse = await updatePermissions({
+                snapshotID: currentSnapshot._id,
+                fileDbIDs: ids, 
+                operation: "unshare",
+                emails: [] 
+            });
+            console.log(unshareResponse);
         }
     }
 
@@ -91,7 +103,14 @@ export default function UpdateScreen() {
                     <hr className="updatescreenbreak"/>
                     <PermissionAdder users={removeCommenters} addType="PUSH_REMOVE_COMMENTER" removeType="PULL_REMOVE_COMMENTER" role="Remove Commenters"/>
                     <hr className="updatescreenbreak"/>
-                    <PermissionAdder users={unshare} addType="PUSH_UNSHARE" removeType="PULL_UNSHARE" role="Unshare"/>
+                    <div className="permissionadder">
+                        <Form.Check 
+                            type='checkbox'
+                            label='Unshare files.'
+                            checked={unshare}
+                            onChange={() => handleChangeUnshare()}
+                        />
+                    </div>
                     <hr className="updatescreenbreak"/>
                 </div>
                 <div className="updatescreenoptions">

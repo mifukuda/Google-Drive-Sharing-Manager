@@ -4,6 +4,8 @@ const showModalReducer = (state = false, action) => {
             return true;
         case 'HIDE_MODAL':
             return false;
+        case 'CLEAR_UPDATE_SCREEN':
+            return false;
         case 'LOG_OUT':
             return false;
         default:

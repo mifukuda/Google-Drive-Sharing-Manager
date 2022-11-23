@@ -96,10 +96,10 @@ USER ENDPOINTS (all endpoints below are prepended with /user/)
 GROUP MEMBERSHIP SNAPSHOT ENDPOINTS (all endpoints below are prepended with /group/)
     POST /uploadgroupsnapshot (Implemented)
         description: parses html members page and saves emails to database
-        input_body: { name: <string>, memberlist: <file> }
+        input_body: { name: <file name>, group_name: <string>, group_email: <string> memberlist: <file> }
         response_body: { id: <string> }
     
     POST /getgroupmembers (NOT Implemented)
         description: returns list of group members given group name
-        input_body: { snapshot_id: <string>, group_name: <string> }
+        input_body: { snapshot_id: <string>, group_email: <string> }
         response_body: { members: [<string>, ...] }

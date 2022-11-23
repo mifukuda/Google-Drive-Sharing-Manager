@@ -81,16 +81,17 @@ const updateSnap = async (req: Request, res: Response) => {
             for (let j = 0; j < emails.length; j++) {
                 let email = emails[j]
                 let response = await drive.addPermission(fileDriveID, email, role)
-                let modifyingDb: boolean = false
+                let mutatingDb: boolean = false
                 fileModel?.permissions.forEach(p => {
                     if (p.drive_id === response.data.id) {
                         p.role = googleDrivePermissionToOurs[response.data.role]
-                        modifyingDb = true
+                        mutatingDb = true
                     }
                 })
-                if (!modifyingDb) {
-                    let emailAddress = response.config.data.emailAddress
-                    fileModel?.permissions.push(new Models.PermissionModel({ drive_id: response.data.id, grantedTo: new driveUserModel({ email: emailAddress, display_name: emailAddress }), role: googleDrivePermissionToOurs[response.data.role]}))
+                if (!mutatingDb) {
+                    console.log("response = ", response)
+                    let { emailAddress, displayName }  = response.config.data
+                    fileModel?.permissions.push(new Models.PermissionModel({ drive_id: response.data.id, grantedTo: new driveUserModel({ email: emailAddress, display_name: displayName}), role: googleDrivePermissionToOurs[response.data.role]}))
                 }
                 await snapshotModel?.save()
             }

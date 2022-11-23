@@ -154,6 +154,7 @@ export class GoogleDriveAdapter extends DriveAdapter {
         let response = await drive.permissions.create({
             auth: this.auth_client,
             fileId: fileDriveID,
+            fields: 'emailAddress, displayName, id, role',
             requestBody: {
                 type: "user",
                 emailAddress: email,

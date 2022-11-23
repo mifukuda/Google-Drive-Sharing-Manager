@@ -1,8 +1,6 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useSelector} from 'react-redux';
 import {getGroupMembers} from '../api/group.js';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
 
 export default function PermissionElement(props) {
     const errorMessage = (<p className="groupmemberelement">You have not uploaded a snapshot for this group yet!</p>);
@@ -13,31 +11,32 @@ export default function PermissionElement(props) {
     const [body, setBody] = useState(errorMessage);
     const [showBody, setShowBody] = useState(false);
 
+    useEffect(() => {
+        if(group === undefined) {
+            setBody(errorMessage);
+        }
+        else {
+            setBody(buildGroupList());
+        }
+    }, [group]);
+
     function handleDisplayGroup() {
-        setShowBody(!showBody);
-        if(showBody) {
-            if(group === undefined) {
-                getGroupMembers({snapshot_id: currentSnapshot._id, group_name: element.granted_to.email}).then(response => {
-                    if(response.status === 200) {
-                        console.log(response.data);
-                        setGroup(response.data.members);
-                        setBody(buildGroupList());
-                    }
-                    else {
-                        setBody(errorMessage);
-                    }
-                });
-            }
-            else {
-                setBody(buildGroupList());
-            }
-        }    
+        if(!showBody && group === undefined) {
+            getGroupMembers({snapshot_id: currentSnapshot._id, group_email: element.granted_to.email}).then(response => {
+                if(response.status === 200) {
+                    console.log(response.data.members);
+                    setGroup(response.data.members);
+                }
+            });
+        }
+        setShowBody(!showBody);    
     }
 
     function buildGroupList() {
+        if (group === undefined) return;
         let memberList = [<p className="groupmemberelement" key={0}><b>Members:</b></p>]
         for(let i = 0; i < group.length; i++) {
-            memberList.push(<p className="groupmemberelement" key={i + 1}>{i + 1} memberList[i]</p>);
+            memberList.push(<p className="groupmemberelement" key={i + 1}>{i + 1} {group[i]}</p>);
         }
         return memberList;
     }

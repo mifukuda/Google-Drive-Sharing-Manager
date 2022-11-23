@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import CompareSnapshotCard from './CompareSnapshotCard';
 
-export default function AnalyzeScreen() {
+export default function CompareScreen() {
     let navigate = useNavigate();
     const dispatch = useDispatch();
     const data = useSelector(state => state.compareSnapshotResults);

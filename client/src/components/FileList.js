@@ -2,7 +2,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import FileCard from './FileCard';
 
-export default function HomeScreen(props) {
+export default function FileList(props) {
     const snapshot = useSelector(state => state.currentSnapshot);
     const searchResults = useSelector(state => state.searchResults);
     const filter = useSelector(state => state.filter);

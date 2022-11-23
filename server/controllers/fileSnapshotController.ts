@@ -90,8 +90,8 @@ const updateSnap = async (req: Request, res: Response) => {
                 })
                 if (!mutatingDb) {
                     console.log("response = ", response)
-                    let { emailAddress, displayName }  = response.config.data
-                    fileModel?.permissions.push(new Models.PermissionModel({ drive_id: response.data.id, grantedTo: new driveUserModel({ email: emailAddress, display_name: displayName}), role: googleDrivePermissionToOurs[response.data.role]}))
+                    let { id, role, emailAddress, displayName }  = response.data
+                    fileModel?.permissions.push(new Models.PermissionModel({ drive_id: id, grantedTo: new driveUserModel({ email: emailAddress, display_name: displayName}), role: googleDrivePermissionToOurs[role]}))
                 }
                 await snapshotModel?.save()
             }

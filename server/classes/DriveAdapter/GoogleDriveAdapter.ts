@@ -58,6 +58,7 @@ export class GoogleDriveAdapter extends DriveAdapter {
                 pageToken: nextPageToken,
                 includeItemsFromAllDrives: true,
                 supportsAllDrives: true,
+                corpora: 'allDrives',
                 fields: 'nextPageToken, files(name, id, mimeType, createdTime, modifiedTime, permissions, parents, owners, sharingUser)',
             })
             allFiles = allFiles.concat(response.data.files)

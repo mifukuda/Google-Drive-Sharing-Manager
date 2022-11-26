@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
-import {Button} from 'react-bootstrap';
 import CompareSnapshotCard from './CompareSnapshotCard';
 
 export default function CompareScreen() {
@@ -19,7 +18,7 @@ export default function CompareScreen() {
     function buildList(results) {
         for(let i = 0; i < results.instances.length; i++) {
             let instance = results.instances[i];
-            cards.push(<CompareSnapshotCard file={instance.file} oldPermissions={instance.oldPermissions} newPermissions={instance.newPermissions}/>)
+            cards.push(<CompareSnapshotCard key={i} file={instance.file} oldPermissions={instance.oldPermissions} newPermissions={instance.newPermissions}/>)
         }
     }
 

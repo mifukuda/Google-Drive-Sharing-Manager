@@ -11,7 +11,7 @@ export default function FileCard(props) {
     //const selectedFiles = useSelector(state => state.selectedFiles);
     //const [isChecked, setIsChecked] = useState(selectedFiles.some(e => e.id == file.id));
     const [isChecked, setIsChecked] = useState(staged);
-    const roles = ["Viewer", "Commenter", "Editor", "Owner"];
+    //const roles = ["Viewer", "Commenter", "Editor", "Owner"];
 
     function handleCheck(event) {
         if(isChecked) {
@@ -61,19 +61,33 @@ export default function FileCard(props) {
         }
     }
 
+    let checkbox = <Form.Check
+        type="checkbox"
+        id="checkbox"
+        style={{marginRight:"16px"}}
+        onClick={(event) => handleCheck(event)}
+        onChange={() => {}}
+        checked={isChecked}
+        // defaultChecked={staged}
+    />
+
+    if(staged) {
+        checkbox = <Form.Check
+            type="checkbox"
+            id="checkbox"
+            style={{marginRight:"16px"}}
+            onClick={(event) => handleCheck(event)}
+            onChange={() => {}}
+            // checked={isChecked}
+            defaultChecked={staged}
+        />
+    }
+
     return (
         <Accordion style={style}>
             <Accordion.Item eventKey="0">
                 <Accordion.Header>
-                    <Form.Check
-                        type="checkbox"
-                        id="checkbox"
-                        style={{marginRight:"16px"}}
-                        onClick={(event) => handleCheck(event)}
-                        onChange={() => {}}
-                        // checked={isChecked}
-                        defaultChecked={staged}
-                    />
+                    {checkbox}
                     {img}
                     <div style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>
                         {file.name}

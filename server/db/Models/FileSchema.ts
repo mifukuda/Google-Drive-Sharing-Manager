@@ -6,6 +6,7 @@ export const FileSchema = new Schema(
     {
         drive_id: { type: String, required: true },
         name: { type: String, required: true },
+        path: {type: String},
         owner: driveUserSchema,
         sharedBy: driveUserSchema,
         mime_type: { type: String},

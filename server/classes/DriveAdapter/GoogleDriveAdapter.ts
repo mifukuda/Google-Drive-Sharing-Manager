@@ -115,10 +115,10 @@ export class GoogleDriveAdapter extends DriveAdapter {
                 return new Permission(new Types.ObjectId().toString(), p.id, granted_to, googleDrivePermissionToOurs[p.role])
             }) : []
             if (mimeType === "application/vnd.google-apps.folder") {
-                idToDriveFiles.set(file.id, [new DriveFolder(new Types.ObjectId().toString(), file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, []), parentID])
+                idToDriveFiles.set(file.id, [new DriveFolder(new Types.ObjectId().toString(), file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, [], ""), parentID])
             }
             else {
-                idToDriveFiles.set(file.id, [new DriveFile(new Types.ObjectId().toString(), file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType), parentID])
+                idToDriveFiles.set(file.id, [new DriveFile(new Types.ObjectId().toString(), file.id, null, file.createdTime, file.modifiedTime, file.name, owner, permissions, shared_by, mimeType, ""), parentID])
             }
         })
     
@@ -135,6 +135,30 @@ export class GoogleDriveAdapter extends DriveAdapter {
             }
         })
     
+        // set paths of each node
+        function setPath(f: DriveFile){
+            let path = f.parent?.path
+            if(path === undefined){ //root
+                path = ""
+            }
+            else{
+                path += f.name
+            }
+
+            f.path = path as string
+
+            f = f as DriveFolder
+            if(f instanceof DriveFolder){
+                f.path += "/"
+                for(let i = 0; i < f.children.length; i++){
+                    setPath(f.children[i])
+                }
+            }
+        }
+        for(let i = 0; i < roots.length; i++){
+            setPath(roots[i])
+        }
+
         return roots
     }
 

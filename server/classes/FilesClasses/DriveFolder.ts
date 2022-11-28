@@ -16,9 +16,10 @@ export class DriveFolder extends DriveFile {
         permissions: Permission[], 
         shared_by: User | null, //| Group 
         mime_type: string,
-        public children: DriveFile[]
+        public children: DriveFile[],
+        public path: string
     ) {
-        super(_id, driveId, parent, date_created, date_modified, name, owner, permissions, shared_by, mime_type)
+        super(_id, driveId, parent, date_created, date_modified, name, owner, permissions, shared_by, mime_type, path)
     }
 
     getSubtree(): DriveFile[] {
@@ -34,6 +35,7 @@ export class DriveFolder extends DriveFile {
             {
                 drive_id: this.driveId,
                 name: this.name,
+                path: this.path,
                 owner: this.owner?.getModel(),
                 sharedBy: this.shared_by?.getModel(),
                 mime_type: this.mime_type,

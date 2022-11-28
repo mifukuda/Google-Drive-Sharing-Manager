@@ -14,7 +14,8 @@ export class DriveFile {
         public owner: User | null, //| Group
         public permissions: Permission[],
         public shared_by: User | null, // Group
-        public mime_type: string
+        public mime_type: string,
+        public path: string
     ) {}
 
     getSubtree(): DriveFile[] {
@@ -26,6 +27,7 @@ export class DriveFile {
             {
                 drive_id: this.driveId,
                 name: this.name,
+                path: this.path,
                 owner: this.owner?.getModel(),
                 sharedBy: this.shared_by?.getModel(),
                 mime_type: this.mime_type,

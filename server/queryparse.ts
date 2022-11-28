@@ -1,6 +1,6 @@
 // import { stringify } from "querystring"
 
-let regexp = /(-?\(*(?:(?:folder|inFolder|drive):(?:(?:["][^"]+["])|(?:(?:['z][^']+[']))|\S+))\)*|(?:or|and))/g 
+let regexp = /(-?\(*(?:(?:drive|owner|creator|from|to|readable|writable|sharable|name|inFolder|folder|path|sharing):(?:(?:["][^"]+["])|(?:(?:['z][^']+[']))|\S+))\)*|(?:or|and))/g 
 
 const conjunctions = ["or", "and"];
 const keywords = ["drive", "owner", "creator", "from", "to", "readable", "writable", "sharable", 
@@ -21,7 +21,6 @@ export const parseQuery = (queryString : string) => {
         }
     }   
     
-    let separatedParentheses = []
     // tokenize parentheses
     for(let i = 0; i < tokens.length; i++){
         let parens: string[] = []

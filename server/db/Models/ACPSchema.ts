@@ -6,7 +6,8 @@ export const ACPSchema = new Schema(
         allowedReaders: [driveUserSchema],
         deniedReaders: [driveUserSchema],
         allowedWriters: [driveUserSchema],
-        deniedWriters: [driveUserSchema]
+        deniedWriters: [driveUserSchema],
+        isGroup: {type: Boolean, required: true},
     },
     {
         timestamps: true

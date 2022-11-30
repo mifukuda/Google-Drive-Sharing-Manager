@@ -22,7 +22,7 @@ export class UserProfile {
         let userProfile = new Models.UserModel({
             driveId: driveId,
             driveToken: driveToken,
-            driveType: "GOOGLE",
+            driveType: driveType,
             displayName: name,
             email: email, 
             fileSnapshots: [],

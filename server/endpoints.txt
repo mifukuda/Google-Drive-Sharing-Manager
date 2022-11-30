@@ -52,7 +52,14 @@ FILE INFO SNAPSHOT ENDPOINTS (all endpoints below are prepended with /fileSnapsh
             snapshot_id: <string>,
             acp_ids: [<string>, ...]
         }
-        response body: [{ file: <file name>, violation: }, ...] # needs to be fixed
+        response body: [{
+            id: <string>,
+            violations: [{
+                set: <AR or AW or DR or DW>, 
+                file_name: <string>,
+                violating_permission: <permissionSchema>
+            }]
+        }, ...] 
         success status: 200
         error status: 400
 

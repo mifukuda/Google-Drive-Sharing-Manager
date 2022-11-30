@@ -172,25 +172,17 @@ const checkPolicies = async (req: Request, res: Response) => {
         let DW: Set<string> = new Set(acp.DW)
         queried_files.forEach((file: DriveFile) => {
             file.permissions.forEach((p: Permission) => {
-                if (DR.has(p.granted_to.email)) { // if someone is in DR, they can't be a reader or higher
-                    if (p.role >= googleDrivePermissionToOurs["reader"]) {
+                if (p.role >= googleDrivePermissionToOurs["reader"]) {
+                    if (DR.size > 0 && DR.has(p.granted_to.email))  // if someone is in DR, they can't be a reader or higher
                         violations.push({ set: "DR", file_name: file.name, violating_permission: p })
-                    }
-                }
-                if (DW.has(p.granted_to.email)) { // if someone is in DW, they CAN be a reader, but NOT a writer or higher
-                    if (p.role >= googleDrivePermissionToOurs["writer"]) {
-                        violations.push({ set: "DW", file_name: file.name, violating_permission: p })
-                    }
-                }
-                if (!AR.has(p.granted_to.email)) {
-                    if (p.role >= googleDrivePermissionToOurs["reader"]) {
+                    if (AR.size > 0 && !AR.has(p.granted_to.email)) 
                         violations.push({ set: "AR", file_name: file.name, violating_permission: p })
-                    }
                 }
-                if (!AW.has(p.granted_to.email)) {
-                    if (p.role >= googleDrivePermissionToOurs["writer"]) {
+                if (p.role >= googleDrivePermissionToOurs["writer"]) {
+                    if (DW.size > 0 && DW.has(p.granted_to.email))  // if someone is in DW, they CAN be a reader, but NOT a writer or higher
+                        violations.push({ set: "DW", file_name: file.name, violating_permission: p })
+                    if (AW.size > 0 && !AW.has(p.granted_to.email)) 
                         violations.push({ set: "AW", file_name: file.name, violating_permission: p })
-                    }
                 }
             })
         })

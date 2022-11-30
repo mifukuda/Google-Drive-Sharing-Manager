@@ -18,8 +18,8 @@ export const getSnapshot = (payload) => api.post('/get/', payload);
 export const getFilteredSnapshot = (payload) => api.post('/query/', payload);
 
 // Get all access control policies
-export const getAccessControlPolicies = () => api.get(`/getAccessControlPolicies/`); 
-export const addAccessControlPolicy = () => api.post(`/addAccessControlPolicy/`); 
+//export const getAccessControlPolicies = () => api.get(`/getAccessControlPolicies/`); 
+//export const addAccessControlPolicy = () => api.post(`/addAccessControlPolicy/`); 
 
 // Update file permissions
 export const updatePermissions = (payload) => api.post('/update/', payload);
@@ -34,8 +34,8 @@ const apis = {
     getAllSnaphotInfo,
     getSnapshot,
     getFilteredSnapshot,
-    getAccessControlPolicies,
-    addAccessControlPolicy,
+    //getAccessControlPolicies,
+    //addAccessControlPolicy,
     updatePermissions,
     performDeviantSharing,
     performSharingDifferences,

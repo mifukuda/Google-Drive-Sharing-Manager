@@ -8,9 +8,17 @@ const api = axios.create({
 export const getRecentSearches = () => api.get('/getsavedqueries');
 export const saveSearch = (payload) => api.post('/savequery', payload)
 
+// Access control policies
+export const getAccessControlPolicies = () => api.get(`/getallacps/`); 
+export const addAccessControlPolicy = (payload) => api.post(`/addacp/`, payload); 
+export const deleteAccessControlPolicy = (payload) => api.post(`/deleteacp/`, payload); 
+
 const userapis = {
     getRecentSearches,
-    saveSearch
+    saveSearch,
+    getAccessControlPolicies,
+    addAccessControlPolicy,
+    deleteAccessControlPolicy
 }
 
 export default userapis;

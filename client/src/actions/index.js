@@ -63,16 +63,25 @@ export function getFilteredSnapshotFromBackend(id, query) {
 
 export function getAccessControlPoliciesFromBackend() {
   return async (dispatch) => {
-    return apis.getAccessControlPolicies().then(response => {
+    return userapis.getAccessControlPolicies().then(response => {
+      console.log("HELLO:" + response );
       if(response.status === 200) {dispatch(setAccessControlPolicies(response));}
     });
   };
 }
 
-export function addAccessControlPolicyToBackend() {
+export function addAccessControlPolicyToBackend(form) {
   return async (dispatch) => {
-    return apis.addAccessControlPolicy().then(response => {
+    return userapis.addAccessControlPolicy(form).then(response => {
       if(response.status === 200) {dispatch(addAccessControlPolicy(response));}
+    });
+  };
+}
+
+export function deleteAccessControlPolicyFromBackend(id) {
+  return async (dispatch) => {
+    return userapis.deleteAccessControlPolicy({acp_id:id}).then(response => {
+      if(response.status === 200) {dispatch(deleteAccessControlPolicy(id));}
     });
   };
 }
@@ -138,7 +147,7 @@ const setAccessControlPolicies = (response) => {
     console.log(response);
     return {
       type: 'SET_ACCESS_CONTROL_POLICIES',
-      payload: response.data
+      payload: response
     }
 }
 
@@ -146,8 +155,16 @@ const addAccessControlPolicy = (response) => {
     console.log(response);
     return {
       type: 'ADD_ACCESS_CONTROL_POLICY',
-      payload: response.data
+      payload: response
     }
+}
+
+const deleteAccessControlPolicy = (response) => {
+  console.log(response);
+  return {
+    type: 'DELETE_ACCESS_CONTROL_POLICY',
+    payload: response
+  }
 }
 
 const setFilter = (text) => {

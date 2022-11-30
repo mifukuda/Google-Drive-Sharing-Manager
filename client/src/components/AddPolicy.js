@@ -1,23 +1,30 @@
-import { useState } from "react"
-import { Button, Container, Form } from "react-bootstrap"
+import { useState } from "react";
+import { useDispatch } from 'react-redux';
+import { addAccessControlPolicyToBackend } from '../actions';
+import { Button, Container, Form } from "react-bootstrap";
 
 export default function AddPolicy({ setAddMode }) {
-    const [formState, setFormState] = useState({name: "", query: "", AR: "", AW: "", DR: "", DW: ""})
+    const [formState, setFormState] = useState({name: "", query: "", AR: "", AW: "", DR: "", DW: "", is_group: false});
+    const dispatch = useDispatch();
 
     function handleFormChange(e) {
         const { name, value } = e.target
         setFormState(prev => ({...prev, [name]: value}))
     }
 
+    function handleSave() {
+        console.log(formState);
+        dispatch(addAccessControlPolicyToBackend(formState));
+    }
+
     return (
         <Container>
-            {formState.AR}
             <Form.Group>
                 <Form.Label>Policy Name:</Form.Label>
                 <Form.Control
                     placeholder="Enter Query"
-                    name="query"
-                    value={formState.query}
+                    name="name"
+                    value={formState.name}
                     onChange={handleFormChange}
                     type="text"
                 />
@@ -73,7 +80,7 @@ export default function AddPolicy({ setAddMode }) {
                 />
             </Form.Group>
             <Button onClick={() => setAddMode(false)}>Discard</Button>
-            <Button>Save</Button>
+            <Button onClick={() => handleSave()}>Save</Button>
         </Container>
     )
 }

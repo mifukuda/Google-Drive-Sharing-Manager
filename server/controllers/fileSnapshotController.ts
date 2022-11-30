@@ -1,7 +1,7 @@
 import { Request, response, Response } from 'express';
 import { GoogleDriveAdapter } from '../classes/DriveAdapter';
 import { DriveRoot, DriveFile, DriveFolder } from '../classes/FilesClasses';
-import { FileInfoSnapshot, googleDrivePermissionToOurs } from '../classes/Structures';
+import { FileInfoSnapshot, googleDrivePermissionToOurs, Permission } from '../classes/Structures';
 import { Query } from '../classes/UserClasses'
 import Models from '../db/Models';
 import { Types } from 'mongoose';
@@ -153,9 +153,49 @@ const updateSnap = async (req: Request, res: Response) => {
 }
 
 const checkPolicies = async (req: Request, res: Response) => {
-    res.status(200).json({ 
-        status: 'OK' 
+    const { snapshot_id, acp_ids } = req.body
+    let response_body: any[] = []
+    let user: any = await getModel(req.cookies.jwt)
+    if (!user) return res.status(400).json({ message: "user not found in database" })
+    let fileSnapshot: FileInfoSnapshot = await FileInfoSnapshot.retrieve(snapshot_id)
+    if (!fileSnapshot) return res.status(400).json({ message: "file snapshot not found in database" })
+    acp_ids.forEach((acp_id: string) => {
+        let violations: any[] = []
+        let acp: any = user.AccessControlPolicy.find((acp: any) => acp._id.toString() === acp_id)
+        if (!acp) console.log("WARNING: ACP not found in database for current user , skipping")
+        let [prop, val] = acp.query.split(":")
+        let queried_files = fileSnapshot.applyQuery(new Query(prop, val))
+        let AR: Set<string> = new Set(acp.AR)
+        let DR: Set<string> = new Set(acp.DR)
+        let AW: Set<string> = new Set(acp.AW)
+        let DW: Set<string> = new Set(acp.DW)
+        queried_files.forEach((file: DriveFile) => {
+            file.permissions.forEach((p: Permission) => {
+                if (DR.has(p.granted_to.email)) { // if someone is in DR, they can't be a reader or higher
+                    if (p.role >= googleDrivePermissionToOurs["reader"]) {
+                        violations.push({ set: "DR", file_name: file.name, violating_permission: p })
+                    }
+                }
+                if (DW.has(p.granted_to.email)) { // if someone is in DW, they CAN be a reader, but NOT a writer or higher
+                    if (p.role >= googleDrivePermissionToOurs["writer"]) {
+                        violations.push({ set: "DW", file_name: file.name, violating_permission: p })
+                    }
+                }
+                if (!AR.has(p.granted_to.email)) {
+                    if (p.role >= googleDrivePermissionToOurs["reader"]) {
+                        violations.push({ set: "AR", file_name: file.name, violating_permission: p })
+                    }
+                }
+                if (!AW.has(p.granted_to.email)) {
+                    if (p.role >= googleDrivePermissionToOurs["writer"]) {
+                        violations.push({ set: "AW", file_name: file.name, violating_permission: p })
+                    }
+                }
+            })
+        })
+        response_body.push({ id: acp_id, violations: violations})
     })
+    return res.status(200).json(response_body)
 }
 
 const analyzeSharing = async (req: Request, res: Response) => {

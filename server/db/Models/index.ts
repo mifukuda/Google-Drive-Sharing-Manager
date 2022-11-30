@@ -4,6 +4,7 @@ import { groupSnapshotModel } from "./GroupSnapshotSchema"
 import { fileSnapshotModel } from "./FileSnapshotSchema"
 import { fileModel } from "./FileSchema"
 import { driveUserModel } from "./DriveUserSchema"
+import { ACPModel } from "./ACPSchema"
 
 const Models = {
     UserModel: userModel,
@@ -11,7 +12,8 @@ const Models = {
     GroupSnapshotModel: groupSnapshotModel,
     FileSnapshotModel: fileSnapshotModel,
     FileModel: fileModel,
-    DriveUserModel: driveUserModel
+    DriveUserModel: driveUserModel,
+    ACPModel: ACPModel
 }
 
 export default Models

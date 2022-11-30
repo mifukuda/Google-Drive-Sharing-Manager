@@ -8,10 +8,11 @@ import AddPolicy from "./AddPolicy";
 
 export default function AccessControlPolicies(props) {
     const dispatch = useDispatch()
-    const access_control_policies = useSelector(state => state.accessControlPolicies)
-    const currentSnapshot = useSelector(state => state.currentSnapshot)
-    const [addMode, setAddMode] = useState(false)
-    const [results, setResults] = useState([])
+    const access_control_policies = useSelector(state => state.accessControlPolicies);
+    const currentSnapshot = useSelector(state => state.currentSnapshot);
+    const [addMode, setAddMode] = useState(false);
+    const [results, setResults] = useState([]);
+    const roles = ["Viewer", "Commenter", "Editor", "Owner"];
 
     useEffect(() => {
         dispatch(getAccessControlPoliciesFromBackend())
@@ -29,12 +30,16 @@ export default function AccessControlPolicies(props) {
 
     let violations = null;
     if(results.length !== 0) {
-        console.log(results);
         let acpViolations = []
         for(let i = 0; i < results.length; i++) {
-            let violationList = results[i].violations.map((element, index) => <li key={index}></li>)
-            let name = <p>{i+1}. {results[i].id}</p>
-            let acpViolation = <div key={i}>{name} <ul>{violationList}</ul></div>
+            let violationList = results[i].violations.map((element, index) => 
+                <li key={index}>
+                    <p>File: {element.file_name}</p>
+                    <p>Violating Permission ({element.set}): </p>
+                    <p>{roles[element.violating_permission.role]}: {element.violating_permission.granted_to.email}, {element.violating_permission.granted_to.display_name} ({element.violating_permission.granted_to.type}) ({element.violating_permission.driveId})</p>
+                </li>);
+            let name = <p>{i+1}. {results[i].id}</p>;
+            let acpViolation = <div key={i}>{name} <ol>{violationList}</ol></div>;
             acpViolations.push(acpViolation);
         }
         violations = acpViolations;

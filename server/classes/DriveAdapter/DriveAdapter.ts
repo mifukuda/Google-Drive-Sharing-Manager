@@ -7,5 +7,4 @@ export abstract class DriveAdapter {
         this.driveToken = driveToken
     }
     abstract getFileRoots(): Promise<DriveRoot[]>
-    abstract addPermission(fileDriveID: string, email: string, role: string): Promise<any> 
 }

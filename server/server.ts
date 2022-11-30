@@ -3,18 +3,8 @@ import cookie_parser from 'cookie-parser'
 import cors from 'cors'
 import express, { Request, Response } from 'express'
 import fileUpload, { UploadedFile } from 'express-fileupload'
-import jwt from 'jsonwebtoken'
-import { Types } from 'mongoose'
-import { GoogleDriveAdapter } from './classes/DriveAdapter'
-import { FileInfoSnapshot } from './classes/Structures'
-import { Query } from './classes/UserClasses'
-import { auth_client } from './controllers'
 import db_connect from './db'
-import Models from "./db/Models"
 import { auth_router, snapshot_router, user_profile_router, group_snapshot_router } from './routers'
-import {calculatePermissionDifferences, analyzeDeviantSharing} from './sharinganalysis'
-import { DriveRoot, DriveFile } from './classes/FilesClasses/'
-import { MSDriveAdapter } from './classes/DriveAdapter/MSDriveAdapter'
 
 //file imports
 const CONFIG = require('./configs.js');

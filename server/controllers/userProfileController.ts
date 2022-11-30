@@ -22,73 +22,45 @@ const getAccessControlPolicies = async (req: Request, res: Response) => {
 
     res.status(200).json({ 
         status: 'OK',
-        Policies: JSON.stringify(user.AccessControlPolicy)
+        acps: user.AccessControlPolicy
     })
 }
 
 const addAccessControlPolicy = async (req: Request, res: Response) => {
     //get the user model
     let user: any = await getModel(req.cookies.jwt)
+    if (!user) return res.status(400).send({ message: "user not found" });
 
-    const payload = req.body
-
-    //create driveUsers
-    let allowedReaders = payload.allowedReaders.map((driveUser: any) => {
-        return new Models.DriveUserModel({
-            type: driveUser.type,
-            email: driveUser.email,
-            displayName: driveUser.displayName
-        })
-    })
-
-    let deniedReaders = payload.deniedReaders.map((driveUser: any) => {
-        return new Models.DriveUserModel({
-            type: driveUser.type,
-            email: driveUser.email,
-            displayName: driveUser.displayName
-        })
-    })
-
-    let allowedWriters = payload.allowedWriters.map((driveUser: any) => {
-        return new Models.DriveUserModel({
-            type: driveUser.type,
-            email: driveUser.email,
-            displayName: driveUser.displayName
-        })
-    })
-
-    let deniedWriters = payload.deniedWriters.map((driveUser: any) => {
-        return new Models.DriveUserModel({
-            type: driveUser.type,
-            email: driveUser.email,
-            displayName: driveUser.displayName
-        })
-    })
+    const { query, AR, DR, AW, DW, is_group } = req.body
 
     //create the policy
     let newPolicy = new Models.ACPModel({
-        allowedReaders: allowedReaders,
-        deniedReaders: deniedReaders,
-        allowedWriters: allowedWriters,
-        deniedWriters: deniedWriters,
-        isGroup: false
+        query: query,
+        AR: AR,
+        DR: DR,
+        AW: AW,
+        DW: DW,
+        isGroup: is_group
     })
 
     //add the policy to the user model
-    user.AccessControlPolicy.push(newPolicy)
+    user.AccessControlPolicy.push(newPolicy) 
     await user.save()
-    console.log(JSON.stringify(newPolicy))
 
     res.status(200).json({ 
         status: 'OK',
-        AccessControlPolicy: JSON.stringify(newPolicy)
+        acp: newPolicy
     })
 }
 
 const deleteAccessControlPolicy = async (req: Request, res: Response) => {
-    res.status(200).json({ 
-        status: 'OK' 
+    let user: any = await getModel(req.cookies.jwt)
+    console.log(user.AccessControlPolicy)
+    user.AccessControlPolicy = user.AccessControlPolicy.filter((acp: any) => {
+        return acp._id.toString() !== req.body.acp_id
     })
+    await user.save()
+    res.status(200).json({ status: 'OK' })
 }
 
 export { saveQuery, getSavedQueries, getAccessControlPolicies, addAccessControlPolicy, deleteAccessControlPolicy }

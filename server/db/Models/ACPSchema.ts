@@ -3,10 +3,11 @@ import { driveUserSchema } from "./DriveUserSchema"
 
 export const ACPSchema = new Schema(
     {
-        allowedReaders: [driveUserSchema],
-        deniedReaders: [driveUserSchema],
-        allowedWriters: [driveUserSchema],
-        deniedWriters: [driveUserSchema],
+        query: String,
+        AR: [String],
+        DR: [String],
+        AW: [String],
+        DW: [String],
         isGroup: {type: Boolean, required: true},
     },
     {

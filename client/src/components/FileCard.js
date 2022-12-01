@@ -56,6 +56,9 @@ export default function FileCard(props) {
             case "application/vnd.google-apps.folder":
                 img = <img src={require('../images/folder.png')} style={{height: '18px', marginRight: '10px', }} alt="Folder Logo"/>
                 break;
+            case "Folder":
+                img = <img src={require('../images/folder.png')} style={{height: '18px', marginRight: '10px', }} alt="Folder Logo"/>
+                break;
             default:
                 img = <img src={require('../images/file.png')} style={{height: '18px', marginRight: '10px', }} alt="File Logo"/>
         }

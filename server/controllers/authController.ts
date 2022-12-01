@@ -66,6 +66,7 @@ const auth_callback = async (req: Request, res: Response) => {
 
     //check the database to see if the user already exists
     let userProfile = await UserProfile.getUserProfileByDriveId(payload.sub)
+    console.log("userprofile: ", userProfile)
     if(!userProfile){
         userProfile = await UserProfile.createUserProfile(
             payload.sub,

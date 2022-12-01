@@ -89,7 +89,8 @@ export class MSDriveAdapter extends DriveAdapter{
                         [],
                         null,
                         "Folder",
-                        []
+                        [],
+                        ""
                     )
                     file.children.push(driveFolder)
 
@@ -112,7 +113,8 @@ export class MSDriveAdapter extends DriveAdapter{
                         new User("MICROSOFT", user.data.userPrincipalName, newFile.createdBy.user.displayName),
                         [],
                         null,
-                        newFile.file.mimeType
+                        newFile.file.mimeType,
+                        ""
                     )
                     file.children.push(driveFile)
 

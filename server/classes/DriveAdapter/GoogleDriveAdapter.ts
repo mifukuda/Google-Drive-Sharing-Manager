@@ -41,7 +41,7 @@ export class GoogleDriveAdapter extends DriveAdapter {
     
     async getFileRoots(): Promise<DriveRoot[]> {
         let allFiles: any = await this.getAllGoogleDriveFiles()
-        this.populateSharedDrivePermissions(allFiles)
+        await this.populateSharedDrivePermissions(allFiles)
         let sharedDrives: any = await this.getSharedGoogleDrives()
         let roots: DriveRoot[] = await this.buildGoogleDriveTrees(allFiles, sharedDrives)
         return roots
@@ -95,7 +95,6 @@ export class GoogleDriveAdapter extends DriveAdapter {
             let allPerms: any[] = []
             let nextPageToken: any = ""
             if (file.driveId) {
-                console.log("driveId not defined")
                 while (nextPageToken != null) {
                     let response = await drive.permissions.list({
                         fileId: file.id,
@@ -109,8 +108,9 @@ export class GoogleDriveAdapter extends DriveAdapter {
                     allPerms = allPerms.concat(response.data.permissions)
                     nextPageToken = response.data.nextPageToken
                 }
+                file.permissions = allPerms;
             }
-            file.permissions = allPerms
+            //file.permissions = allPerms
         }
     }
 

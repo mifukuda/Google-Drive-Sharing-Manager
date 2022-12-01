@@ -8,6 +8,7 @@ import { Types } from 'mongoose';
 import { getModel } from '../middleware/getUserModel'
 import { analyzeDeviantSharing, calculatePermissionDifferences, calculateSharingChanges } from '../sharinganalysis'
 import { driveUserModel } from '../db/Models/DriveUserSchema';
+import { MSDriveAdapter } from '../classes/DriveAdapter/MSDriveAdapter';
 
 
 const createSnapshot = async (req: Request, res: Response) => {
@@ -15,9 +16,13 @@ const createSnapshot = async (req: Request, res: Response) => {
     let user: any = await getModel(req.cookies.jwt)
 
     //create the snapshot
-    const drive = new GoogleDriveAdapter(user.driveToken)
+    let drive: any = 0;
+    if(user.driveType === 'MICROSOFT')
+        drive = new MSDriveAdapter(user.driveToken)
+    else
+        drive = new GoogleDriveAdapter(user.driveToken)
+    
     const roots: DriveRoot[] = await drive.getFileRoots()
-    console.log(roots)
     const fileSnapshot: FileInfoSnapshot = await FileInfoSnapshot.createNew(user._id, roots)
 
     //update and save the user userProfile

@@ -19,6 +19,13 @@ export const googleDrivePermissionToOurs: { [property: string]: permission_level
     // "fileOrganizer"
 }
 
+export const onedrivePermissionToOurs: {[property: string]: permission_level } = {
+    "owner": permission_level.OWNER,
+    "write": permission_level.EDITOR,
+    "member": permission_level.COMMENTER,
+    "read": permission_level.VIEWER
+}
+
 export class Permission {
     constructor (
         public _id: string,

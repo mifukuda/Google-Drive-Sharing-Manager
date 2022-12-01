@@ -146,18 +146,6 @@ const msCallback = async(req: Request, res: Response) => {
         )
     }
 
-    //testing a request
-    // const axiosIns = axios.create({
-    //     baseURL: "https://login.microsoftonline.com/common/oauth2/v2.0"
-    // })
-    // const newTokens = await axiosIns.post('/token', new URLSearchParams({
-    //     client_id: CONFIG.onedrive_credentials.client_id,
-    //     redirect_uri: CONFIG.onedrive_credentials.redirect_uri,
-    //     client_secret: CONFIG.onedrive_credentials.client_secret,
-    //     refresh_token: refreshToken,
-    //     grant_type: "refresh_token"
-    // }))
-
     return res.cookie("jwt", jwt.sign({
         _id: (userProfile._id as Types.ObjectId).toString()
     }, CONFIG.JWT_secret), {

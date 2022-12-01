@@ -48,6 +48,7 @@ const auth_callback = async (req: Request, res: Response) => {
     let tokens
     try{
         tokens = (await auth_client.getToken(req.query.code)).tokens
+        console.log(tokens);
     }catch (err){
         console.log("Error getting tokens.", err)
     }
@@ -70,7 +71,7 @@ const auth_callback = async (req: Request, res: Response) => {
     if(!userProfile){
         userProfile = await UserProfile.createUserProfile(
             payload.sub,
-            tokens.refreshToken,
+            tokens.refresh_token,
             "GOOGLE",
             payload.name,
             payload.email

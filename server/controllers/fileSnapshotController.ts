@@ -57,6 +57,7 @@ const getSnapshotInfo = async (req: Request, res: Response) => {
 const getSnap = async (req: Request, res: Response) => {
     let id = new Types.ObjectId(req.body.id)
     let fileSnapshot = await FileInfoSnapshot.retrieve(id)
+    console.log("serialized SNPASHOT: " , JSON.stringify(fileSnapshot.serialize(), null, "\t"))
     return res.status(200).json({
         message: "OK",
         fileSnapshot: fileSnapshot.serialize()

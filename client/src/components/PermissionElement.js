@@ -5,7 +5,7 @@ import {getGroupMembers} from '../api/group.js';
 export default function PermissionElement(props) {
     const errorMessage = (<p className="groupmemberelement">You have not uploaded a snapshot for this group yet!</p>);
     const {index, element} = props;
-    const roles = ["Viewer", "Commenter", "Editor", "Owner"];
+    const roles = ["Viewer", "Commenter", "Editor", "Owner", "organizer", "fileOrganizer"];
     const currentSnapshot = useSelector(state => state.currentSnapshot);
     const [group, setGroup] = useState();
     const [body, setBody] = useState(errorMessage);

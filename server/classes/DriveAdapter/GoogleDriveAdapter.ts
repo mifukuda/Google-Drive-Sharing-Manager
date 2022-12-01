@@ -41,6 +41,7 @@ export class GoogleDriveAdapter extends DriveAdapter {
     
     async getFileRoots(): Promise<DriveRoot[]> {
         let allFiles: any = await this.getAllGoogleDriveFiles()
+        this.populateSharedDrivePermissions(allFiles)
         let sharedDrives: any = await this.getSharedGoogleDrives()
         let roots: DriveRoot[] = await this.buildGoogleDriveTrees(allFiles, sharedDrives)
         return roots
@@ -59,7 +60,7 @@ export class GoogleDriveAdapter extends DriveAdapter {
                 includeItemsFromAllDrives: true,
                 supportsAllDrives: true,
                 corpora: 'allDrives',
-                fields: 'nextPageToken, files(name, id, mimeType, createdTime, modifiedTime, permissions, parents, owners, sharingUser)',
+                fields: 'nextPageToken, files(name, id, mimeType, createdTime, modifiedTime, permissions, parents, owners, sharingUser, driveId)',
             })
             allFiles = allFiles.concat(response.data.files)
             nextPageToken = response.data.nextPageToken
@@ -85,6 +86,32 @@ export class GoogleDriveAdapter extends DriveAdapter {
             nextPageToken = response.data.nextPageToken
         }
         return sharedDrives
+    }
+
+    async populateSharedDrivePermissions(allfiles: any[]): Promise<any> {
+        const drive = google.drive('v3');
+        for (let i = 0; i < allfiles.length; i++) {
+            let file: any = allfiles[i]
+            let allPerms: any[] = []
+            let nextPageToken: any = ""
+            if (file.driveId) {
+                console.log("driveId not defined")
+                while (nextPageToken != null) {
+                    let response = await drive.permissions.list({
+                        fileId: file.id,
+                        auth: this.auth_client,
+                        pageSize: 100,
+                        // pageToken: nextPageToken,
+                        supportsAllDrives: true,
+                        fields: 'permissions(emailAddress, displayName, role, id)'
+                    })
+                    // console.log("response.data: ", JSON.stringify(response.data, null, "\t"))
+                    allPerms = allPerms.concat(response.data.permissions)
+                    nextPageToken = response.data.nextPageToken
+                }
+            }
+            file.permissions = allPerms
+        }
     }
 
     async buildGoogleDriveTrees(allFiles: any, sharedDrives: any): Promise<DriveRoot[]> {

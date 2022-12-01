@@ -8,15 +8,17 @@ export enum permission_level {
     COMMENTER,
     EDITOR,
     OWNER,
+    ORGANIZER,
+    FILE_ORGANIZER
 }
 
 export const googleDrivePermissionToOurs: { [property: string]: permission_level } = {
     "owner": permission_level.OWNER,
     "writer": permission_level.EDITOR,
     "commenter": permission_level.COMMENTER,
-    "reader": permission_level.VIEWER
-    // "organizer"
-    // "fileOrganizer"
+    "reader": permission_level.VIEWER,
+    "organizer": permission_level.ORGANIZER,
+    "fileOrganizer": permission_level.FILE_ORGANIZER
 }
 
 export const onedrivePermissionToOurs: {[property: string]: permission_level } = {

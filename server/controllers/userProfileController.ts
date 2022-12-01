@@ -36,10 +36,10 @@ const addAccessControlPolicy = async (req: Request, res: Response) => {
     //create the policy
     let newPolicy = new Models.ACPModel({
         query: query,
-        AR: AR,
-        DR: DR,
-        AW: AW,
-        DW: DW,
+        AR: (AR == "" ? [] : AR.split(",").map((element: any) => element.trim())),
+        DR: (DR == "" ? [] : DR.split(",").map((element: any) => element.trim())),
+        AW: (AW == "" ? [] : AW.split(",").map((element: any) => element.trim())),
+        DW: (DW == "" ? [] : DW.split(",").map((element: any) => element.trim())),
         isGroup: is_group
     })
 

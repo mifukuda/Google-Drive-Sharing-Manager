@@ -12,7 +12,7 @@ export default function AccessControlPolicies(props) {
     const currentSnapshot = useSelector(state => state.currentSnapshot);
     const [addMode, setAddMode] = useState(false);
     const [results, setResults] = useState([]);
-    const roles = ["Viewer", "Commenter", "Editor", "Owner"];
+    const roles = ["Viewer", "Commenter", "Editor", "Owner", "organizer", "fileOrganizer"];
 
     useEffect(() => {
         dispatch(getAccessControlPoliciesFromBackend())
